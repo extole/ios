@@ -27,7 +27,7 @@ class ExtoleAPITest: XCTestCase {
         let tokenResponse = extoleApi.getToken()
         let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssert(accessToken != nil)
-        XCTAssert(accessToken!.access_token.isEmpty)
+        XCTAssert(!accessToken!.access_token.isEmpty)
     }
 
 }

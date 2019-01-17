@@ -12,8 +12,11 @@ import XCTest
 
 class firstappTests: XCTestCase {
 
+    let extoleApi = ExtoleAPI.init(baseUrl: "https://roman-tibin-test.extole.com")
+    let waitGroup = DispatchGroup.init()
+    
     override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        waitGroup.enter()
         Logger.Info(message: "setup")
     }
 
@@ -22,17 +25,13 @@ class firstappTests: XCTestCase {
          Logger.Info(message: "teardown")
     }
 
-    func testExample() {
-        Logger.Info(message: "log example")
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testGetToken() {
+        Logger.Info(message: "start load")
+        extoleApi.getToken() { token in
+            Logger.Info(message: "Received \(token)")
+            self.waitGroup.leave()
         }
+        waitGroup.wait(timeout: DispatchTime.now() + .seconds(10))
     }
 
 }

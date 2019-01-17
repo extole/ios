@@ -12,7 +12,7 @@
 		4918EA8B21E8DEAF00CE4C78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4918EA8921E8DEAF00CE4C78 /* Main.storyboard */; };
 		4918EA8D21E8DEB000CE4C78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4918EA8C21E8DEB000CE4C78 /* Assets.xcassets */; };
 		4918EA9021E8DEB000CE4C78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4918EA8E21E8DEB000CE4C78 /* LaunchScreen.storyboard */; };
-		4918EA9B21E8DEB100CE4C78 /* firstappTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918EA9A21E8DEB100CE4C78 /* firstappTests.swift */; };
+		4918EA9B21E8DEB100CE4C78 /* ExtoleAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918EA9A21E8DEB100CE4C78 /* ExtoleAPITest.swift */; };
 		4918EAA621E8DEB100CE4C78 /* firstappUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918EAA521E8DEB100CE4C78 /* firstappUITests.swift */; };
 		49B52C4221F0A39F00AC2DFC /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B52C4121F0A39F00AC2DFC /* Logger.swift */; };
 		49B52C4421F0A8F100AC2DFC /* ExtoleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B52C4321F0A8F100AC2DFC /* ExtoleAPI.swift */; };
@@ -44,7 +44,7 @@
 		4918EA8F21E8DEB000CE4C78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4918EA9121E8DEB000CE4C78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4918EA9621E8DEB100CE4C78 /* firstappTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = firstappTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4918EA9A21E8DEB100CE4C78 /* firstappTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = firstappTests.swift; sourceTree = "<group>"; };
+		4918EA9A21E8DEB100CE4C78 /* ExtoleAPITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleAPITest.swift; sourceTree = "<group>"; };
 		4918EA9C21E8DEB100CE4C78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4918EAA121E8DEB100CE4C78 /* firstappUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = firstappUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4918EAA521E8DEB100CE4C78 /* firstappUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = firstappUITests.swift; sourceTree = "<group>"; };
@@ -116,7 +116,7 @@
 		4918EA9921E8DEB100CE4C78 /* firstappTests */ = {
 			isa = PBXGroup;
 			children = (
-				4918EA9A21E8DEB100CE4C78 /* firstappTests.swift */,
+				4918EA9A21E8DEB100CE4C78 /* ExtoleAPITest.swift */,
 				4918EA9C21E8DEB100CE4C78 /* Info.plist */,
 			);
 			path = firstappTests;
@@ -273,7 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4918EA9B21E8DEB100CE4C78 /* firstappTests.swift in Sources */,
+				4918EA9B21E8DEB100CE4C78 /* ExtoleAPITest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,20 +10,42 @@ import Foundation
 
 public class ExtoleAPI {
     
-    var baseUrl : String = "https://roman-tibin-test.extole.com";
+    let baseUrl : String;
+    
     init(baseUrl: String) {
         self.baseUrl = baseUrl
     }
     
     public struct ConsumerToken : Codable {
-        var access_token: String
-        var expires_in: Int
-        var scopes: [String]
-        var capabilities: [String]
+        let access_token: String
+        let expires_in: Int
+        let scopes: [String]
+        let capabilities: [String]
     }
     
-    public func getToken(reponseHandler : @escaping (ConsumerToken?) -> Void) -> Void {
+    public class APIResponse {
+        var consumerToken: ConsumerToken?
+        let waitGroup : DispatchGroup
+        init() {
+            waitGroup = DispatchGroup.init()
+            waitGroup.enter()
+        }
+        func setConsumerToken(consumerToken: ConsumerToken?) -> Void{
+            self.consumerToken = consumerToken
+            waitGroup.leave()
+        }
+        
+        public func await(timeout: DispatchTime) -> ConsumerToken? {
+            waitGroup.wait(timeout: timeout)
+            return self.consumerToken
+        }
+    }
+
+    public func getToken() -> APIResponse {
+        let apiResponse = APIResponse.init()
+        
         let url = URL(string: "\(baseUrl)/api/v4/token")!
+        
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 Logger.Error(message: "Error fetching \(error)")
@@ -38,12 +60,13 @@ public class ExtoleAPI {
                 let decoder = JSONDecoder.init()
                 let consumerToken = try? decoder.decode(ConsumerToken.self, from: responseData)
                 Logger.Info(message: "Received response :\(consumerToken)")
-                reponseHandler(consumerToken)
+                apiResponse.setConsumerToken(consumerToken: consumerToken)
             } else {
                 Logger.Info(message: "Received no data")
             }
             
         }
         task.resume()
+        return apiResponse
     }
 }

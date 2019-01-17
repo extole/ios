@@ -10,13 +10,11 @@ import XCTest
 
 @testable import firstapp
 
-class firstappTests: XCTestCase {
+class ExtoleAPITest: XCTestCase {
 
     let extoleApi = ExtoleAPI.init(baseUrl: "https://roman-tibin-test.extole.com")
-    let waitGroup = DispatchGroup.init()
-    
+ 
     override func setUp() {
-        waitGroup.enter()
         Logger.Info(message: "setup")
     }
 
@@ -26,12 +24,10 @@ class firstappTests: XCTestCase {
     }
 
     func testGetToken() {
-        Logger.Info(message: "start load")
-        extoleApi.getToken() { token in
-            Logger.Info(message: "Received \(token)")
-            self.waitGroup.leave()
-        }
-        waitGroup.wait(timeout: DispatchTime.now() + .seconds(10))
+        let tokenResponse = extoleApi.getToken()
+        let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssert(accessToken != nil)
+        XCTAssert(accessToken!.access_token.isEmpty)
     }
 
 }

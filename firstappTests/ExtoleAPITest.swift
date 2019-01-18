@@ -29,5 +29,15 @@ class ExtoleAPITest: XCTestCase {
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
     }
+    
+    func testGetMyShareables() {
+        let tokenResponse = extoleApi.getToken()
+        let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssert(accessToken != nil)
+        XCTAssert(!accessToken!.access_token.isEmpty)
+        let shareableResponse = extoleApi.getShareables(accessToken: accessToken!)
+        let shareable = shareableResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssert(shareable != nil)
+    }
 
 }

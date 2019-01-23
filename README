@@ -1,0 +1,4 @@
+xcode-select -switch /Applications/Xcode.app/Contents/Developer/
+
+
+./runTest.sh

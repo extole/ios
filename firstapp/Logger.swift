@@ -11,7 +11,7 @@ import Foundation
 public class Logger {
     
     static func Debug(message : String) {
-        // print("DEBUG : \(message)")
+        print("DEBUG : \(message)")
     }
     
     static func Info(message : String) {

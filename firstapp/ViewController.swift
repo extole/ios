@@ -10,9 +10,29 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var accessTokenLabel: UILabel!
+    
+    let extoleApi = ExtoleAPI.init(baseUrl: "https://roman-tibin-test.extole.com")
+    
+    func setLabelText(text: String) {
+        DispatchQueue.main.async {
+            self.accessTokenLabel.text = text
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        let dispatchQueue = DispatchQueue(label : "Extole", qos:.background)
+        dispatchQueue.async {
+            self.setLabelText(text: "Fetching access Token...")
+            let accessToken = self.extoleApi.getToken().await(timeout: DispatchTime.now() + .seconds(10))
+            if let accessToken = accessToken {
+                self.setLabelText(text: "Token: \(accessToken.access_token)")
+            } else {
+                self.setLabelText(text: "No Token")
+            }
+        }
+        
     }
 
 

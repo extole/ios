@@ -30,14 +30,26 @@ class ExtoleAPITest: XCTestCase {
         XCTAssert(!accessToken!.access_token.isEmpty)
     }
     
-    func testGetMyShareables() {
+    func testCreateShareable() {
         let tokenResponse = extoleApi.getToken()
         let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
-        let shareableResponse = extoleApi.getShareables(accessToken: accessToken!)
+        let newShareable = ExtoleAPI.MyShareable(label: "refer-a-friend")
+        let shareableResponse = extoleApi.createShareable(accessToken: accessToken!,
+                                                          shareable: newShareable)
         let shareable = shareableResponse.await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssert(shareable != nil)
+        XCTAssertEqual("SUCCEEDED", shareable?.status)
+    }
+    
+    func testFetchZone() {
+        let shareLinkResponse = extoleApi.fetchZone(accessToken: nil,
+                                                    zone: "share_experience")
+        let shareLink = shareLinkResponse.await(timeout: DispatchTime.now() + .seconds(100))
+        XCTAssert(shareLink != nil)
+        let linkData = String.init(data: shareLink!, encoding: String.Encoding.utf8)!
+        Logger.Debug(message: "share_link : \(linkData)")
+        XCTAssert(linkData.contains("extole.define"))
     }
 
 }

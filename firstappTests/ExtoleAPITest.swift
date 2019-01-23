@@ -36,10 +36,42 @@ class ExtoleAPITest: XCTestCase {
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
         let newShareable = ExtoleAPI.MyShareable(label: "refer-a-friend")
-        let shareableResponse = extoleApi.createShareable(accessToken: accessToken!,
+        let pollingResponse = extoleApi.createShareable(accessToken: accessToken!,
                                                           shareable: newShareable)
-        let shareable = shareableResponse.await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertEqual("SUCCEEDED", shareable?.status)
+        let polingResult = pollingResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssertEqual("SUCCEEDED", polingResult?.status)
+        XCTAssertGreaterThan(polingResult!.code, "1111")
+        
+        let shareablesResponse = extoleApi.getShareables(accessToken: accessToken!)
+            .await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssertNotNil(shareablesResponse)
+        XCTAssertEqual(1, shareablesResponse?.count)
+        XCTAssertEqual("refer-a-friend", shareablesResponse?.first?.label)
+    }
+    
+    func testCustomShare() {
+        let tokenResponse = extoleApi.getToken()
+        let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssert(accessToken != nil)
+        XCTAssert(!accessToken!.access_token.isEmpty)
+        let newShareable = ExtoleAPI.MyShareable(label: "refer-a-friend")
+        let pollingResponse = extoleApi.createShareable(accessToken: accessToken!,
+                                                        shareable: newShareable)
+        let pollingResult = pollingResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssertEqual("SUCCEEDED", pollingResult?.status)
+        XCTAssertGreaterThan(pollingResult!.code, "1111")
+    
+        let customShare = ExtoleAPI.CustomShare(advocate_code: pollingResult!.code,
+                                                channel: "EMAIL",
+                                                message: "testmessage",
+                                                recipient_email: "rtibin@extole.com",
+                                                data: [:])
+        
+        let shareResponse = extoleApi.customShare(accessToken : accessToken!, share: customShare)
+            .await(timeout: DispatchTime.now() + .seconds(100))
+        
+        shareResponse?.share_id
+        
     }
     
     func testFetchZone() {

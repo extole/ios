@@ -8,8 +8,6 @@
 
 import Foundation
 
-var baseUrl : String = "https://roman-tibin-test.extole.com"
-
 func tryDecode<T: Codable>(data: Data) -> T? {
     let decoder = JSONDecoder.init()
     return try? decoder.decode(T.self, from: data)

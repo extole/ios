@@ -12,7 +12,7 @@ import XCTest
 
 class ExtoleAPITest: XCTestCase {
 
-    let extoleApi = ExtoleAPI.init(baseUrl: "https://roman-tibin-test.extole.com")
+    let program = Program(baseUrl: "https://roman-tibin-test.extole.com")
  
     override func setUp() {
         Logger.Info(message: "setup")
@@ -24,25 +24,25 @@ class ExtoleAPITest: XCTestCase {
     }
 
     func testGetToken() {
-        let tokenResponse = extoleApi.getToken()
+        let tokenResponse = program.getToken()
         let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
     }
     
     func testCreateShareable() {
-        let tokenResponse = extoleApi.getToken()
+        let tokenResponse = program.getToken()
         let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
-        let newShareable = ExtoleAPI.MyShareable(label: "refer-a-friend")
-        let pollingResponse = extoleApi.createShareable(accessToken: accessToken!,
+        let newShareable = MyShareable(label: "refer-a-friend")
+        let pollingResponse = program.createShareable(accessToken: accessToken!,
                                                           shareable: newShareable)
         let polingResult = pollingResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssertEqual("SUCCEEDED", polingResult?.status)
         XCTAssertGreaterThan(polingResult!.code, "1111")
         
-        let shareablesResponse = extoleApi.getShareables(accessToken: accessToken!)
+        let shareablesResponse = program.getShareables(accessToken: accessToken!)
             .await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssertNotNil(shareablesResponse)
         XCTAssertEqual(1, shareablesResponse?.count)
@@ -50,44 +50,44 @@ class ExtoleAPITest: XCTestCase {
     }
     
     func testProfile() {
-        let tokenResponse = extoleApi.getToken()
+        let tokenResponse = program.getToken()
         let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
-        let myProfile = ExtoleAPI.MyProfile(email: "testprofile@extole.com",
+        let myProfile = MyProfile(email: "testprofile@extole.com",
                                                first_name: "Test",
                                                last_name: "Profile",
                                                partner_user_id: "Zorro")
         
-        let updateResponse = extoleApi.updateProfile(accessToken: accessToken!,
+        let updateResponse = program.updateProfile(accessToken: accessToken!,
                                     profile: myProfile)
             .await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssertEqual("success", updateResponse?.status)
         
-        let profileResponse = extoleApi.getProfile(accessToken: accessToken!)
+        let profileResponse = program.getProfile(accessToken: accessToken!)
             .await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssertEqual(profileResponse?.email, myProfile.email)
     }
     
     func testCustomShare() {
-        let tokenResponse = extoleApi.getToken()
+        let tokenResponse = program.getToken()
         let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
-        let newShareable = ExtoleAPI.MyShareable(label: "refer-a-friend")
-        let pollingResponse = extoleApi.createShareable(accessToken: accessToken!,
+        let newShareable = MyShareable(label: "refer-a-friend")
+        let pollingResponse = program.createShareable(accessToken: accessToken!,
                                                         shareable: newShareable)
         let pollingResult = pollingResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssertEqual("SUCCEEDED", pollingResult?.status)
         XCTAssertGreaterThan(pollingResult!.code, "1111")
     
-        let customShare = ExtoleAPI.CustomShare(advocate_code: pollingResult!.code,
+        let customShare = CustomShare(advocate_code: pollingResult!.code,
                                                 channel: "EMAIL",
                                                 message: "testmessage",
                                                 recipient_email: "rtibin@extole.com",
                                                 data: [:])
         
-        let shareResponse = extoleApi.customShare(accessToken : accessToken!, share: customShare)
+        let shareResponse = program.customShare(accessToken : accessToken!, share: customShare)
             .await(timeout: DispatchTime.now() + .seconds(100))
         
         shareResponse?.share_id
@@ -95,7 +95,7 @@ class ExtoleAPITest: XCTestCase {
     }
     
     func testFetchZone() {
-        let shareLinkResponse = extoleApi.fetchZone(accessToken: nil,
+        let shareLinkResponse = program.fetchZone(accessToken: nil,
                                                     zone: "share_experience")
         let shareLink = shareLinkResponse.await(timeout: DispatchTime.now() + .seconds(100))
         XCTAssert(shareLink != nil)

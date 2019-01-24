@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var accessTokenLabel: UILabel!
     
-    let extoleApi = ExtoleAPI.init(baseUrl: "https://roman-tibin-test.extole.com")
+    let program = Program.init(baseUrl: "https://roman-tibin-test.extole.com")
     
     func setLabelText(text: String) {
         DispatchQueue.main.async {
@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         let dispatchQueue = DispatchQueue(label : "Extole", qos:.background)
         dispatchQueue.async {
             self.setLabelText(text: "Fetching access Token...")
-            let accessToken = self.extoleApi.getToken().await(timeout: DispatchTime.now() + .seconds(10))
+            let accessToken = self.program.getToken().await(timeout: DispatchTime.now() + .seconds(10))
             if let accessToken = accessToken {
                 self.setLabelText(text: "Token: \(accessToken.access_token)")
             } else {

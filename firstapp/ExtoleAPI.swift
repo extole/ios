@@ -53,6 +53,17 @@ public class ExtoleAPI {
         let code: String
     }
     
+    public struct MyProfile : Codable {
+        let email: String
+        let first_name: String
+        let last_name: String
+        let partner_user_id: String
+    }
+    
+    public struct SuccessResponse : Codable {
+        let status: String
+    }
+    
     public struct MyShareable : Codable {
         //let code: String
         let label: String
@@ -92,6 +103,19 @@ public class ExtoleAPI {
         }
     }
 
+    public func updateProfile(accessToken: ConsumerToken, profile: MyProfile)
+        -> APIResponse<SuccessResponse> {
+            let url = URL(string: "\(baseUrl)/api/v4/me")!
+            let shareableData = try? JSONEncoder().encode(profile)
+            return dataTask(url: url, accessToken: accessToken.access_token, postData: shareableData)
+    }
+    
+    public func getProfile(accessToken: ConsumerToken)
+        -> APIResponse<MyProfile> {
+            let url = URL(string: "\(baseUrl)/api/v4/me")!
+            return dataTask(url: url, accessToken: accessToken.access_token, postData: nil)
+    }
+    
     public func getShareables(accessToken: ConsumerToken) -> APIResponse<[MyShareable]> {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
         return dataTask(url: url, accessToken: accessToken.access_token, postData: nil)

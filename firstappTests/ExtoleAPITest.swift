@@ -49,6 +49,26 @@ class ExtoleAPITest: XCTestCase {
         XCTAssertEqual("refer-a-friend", shareablesResponse?.first?.label)
     }
     
+    func testProfile() {
+        let tokenResponse = extoleApi.getToken()
+        let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssert(accessToken != nil)
+        XCTAssert(!accessToken!.access_token.isEmpty)
+        let myProfile = ExtoleAPI.MyProfile(email: "testprofile@extole.com",
+                                               first_name: "Test",
+                                               last_name: "Profile",
+                                               partner_user_id: "Zorro")
+        
+        let updateResponse = extoleApi.updateProfile(accessToken: accessToken!,
+                                    profile: myProfile)
+            .await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssertEqual("success", updateResponse?.status)
+        
+        let profileResponse = extoleApi.getProfile(accessToken: accessToken!)
+            .await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssertEqual(profileResponse?.email, myProfile.email)
+    }
+    
     func testCustomShare() {
         let tokenResponse = extoleApi.getToken()
         let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))

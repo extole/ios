@@ -31,15 +31,13 @@ extension Program {
     }
 
     public func createShareable(accessToken: ConsumerToken, shareable: MyShareable)
-        -> APIResponse<ShareablePollingResult> {
+        -> APIResponse<PollingIdResponse> {
             let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
             let shareableData = try? JSONEncoder().encode(shareable)
-            let pollingResponse : PollingIdResponse?
-            pollingResponse = dataTask(url: url, accessToken: accessToken.access_token, postData: shareableData).await(timeout: DispatchTime.now() + .seconds(100))
-            return pollShareable(accessToken: accessToken, pollingResponse: pollingResponse!)
+            return dataTask(url: url, accessToken: accessToken.access_token, postData: shareableData)
     }
 
-    private func pollShareable(accessToken: ConsumerToken, pollingResponse: PollingIdResponse)
+    public func pollShareable(accessToken: ConsumerToken, pollingResponse: PollingIdResponse)
         -> APIResponse<ShareablePollingResult> {
             let url = URL(string: "\(baseUrl)/api/v5/me/shareables/status/\(pollingResponse.polling_id)")!
             return dataTask(url: url, accessToken: accessToken.access_token, postData: nil)

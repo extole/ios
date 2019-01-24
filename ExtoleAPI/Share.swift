@@ -25,15 +25,13 @@ public struct CustomSharePollingResult : Codable {
 extension Program {
     
     public func customShare(accessToken: ConsumerToken, share: CustomShare)
-        -> APIResponse<CustomSharePollingResult> {
-            let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
-            let shareData = try? JSONEncoder().encode(share)
-            let pollingResponse : PollingIdResponse?
-            pollingResponse = dataTask(url: url, accessToken: accessToken.access_token, postData: shareData).await(timeout: DispatchTime.now() + .seconds(100))
-            return pollCustomShare(accessToken: accessToken, pollingResponse: pollingResponse!)
+        -> APIResponse<PollingIdResponse> {
+        let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
+        let shareData = try? JSONEncoder().encode(share)
+        return dataTask(url: url, accessToken: accessToken.access_token, postData: shareData)
     }
 
-    private func pollCustomShare(accessToken: ConsumerToken, pollingResponse: PollingIdResponse)
+    public func pollCustomShare(accessToken: ConsumerToken, pollingResponse: PollingIdResponse)
         -> APIResponse<CustomSharePollingResult> {
             let response = APIResponse<CustomSharePollingResult>.init()
             

@@ -36,11 +36,16 @@ class ExtoleAPITest: XCTestCase {
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
         let newShareable = MyShareable(label: "refer-a-friend")
-        let pollingResponse = program.createShareable(accessToken: accessToken!,
+        let shareableResponse = program.createShareable(accessToken: accessToken!,
                                                           shareable: newShareable)
-        let polingResult = pollingResponse.await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertEqual("SUCCEEDED", polingResult?.status)
-        XCTAssertGreaterThan(polingResult!.code, "1111")
+        let shareableResult = shareableResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssertGreaterThan(shareableResult!.polling_id, "111111")
+        
+        let pollingResult = program.pollShareable(accessToken: accessToken!,
+                              pollingResponse: shareableResult!)
+            .await(timeout: DispatchTime.now() + .seconds(10))
+        
+        XCTAssertGreaterThan(pollingResult!.code, "1111")
         
         let shareablesResponse = program.getShareables(accessToken: accessToken!)
             .await(timeout: DispatchTime.now() + .seconds(10))
@@ -75,23 +80,30 @@ class ExtoleAPITest: XCTestCase {
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
         let newShareable = MyShareable(label: "refer-a-friend")
-        let pollingResponse = program.createShareable(accessToken: accessToken!,
+        let shareableResponse = program.createShareable(accessToken: accessToken!,
                                                         shareable: newShareable)
-        let pollingResult = pollingResponse.await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertEqual("SUCCEEDED", pollingResult?.status)
-        XCTAssertGreaterThan(pollingResult!.code, "1111")
+        let shareableResult = shareableResponse.await(timeout: DispatchTime.now() + .seconds(10))
+        
+        let shareable = program.pollShareable(accessToken: accessToken!, pollingResponse: shareableResult!)
+            .await(timeout: DispatchTime.now() + .seconds(10))
+        XCTAssertEqual("SUCCEEDED", shareable?.status)
+        XCTAssertGreaterThan(shareable!.code, "1111")
     
-        let customShare = CustomShare(advocate_code: pollingResult!.code,
+        let customShare = CustomShare(advocate_code: shareable!.code,
                                                 channel: "EMAIL",
                                                 message: "testmessage",
                                                 recipient_email: "rtibin@extole.com",
                                                 data: [:])
         
         let shareResponse = program.customShare(accessToken : accessToken!, share: customShare)
-            .await(timeout: DispatchTime.now() + .seconds(100))
+            .await(timeout: DispatchTime.now() + .seconds(10))
         
-        shareResponse?.share_id
+        XCTAssertGreaterThan(shareResponse!.polling_id, "1111")
+        let customShareResult = program.pollCustomShare(accessToken: accessToken!,
+                pollingResponse: shareResponse!)
+            .await(timeout: DispatchTime.now() + .seconds(10))
         
+        XCTAssertGreaterThan(customShareResult!.share_id, "1111")
     }
     
     func testFetchZone() {

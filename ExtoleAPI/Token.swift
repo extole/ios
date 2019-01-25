@@ -9,9 +9,9 @@
 import Foundation
 
 extension Program {
-    public func getToken() -> APIResponse<ConsumerToken> {
+    public func getToken(token: String? = nil) -> APIResponse<ConsumerToken> {
         let url = URL(string: "\(baseUrl)/api/v4/token")!
-        return dataTask(url: url, accessToken: nil, postData: nil)
+        return dataTask(url: url, accessToken: token, postData: nil)
     }
 }
 public struct ConsumerToken : Codable {

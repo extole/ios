@@ -37,6 +37,8 @@ class ProfileViewController: UIViewController {
     
     let program = Program.init(baseUrl: "https://roman-tibin-test.extole.com")
     
+    var extoleApp = ExtoleApp.default
+    
     var accessToken: ConsumerToken?
     
     func showAccessToken(text: String) {
@@ -50,6 +52,10 @@ class ProfileViewController: UIViewController {
             self.emailText.text = profile.email
             self.firstNameTesxt.text = profile.first_name
             self.lastNameText.text = profile.last_name
+            
+            if let _ = profile.email {
+                self.nextButton.isEnabled = true
+            }
         }
     }
     
@@ -59,9 +65,16 @@ class ProfileViewController: UIViewController {
         let dispatchQueue = DispatchQueue(label : "Extole", qos:.background)
         dispatchQueue.async {
             self.showAccessToken(text: "Fetching access Token...")
-            self.accessToken = self.program.getToken().await(timeout: DispatchTime.now() + .seconds(10))
+            if let savedToken = self.extoleApp.savedToken {
+                self.accessToken = self.program.getToken(token: savedToken)
+                    .await(timeout: DispatchTime.now() + .seconds(10))
+            } else {
+                self.accessToken = self.program.getToken()
+                    .await(timeout: DispatchTime.now() + .seconds(10))
+            }
             if let accessToken = self.accessToken {
                 self.showAccessToken(text: "Token: \(accessToken.access_token)")
+                self.extoleApp.savedToken = accessToken.access_token
                 let profile = self.program.getProfile(accessToken: accessToken)
                     .await(timeout: DispatchTime.now() + .seconds(10))
                 if let profile = profile {

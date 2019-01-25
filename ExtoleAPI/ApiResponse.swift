@@ -12,6 +12,10 @@ public class APIResponse<T: Codable> {
     var data: T?
     var error: Error?
     let waitGroup : DispatchGroup
+    
+    let completeLock = DispatchQueue(label: "com.extole.APIResponse")
+    var complete: ((_ : T?) -> Void)?
+    
     init() {
         waitGroup = DispatchGroup.init()
         waitGroup.enter()
@@ -19,6 +23,12 @@ public class APIResponse<T: Codable> {
     
     func setData(data: T) -> Void{
         self.data = data
+        completeLock.sync {
+            if let onComplete = complete {
+                onComplete(data)
+            }
+        }
+        
         waitGroup.leave()
     }
     
@@ -26,6 +36,16 @@ public class APIResponse<T: Codable> {
         Logger.Error(message: "API error \(error)")
         self.error = error
         waitGroup.leave()
+    }
+    
+    func onComplete(callback: @escaping (_ : T?) -> Void) -> Self {
+        completeLock.sync {
+            self.complete = callback
+            if let dataComplete = data {
+                callback(dataComplete)
+            }
+        }
+        return self
     }
     
     public func await(timeout: DispatchTime) -> T? {

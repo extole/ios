@@ -34,22 +34,25 @@ extension Program {
     public func pollCustomShare(accessToken: ConsumerToken, pollingResponse: PollingIdResponse)
         -> APIResponse<CustomSharePollingResult> {
             let response = APIResponse<CustomSharePollingResult>.init()
-            
             let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
-            var polingResult:CustomSharePollingResult? = dataTask(url: url, accessToken: accessToken.access_token, postData: nil)
-                .await(timeout: DispatchTime.now() + .seconds(5))
-            var polingStatus = polingResult?.status
-            for _ in 0..<10 {
-                if polingStatus == "SUCCEEDED" {
-                    response.setData(data: polingResult!)
-                    return response;
+            
+            func poll(retries: UInt = 10) {
+                dataTask(url: url, accessToken: accessToken.access_token, postData: nil)
+                    .onComplete { (pollingResult: CustomSharePollingResult?) in
+                        let polingStatus = pollingResult?.status
+                        if polingStatus == "SUCCEEDED" {
+                            response.setData(data: pollingResult!)
+                        } else if retries > 0 {
+                            sleep(1)
+                            poll(retries: retries - 1)
+                        } else {
+                            response.setError(error: ExtoleClientError.pollingTimeout)
+                        }
                 }
-                sleep(1)
-                polingResult = dataTask(url: url, accessToken: accessToken.access_token, postData: nil)
-                    .await(timeout: DispatchTime.now() + .seconds(5))
-                polingStatus = polingResult?.status
             }
-            response.setError(error: ExtoleClientError.pollingTimeout)
+            
+            poll(retries: 10)
+            
             return response
     }
 

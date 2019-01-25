@@ -15,11 +15,15 @@ public struct PollingIdResponse : Codable {
 public struct ShareablePollingResult : Codable {
     let polling_id : String
     let status : String
-    let code : String
+    let code : String?
 }
 
 public struct MyShareable : Codable {
-    //let code: String
+    init(label: String, code:String? = nil) {
+        self.label = label
+        self.code = code
+    }
+    let code: String?
     let label: String
 }
 

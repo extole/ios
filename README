@@ -1,4 +1,5 @@
 xcode-select -switch /Applications/Xcode.app/Contents/Developer/
 
 
+gem xcpretty
 ./runTest.sh

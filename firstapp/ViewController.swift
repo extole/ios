@@ -12,11 +12,39 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var accessTokenLabel: UILabel!
     
+    @IBOutlet weak var emailText: UITextField!
+    
+    @IBOutlet weak var firstNameTesxt: UITextField!
+    
+    @IBOutlet weak var lastNameText: UITextField!
+    
+    @IBAction func shareClick(_ sender: UIButton) {
+    }
+    
+    @IBAction func profileChanged(_ sender: UITextField) {
+        let updatedProfile = MyProfile.init(email: emailText.text,
+                                            first_name: firstNameTesxt.text,
+                                            last_name: lastNameText.text,
+                                            partner_user_id: nil)
+        program.updateProfile(accessToken: accessToken!, profile: updatedProfile).onComplete(callback: {_ in Logger.Info(message: "Updated \(updatedProfile)")
+        })
+    }
+    
     let program = Program.init(baseUrl: "https://roman-tibin-test.extole.com")
     
-    func setLabelText(text: String) {
+    var accessToken: ConsumerToken?
+    
+    func showAccessToken(text: String) {
         DispatchQueue.main.async {
             self.accessTokenLabel.text = text
+        }
+    }
+    
+    func showProfile(profile: MyProfile) {
+        DispatchQueue.main.async {
+            self.emailText.text = profile.email
+            self.firstNameTesxt.text = profile.first_name
+            self.lastNameText.text = profile.last_name
         }
     }
     
@@ -24,17 +52,20 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         let dispatchQueue = DispatchQueue(label : "Extole", qos:.background)
         dispatchQueue.async {
-            self.setLabelText(text: "Fetching access Token...")
-            let accessToken = self.program.getToken().await(timeout: DispatchTime.now() + .seconds(10))
-            if let accessToken = accessToken {
-                self.setLabelText(text: "Token: \(accessToken.access_token)")
+            self.showAccessToken(text: "Fetching access Token...")
+            self.accessToken = self.program.getToken().await(timeout: DispatchTime.now() + .seconds(10))
+            if let accessToken = self.accessToken {
+                self.showAccessToken(text: "Token: \(accessToken.access_token)")
+                let profile = self.program.getProfile(accessToken: accessToken)
+                    .await(timeout: DispatchTime.now() + .seconds(10))
+                if let profile = profile {
+                    self.showProfile(profile: profile)
+                }
             } else {
-                self.setLabelText(text: "No Token")
+                self.showAccessToken(text: "No Token")
             }
         }
-        
     }
-
-
+    
 }
 

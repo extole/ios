@@ -9,10 +9,10 @@
 import Foundation
 
 public struct MyProfile : Codable {
-    let email: String
-    let first_name: String
-    let last_name: String
-    let partner_user_id: String
+    let email: String?
+    let first_name: String?
+    let last_name: String?
+    let partner_user_id: String?
 }
 
 public struct SuccessResponse : Codable {

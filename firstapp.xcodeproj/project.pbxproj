@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4918EA8621E8DEAF00CE4C78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918EA8521E8DEAF00CE4C78 /* AppDelegate.swift */; };
-		4918EA8821E8DEAF00CE4C78 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918EA8721E8DEAF00CE4C78 /* ViewController.swift */; };
+		4918EA8821E8DEAF00CE4C78 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918EA8721E8DEAF00CE4C78 /* ProfileViewController.swift */; };
 		4918EA8B21E8DEAF00CE4C78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4918EA8921E8DEAF00CE4C78 /* Main.storyboard */; };
 		4918EA8D21E8DEB000CE4C78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4918EA8C21E8DEB000CE4C78 /* Assets.xcassets */; };
 		4918EA9021E8DEB000CE4C78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4918EA8E21E8DEB000CE4C78 /* LaunchScreen.storyboard */; };
@@ -18,6 +18,7 @@
 		4988D86121FB22E4005CD183 /* TokenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4988D86021FB22E4005CD183 /* TokenTest.swift */; };
 		4988D86321FB2397005CD183 /* ProfileTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4988D86221FB2397005CD183 /* ProfileTest.swift */; };
 		4988D86521FB2427005CD183 /* ShareTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4988D86421FB2427005CD183 /* ShareTest.swift */; };
+		498FE16821FB670300052D9F /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498FE16721FB670300052D9F /* ShareViewController.swift */; };
 		49B52C4221F0A39F00AC2DFC /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B52C4121F0A39F00AC2DFC /* Logger.swift */; };
 		49D6DF3F21F9FF240036B7DD /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D6DF3E21F9FF240036B7DD /* Network.swift */; };
 		49D6DF4121F9FFC20036B7DD /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D6DF4021F9FFC20036B7DD /* ApiResponse.swift */; };
@@ -50,7 +51,7 @@
 /* Begin PBXFileReference section */
 		4918EA8221E8DEAF00CE4C78 /* firstapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = firstapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4918EA8521E8DEAF00CE4C78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4918EA8721E8DEAF00CE4C78 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4918EA8721E8DEAF00CE4C78 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		4918EA8A21E8DEAF00CE4C78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4918EA8C21E8DEB000CE4C78 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4918EA8F21E8DEB000CE4C78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -65,6 +66,7 @@
 		4988D86021FB22E4005CD183 /* TokenTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTest.swift; sourceTree = "<group>"; };
 		4988D86221FB2397005CD183 /* ProfileTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTest.swift; sourceTree = "<group>"; };
 		4988D86421FB2427005CD183 /* ShareTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTest.swift; sourceTree = "<group>"; };
+		498FE16721FB670300052D9F /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		49B52C4121F0A39F00AC2DFC /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		49D6DF3E21F9FF240036B7DD /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		49D6DF4021F9FFC20036B7DD /* ApiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
@@ -127,12 +129,13 @@
 			isa = PBXGroup;
 			children = (
 				4918EA8521E8DEAF00CE4C78 /* AppDelegate.swift */,
-				4918EA8721E8DEAF00CE4C78 /* ViewController.swift */,
+				4918EA8721E8DEAF00CE4C78 /* ProfileViewController.swift */,
 				4918EA8921E8DEAF00CE4C78 /* Main.storyboard */,
 				4918EA8C21E8DEB000CE4C78 /* Assets.xcassets */,
 				4918EA8E21E8DEB000CE4C78 /* LaunchScreen.storyboard */,
 				4918EA9121E8DEB000CE4C78 /* Info.plist */,
 				49B52C4121F0A39F00AC2DFC /* Logger.swift */,
+				498FE16721FB670300052D9F /* ShareViewController.swift */,
 			);
 			path = firstapp;
 			sourceTree = "<group>";
@@ -309,7 +312,8 @@
 				49D6DF4721FA00BE0036B7DD /* Token.swift in Sources */,
 				49D6DF3F21F9FF240036B7DD /* Network.swift in Sources */,
 				49D6DF4521FA00800036B7DD /* Profile.swift in Sources */,
-				4918EA8821E8DEAF00CE4C78 /* ViewController.swift in Sources */,
+				4918EA8821E8DEAF00CE4C78 /* ProfileViewController.swift in Sources */,
+				498FE16821FB670300052D9F /* ShareViewController.swift in Sources */,
 				49D6DF4121F9FFC20036B7DD /* ApiResponse.swift in Sources */,
 				49D6DF4F21FA08670036B7DD /* Zone.swift in Sources */,
 				49B52C4221F0A39F00AC2DFC /* Logger.swift in Sources */,

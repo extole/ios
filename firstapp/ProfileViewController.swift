@@ -8,9 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ProfileViewController: UIViewController {
 
     @IBOutlet weak var accessTokenLabel: UILabel!
+    
+    @IBOutlet weak var nextButton: UIButton!
     
     @IBOutlet weak var emailText: UITextField!
     
@@ -27,6 +29,9 @@ class ViewController: UIViewController {
                                             last_name: lastNameText.text,
                                             partner_user_id: nil)
         program.updateProfile(accessToken: accessToken!, profile: updatedProfile).onComplete(callback: {_ in Logger.Info(message: "Updated \(updatedProfile)")
+            DispatchQueue.main.async {
+                self.nextButton.isEnabled = true
+            }
         })
     }
     
@@ -50,6 +55,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        nextButton.isEnabled = false
         let dispatchQueue = DispatchQueue(label : "Extole", qos:.background)
         dispatchQueue.async {
             self.showAccessToken(text: "Fetching access Token...")

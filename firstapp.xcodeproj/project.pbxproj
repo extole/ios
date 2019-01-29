@@ -14,6 +14,7 @@
 		4918EA9021E8DEB000CE4C78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4918EA8E21E8DEB000CE4C78 /* LaunchScreen.storyboard */; };
 		4918EA9B21E8DEB100CE4C78 /* ZoneTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918EA9A21E8DEB100CE4C78 /* ZoneTest.swift */; };
 		4918EAA621E8DEB100CE4C78 /* firstappUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4918EAA521E8DEB100CE4C78 /* firstappUITests.swift */; };
+		497EE1592200802400C070D1 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497EE1582200802400C070D1 /* Events.swift */; };
 		4988D85F21FB2140005CD183 /* ShareableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4988D85E21FB2140005CD183 /* ShareableTest.swift */; };
 		4988D86121FB22E4005CD183 /* TokenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4988D86021FB22E4005CD183 /* TokenTest.swift */; };
 		4988D86321FB2397005CD183 /* ProfileTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4988D86221FB2397005CD183 /* ProfileTest.swift */; };
@@ -63,6 +64,7 @@
 		4918EAA121E8DEB100CE4C78 /* firstappUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = firstappUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4918EAA521E8DEB100CE4C78 /* firstappUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = firstappUITests.swift; sourceTree = "<group>"; };
 		4918EAA721E8DEB100CE4C78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		497EE1582200802400C070D1 /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		4988D85E21FB2140005CD183 /* ShareableTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareableTest.swift; sourceTree = "<group>"; };
 		4988D86021FB22E4005CD183 /* TokenTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTest.swift; sourceTree = "<group>"; };
 		4988D86221FB2397005CD183 /* ProfileTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTest.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				498FE16A21FB6CE500052D9F /* ExtoleApp.swift */,
+				497EE1582200802400C070D1 /* Events.swift */,
 			);
 			path = ExtoleModel;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 				49D6DF4F21FA08670036B7DD /* Zone.swift in Sources */,
 				49B52C4221F0A39F00AC2DFC /* Logger.swift in Sources */,
 				49D6DF4D21FA04B60036B7DD /* Program.swift in Sources */,
+				497EE1592200802400C070D1 /* Events.swift in Sources */,
 				49D6DF4B21FA02A20036B7DD /* Share.swift in Sources */,
 				498FE16B21FB6CE500052D9F /* ExtoleApp.swift in Sources */,
 				49D6DF4321FA001A0036B7DD /* ErrorData.swift in Sources */,

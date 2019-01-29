@@ -20,7 +20,6 @@ extension Program {
         Logger.Info(message: "dataTask with \(url)")
         let newSession = URLSession.init(configuration: URLSessionConfiguration.ephemeral)
         var urlRequest = URLRequest(url: url)
-        //urlRequest.addValue("curl/7.54.0", forHTTPHeaderField: "User-Agent")
         urlRequest.addValue("*/*", forHTTPHeaderField: "Accept")
         if let existingToken = accessToken {
             Logger.Info(message: "using accessToken \(existingToken)")

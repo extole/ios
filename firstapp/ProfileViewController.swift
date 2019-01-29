@@ -20,6 +20,8 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var lastNameText: UITextField!
     
+    @IBOutlet weak var stateLabel: UILabel!
+    
     @IBAction func shareClick(_ sender: UIButton) {
     }
     
@@ -28,14 +30,8 @@ class ProfileViewController: UIViewController {
                                             first_name: firstNameTesxt.text,
                                             last_name: lastNameText.text,
                                             partner_user_id: nil)
-        program.updateProfile(accessToken: accessToken!, profile: updatedProfile).onComplete(callback: {_ in Logger.Info(message: "Updated \(updatedProfile)")
-            DispatchQueue.main.async {
-                self.nextButton.isEnabled = true
-            }
-        })
+        extoleApp.updateProfile(profile: updatedProfile)
     }
-    
-    let program = Program.init(baseUrl: "https://roman-tibin-test.extole.com")
     
     var extoleApp = ExtoleApp.default
     
@@ -47,43 +43,36 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    func showProfile(profile: MyProfile) {
+    @objc private func stateChanged(_ notification: Notification) {
+        guard let extoleApp = notification.object as? ExtoleApp else {
+            return
+        }
+        showState(app: extoleApp)
+    }
+    
+    func showState(app: ExtoleApp) {
         DispatchQueue.main.async {
-            self.emailText.text = profile.email
-            self.firstNameTesxt.text = profile.first_name
-            self.lastNameText.text = profile.last_name
-            
-            if let _ = profile.email {
-                self.nextButton.isEnabled = true
+            self.stateLabel.text = "State \(app.state)"
+            self.accessTokenLabel.text = app.savedToken
+            if let profile = app.profile {
+                self.emailText.text = profile.email
+                self.firstNameTesxt.text = profile.first_name
+                self.lastNameText.text = profile.last_name
+                
+                if let _ = profile.email {
+                    self.nextButton.isEnabled = true
+                }
+            } else {
+                self.nextButton.isEnabled = false
             }
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        nextButton.isEnabled = false
-        let dispatchQueue = DispatchQueue(label : "Extole", qos:.background)
-        dispatchQueue.async {
-            self.showAccessToken(text: "Fetching access Token...")
-            if let savedToken = self.extoleApp.savedToken {
-                self.accessToken = self.program.getToken(token: savedToken)
-                    .await(timeout: DispatchTime.now() + .seconds(10))
-            } else {
-                self.accessToken = self.program.getToken()
-                    .await(timeout: DispatchTime.now() + .seconds(10))
-            }
-            if let accessToken = self.accessToken {
-                self.showAccessToken(text: "Token: \(accessToken.access_token)")
-                self.extoleApp.savedToken = accessToken.access_token
-                let profile = self.program.getProfile(accessToken: accessToken)
-                    .await(timeout: DispatchTime.now() + .seconds(10))
-                if let profile = profile {
-                    self.showProfile(profile: profile)
-                }
-            } else {
-                self.showAccessToken(text: "No Token")
-            }
-        }
+        extoleApp.notification.addObserver(self, selector: #selector(stateChanged),
+                                                   name: NSNotification.Name.state, object: nil)
+        showState(app: extoleApp)
     }
     
 }

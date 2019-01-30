@@ -92,6 +92,22 @@ class ExtoleApp {
         }
     }
     
+    func signalEmailShare() {
+        Logger.Info(message: "shared via system-email")
+    }
+    
+    func signalMessageShare() {
+        Logger.Info(message: "shared via system-message")
+    }
+    
+    func signalFacebookShare() {
+        Logger.Info(message: "shared via system-facebook")
+    }
+    
+    func signalShare(channel: String) {
+        Logger.Info(message: "shared via \(channel)")
+    }
+    
     func share(recepient: String, message: String) {
         dispatchQueue.async {
             let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: "EMAIL", message: message, recipient_email: recepient, data: [:])

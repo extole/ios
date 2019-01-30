@@ -29,16 +29,37 @@ class ShareViewController: UIViewController {
         if let recepient = recepientText.text, !recepient.isEmpty {
             extoleApp.share(recepient: recepient, message: message!)
         } else {
-            // set up activity view controller
-            let textToShare = [ self.extoleApp.selectedShareable?.link  ]
+            let shareItem = ShareItem.init(subject: "Check this out",
+                                           message: messageText.text!,
+                                           shortMessage: shareLink.text!)
+            let textToShare = [ shareItem  ]
             let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
             
             // exclude some activity types from the list (optional)
-            activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
+            activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop ]
             
             // present the view controller
             self.present(activityViewController, animated: true, completion: nil)
+            activityViewController.completionWithItemsHandler =  {(activityType : UIActivity.ActivityType?, completed : Bool, returnedItems: [Any]?, activityError : Error?) in
+                if let completedActivity = activityType, completed {
+                    switch(completedActivity) {
+                        case UIActivity.ActivityType.mail : do {
+                           self.extoleApp.signalEmailShare()
+                        }
+                        case UIActivity.ActivityType.message : do {
+                            self.extoleApp.signalMessageShare()
+                        }
+                        case UIActivity.ActivityType.postToFacebook : do {
+                            self.extoleApp.signalFacebookShare()
+                        }
+                        default : do {
+                            self.extoleApp.signalShare(channel: completedActivity.rawValue)
+                        }
+                    }
+                    
+                }
+            }
 
         }
     }
@@ -74,5 +95,30 @@ class ShareViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
-
+    
+    @objc class ShareItem : NSObject, UIActivityItemSource {
+        let message: String
+        let shortMessage: String
+        let subject: String
+        init (subject: String, message: String, shortMessage: String) {
+            self.subject = subject
+            self.message = message
+            self.shortMessage = shortMessage
+        }
+        func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+            return shortMessage
+        }
+        
+        func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+            switch activityType {
+                case UIActivity.ActivityType.message: return shortMessage
+                default: return message
+            }
+            return message
+        }
+        
+        func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
+            return subject
+        }
+    }
 }

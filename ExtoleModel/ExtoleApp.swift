@@ -53,14 +53,20 @@ class ExtoleApp {
     
     func applicationDidBecomeActive() {
         Logger.Info(message: "application active")
-        if let existingToken = self.savedToken {
-            dispatchQueue.async {
+        dispatchQueue.async {
+            if let existingToken = self.savedToken {
                 self.program.getToken(token: existingToken)
                     .onComplete(callback: { (token : ConsumerToken?) in
                         if let verifiedToken = token {
                             self.onVerifiedToken(verifiedToken: verifiedToken)
                         }
-                    })
+                })
+            } else {
+                self.program.getToken().onComplete(callback: { (token : ConsumerToken?) in
+                    if let newToken = token {
+                        self.onVerifiedToken(verifiedToken: newToken)
+                    }
+                })
             }
         }
     }
@@ -81,8 +87,7 @@ class ExtoleApp {
         dispatchQueue.async {
             self.state = State.Busy
             self.program.updateProfile(accessToken: self.accessToken!, profile: profile).onComplete { (_: SuccessResponse?) in
-                self.profile = profile
-                self.state = State.Identified
+                self.onProfileIdentified(identified: profile)
             }
         }
     }

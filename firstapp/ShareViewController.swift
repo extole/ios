@@ -70,5 +70,10 @@ class ShareViewController: UIViewController {
         }
         showState(app: extoleApp)
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        recepientText.resignFirstResponder()
+        messageText.resignFirstResponder()
+    }
 
 }

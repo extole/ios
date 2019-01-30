@@ -33,6 +33,12 @@ class ProfileViewController: UIViewController {
         extoleApp.updateProfile(profile: updatedProfile)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        emailText.resignFirstResponder()
+        firstNameTesxt.resignFirstResponder()
+        lastNameText.resignFirstResponder()
+    }
+    
     var extoleApp = ExtoleApp.default
     
     func showAccessToken(text: String) {

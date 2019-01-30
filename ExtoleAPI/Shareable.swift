@@ -19,12 +19,14 @@ public struct ShareablePollingResult : Codable {
 }
 
 public struct MyShareable : Codable {
-    init(label: String, code:String? = nil) {
+    init(label: String, code:String? = nil, key:String? = nil) {
         self.label = label
         self.code = code
+        self.key = key
     }
+    let key: String?
     let code: String?
-    let label: String
+    let label: String?
 }
 
 extension Program {

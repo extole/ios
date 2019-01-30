@@ -22,9 +22,6 @@ class ShareableTest: XCTestCase {
         XCTAssert(!accessToken!.access_token.isEmpty)
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
 
     func testCreateWithCode() {
         let newShareable = MyShareable.init(label: "refer-a-friend")

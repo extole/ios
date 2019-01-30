@@ -35,8 +35,6 @@ class ProfileViewController: UIViewController {
     
     var extoleApp = ExtoleApp.default
     
-    var accessToken: ConsumerToken?
-    
     func showAccessToken(text: String) {
         DispatchQueue.main.async {
             self.accessTokenLabel.text = text
@@ -54,11 +52,11 @@ class ProfileViewController: UIViewController {
         DispatchQueue.main.async {
             self.stateLabel.text = "State \(app.state)"
             self.accessTokenLabel.text = app.savedToken
+            
             if let profile = app.profile {
                 self.emailText.text = profile.email
                 self.firstNameTesxt.text = profile.first_name
                 self.lastNameText.text = profile.last_name
-                
                 if let _ = profile.email {
                     self.nextButton.isEnabled = true
                 }

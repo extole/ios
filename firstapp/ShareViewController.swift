@@ -72,8 +72,7 @@ class ShareViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        recepientText.resignFirstResponder()
-        messageText.resignFirstResponder()
+        view.endEditing(true)
     }
 
 }

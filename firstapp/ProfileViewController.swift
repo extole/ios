@@ -34,9 +34,7 @@ class ProfileViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        emailText.resignFirstResponder()
-        firstNameTesxt.resignFirstResponder()
-        lastNameText.resignFirstResponder()
+        view.endEditing(true)
     }
     
     var extoleApp = ExtoleApp.default

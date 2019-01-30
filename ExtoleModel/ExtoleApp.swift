@@ -12,6 +12,7 @@ class ExtoleApp {
     
     enum State {
         case Init
+        case Inactive
         case Online
         case Identified
         case ReadyToShare
@@ -125,5 +126,6 @@ class ExtoleApp {
     
     func applicationWillResignActive() {
         Logger.Info(message: "application resign active")
+        self.state = .Inactive
     }
 }

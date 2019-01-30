@@ -57,11 +57,14 @@ class ProfileViewController: UIViewController {
                 self.emailText.text = profile.email
                 self.firstNameTesxt.text = profile.first_name
                 self.lastNameText.text = profile.last_name
-                if let _ = profile.email {
+            }
+            switch (app.state) {
+                case .ReadyToShare : do {
                     self.nextButton.isEnabled = true
                 }
-            } else {
-                self.nextButton.isEnabled = false
+                default : do {
+                    self.nextButton.isEnabled = false
+                }
             }
         }
     }

@@ -19,12 +19,28 @@ class ShareViewController: UIViewController {
     
     @IBOutlet weak var shareButton: UIButton!
     
+    @IBOutlet weak var shareLink: UITextField!
+    
     var extoleApp = ExtoleApp.default
     
     @IBAction func doShare(_ sender: UIButton) {
-        let recepient = recepientText.text
+       
         let message = messageText.text
-        extoleApp.share(recepient: recepient!, message: message!)
+        if let recepient = recepientText.text, !recepient.isEmpty {
+            extoleApp.share(recepient: recepient, message: message!)
+        } else {
+            // set up activity view controller
+            let textToShare = [ self.extoleApp.selectedShareable?.link  ]
+            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+            
+            // exclude some activity types from the list (optional)
+            activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
+            
+            // present the view controller
+            self.present(activityViewController, animated: true, completion: nil)
+
+        }
     }
     
     override func viewDidLoad() {
@@ -37,6 +53,14 @@ class ShareViewController: UIViewController {
     func showState(app: ExtoleApp) {
         DispatchQueue.main.async {
             self.stateLabel.text = "State \(app.state)"
+            switch app.state {
+                case .ReadyToShare : do {
+                    self.shareLink.text = app.selectedShareable?.link
+                }
+                default: do {
+                    self.shareLink.isEnabled = false
+                }
+            }
         }
     }
     

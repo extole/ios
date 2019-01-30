@@ -23,10 +23,12 @@ public struct MyShareable : Codable {
         self.label = label
         self.code = code
         self.key = key
+        self.link = nil
     }
     let key: String?
     let code: String?
     let label: String?
+    let link: String?
 }
 
 extension Program {

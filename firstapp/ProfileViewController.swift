@@ -10,6 +10,8 @@ import UIKit
 
 class ProfileViewController: UIViewController {
 
+    var extoleApp: ExtoleApp!
+    
     var stateLabel: UILabel!
     
     var accessTokenLabel: UILabel!
@@ -22,9 +24,11 @@ class ProfileViewController: UIViewController {
     
     var nextButton: UIButton!
     
+    let shareController = ShareViewController()
+    
     @objc func shareClick(_ sender: UIButton) {
-        let shareController = ShareViewController()
-        present(shareController, animated: true, completion: nil )
+        shareController.extoleApp = self.extoleApp
+        self.navigationController?.pushViewController(shareController, animated: true)
     }
     
     @IBAction func profileChanged(_ sender: UITextField) {
@@ -39,7 +43,7 @@ class ProfileViewController: UIViewController {
         view.endEditing(true)
     }
     
-    var extoleApp = ExtoleApp.default
+    
     
     func showAccessToken(text: String) {
         DispatchQueue.main.async {
@@ -103,13 +107,16 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationItem.title = "Advocate Profile"
+        
         let headerView = UIView()
         self.view.addSubview(headerView)
         
         headerView.backgroundColor = .white
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        headerView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        headerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
         headerView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier :1 ).isActive = true
         headerView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1).isActive = true
         

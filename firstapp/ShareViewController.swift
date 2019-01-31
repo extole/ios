@@ -21,7 +21,7 @@ class ShareViewController: UIViewController {
     
     var shareLink: UITextField!
     
-    var extoleApp = ExtoleApp.default
+    var extoleApp: ExtoleApp!
     
     @objc func doShare(_ sender: UIButton) {
        
@@ -99,13 +99,15 @@ class ShareViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationItem.title = "Share Link"
+        
         let headerView = UIView()
         self.view.addSubview(headerView)
         
         headerView.backgroundColor = .white
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        headerView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        headerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
         headerView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier :1 ).isActive = true
         headerView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1).isActive = true
         
@@ -196,7 +198,6 @@ class ShareViewController: UIViewController {
                 case UIActivity.ActivityType.message: return shortMessage
                 default: return message
             }
-            return message
         }
         
         func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {

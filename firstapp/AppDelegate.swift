@@ -12,12 +12,17 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    let extoleApp = ExtoleApp.default
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
+        
         let homeViewController = ProfileViewController()
-        //homeViewController.view.backgroundColor = UIColor.red
-        window!.rootViewController = homeViewController
+        homeViewController.extoleApp = self.extoleApp
+        
+        let navigationController = UINavigationController(rootViewController: homeViewController)
+        window!.rootViewController = navigationController
         window!.makeKeyAndVisible()
         return true
     }

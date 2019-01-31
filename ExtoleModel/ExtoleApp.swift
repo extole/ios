@@ -13,6 +13,8 @@ class ExtoleApp {
     public enum State {
         case Init
         case Inactive
+        case InvalidToken
+        case ServerError
         case Online
         case Identified
         case ReadyToShare
@@ -77,11 +79,17 @@ class ExtoleApp {
     }
     
     func onTokenInvalid() {
-        
+        self.state = State.InvalidToken
+        self.savedToken = nil
+        self.program.getToken().onComplete(callback: { (token : ConsumerToken?) in
+            if let newToken = token {
+                self.onVerifiedToken(verifiedToken: newToken)
+            }
+        })
     }
     
     func onServerError() {
-        
+        self.state = State.ServerError
     }
     
     func onVerifiedToken(verifiedToken: ConsumerToken) {

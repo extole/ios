@@ -30,14 +30,16 @@ public struct ConsumerToken : Codable {
 
 extension Program {
 
+    func tokenUrl() -> URL {
+        return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
+    }
+    
     public func getToken() -> APIResponse<ConsumerToken> {
-        let url = URL(string: "\(baseUrl)/api/v4/token")!
-        return dataTask(url: url, accessToken: nil, postData: nil)
+        return dataTask(url: tokenUrl(), accessToken: nil, postData: nil)
     }
     
     public func verifyToken(token: String, callback : @escaping (_: ConsumerToken?, _: VerifyTokenError?) -> Void) {
-        
-        let url = URL(string: "\(baseUrl)/api/v4/token/\(token)")!
+        let url = URL.init(string: token, relativeTo: tokenUrl())!
         let request = newRequest(url: url)
        
         processRequest(with: request) { data, error in

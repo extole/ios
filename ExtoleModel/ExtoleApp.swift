@@ -19,7 +19,7 @@ class ExtoleApp {
         case Busy
     }
     
-    private let program = Program.init(baseUrl: "https://roman-tibin-test.extole.com")
+    private let program = Program.init(baseUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
     
     private let label = "refer-a-friend"
     

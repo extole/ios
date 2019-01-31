@@ -12,7 +12,7 @@ import XCTest
 
 class ProfileTest: XCTestCase {
 
-    let program = Program(baseUrl: "https://roman-tibin-test.extole.com")
+    let program = Program(baseUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
     var accessToken: ConsumerToken?
     
     override func setUp() {

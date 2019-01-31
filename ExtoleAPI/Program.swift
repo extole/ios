@@ -9,5 +9,5 @@
 import Foundation
 
 struct Program {
-    let baseUrl: String
+    let baseUrl: URL
 }

@@ -12,7 +12,7 @@ import XCTest
 
 class ZoneTest: XCTestCase {
 
-    let program = Program(baseUrl: "https://roman-tibin-test.extole.com")
+    let program = Program(baseUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
 
     func testFetchZone() {
         let shareLinkResponse = program.fetchZone(accessToken: nil,

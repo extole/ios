@@ -20,6 +20,37 @@ func newSession() -> URLSession {
 func newRequest(url: URL) -> URLRequest {
     return URLRequest(url: url)
 }
+
+func processRequest(with request: URLRequest,
+                    callback:  @escaping (_: Data?, _: ExtoleApiError?) -> Void) {
+    let session = newSession()
+    let task = session.dataTask(with: request) { data, response, error in
+        if let serverError = error {
+            callback(nil, ExtoleApiError.serverError(error: serverError))
+        }
+        guard let httpResponse = response as? HTTPURLResponse,
+            (200...299).contains(httpResponse.statusCode) else {
+                if let responseData = data {
+                    let decodedError: ErrorData? = tryDecode(data: responseData)
+                    if let decodedError = decodedError {
+                        callback(nil, .genericError(errorData: decodedError))
+                    } else {
+                        callback(nil, .decodingError)
+                    }
+                } else {
+                    callback(nil, .noContent)
+                }
+                return
+        }
+        if let responseData = data {
+            Logger.Debug(message: String(data: responseData, encoding: String.Encoding.utf8)!)
+            callback(responseData, nil)
+        } else {
+            callback(nil, .noContent)
+        }
+    }
+    task.resume()
+}
     
 func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) -> APIResponse<T> {
     let apiResponse = APIResponse<T>.init()

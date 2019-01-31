@@ -57,7 +57,7 @@ class ExtoleApp {
         Logger.Info(message: "application active")
         dispatchQueue.async {
             if let existingToken = self.savedToken {
-                self.program.verifyToken(token: existingToken) { token, error in
+                self.program.getToken(token: existingToken) { token, error in
                     if let verifiedToken = token {
                         self.onVerifiedToken(verifiedToken: verifiedToken)
                     }
@@ -69,11 +69,11 @@ class ExtoleApp {
                     }
                 }
             } else {
-                self.program.getToken().onComplete(callback: { (token : ConsumerToken?) in
+                self.program.getToken() { (token, error) in
                     if let newToken = token {
                         self.onVerifiedToken(verifiedToken: newToken)
                     }
-                })
+                }
             }
         }
     }
@@ -81,11 +81,11 @@ class ExtoleApp {
     func onTokenInvalid() {
         self.state = State.InvalidToken
         self.savedToken = nil
-        self.program.getToken().onComplete(callback: { (token : ConsumerToken?) in
+        self.program.getToken(){ token, error in
             if let newToken = token {
                 self.onVerifiedToken(verifiedToken: newToken)
             }
-        })
+        }
     }
     
     func onServerError() {
@@ -98,7 +98,7 @@ class ExtoleApp {
         self.state = State.Online
         self.program.getProfile(accessToken: verifiedToken)
             .onComplete { (profile: MyProfile?) in
-                if let identified = profile {
+                if let identified = profile, !(identified.email?.isEmpty ?? true) {
                     self.onProfileIdentified(identified: identified)
                 }
         }
@@ -108,7 +108,9 @@ class ExtoleApp {
         dispatchQueue.async {
             self.state = State.Busy
             self.program.updateProfile(accessToken: self.accessToken!, profile: profile).onComplete { (_: SuccessResponse?) in
-                self.onProfileIdentified(identified: profile)
+                if !(profile.email?.isEmpty ?? true) {
+                    self.onProfileIdentified(identified: profile)
+                }
             }
         }
     }

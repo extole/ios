@@ -17,10 +17,14 @@ class ShareTest: XCTestCase {
     var advocateCode: String?
     
     override func setUp() {
-        let tokenResponse = program.getToken().await(timeout: DispatchTime.now() + .seconds(10))
-        self.accessToken = tokenResponse
-        XCTAssert(accessToken != nil)
-        XCTAssert(!accessToken!.access_token.isEmpty)
+        let promise = expectation(description: "invalid token response")
+        program.getToken() { token, error in
+            XCTAssert(token != nil)
+            XCTAssert(!token!.access_token.isEmpty)
+            self.accessToken = token
+            promise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
         
         let newShareable = MyShareable.init(label: "refer-a-friend")
         let shareableResponse = program.createShareable(accessToken: accessToken!,

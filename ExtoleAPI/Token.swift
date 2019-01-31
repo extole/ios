@@ -16,7 +16,7 @@ enum ExtoleApiError {
     case genericError(errorData: ErrorData)
 }
 
-enum VerifyTokenError : Error {
+enum GetTokenError : Error {
     case invalidProtocol(error: ExtoleApiError)
     case invalidAccessToken
 }
@@ -33,39 +33,41 @@ extension Program {
     func tokenUrl() -> URL {
         return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
     }
-    
-    public func getToken() -> APIResponse<ConsumerToken> {
-        return dataTask(url: tokenUrl(), accessToken: nil, postData: nil)
-    }
-    
-    public func verifyToken(token: String, callback : @escaping (_: ConsumerToken?, _: VerifyTokenError?) -> Void) {
-        let url = URL.init(string: token, relativeTo: tokenUrl())!
-        let request = newRequest(url: url)
-       
+
+    private func procesGetToken(with request: URLRequest, responseHandler: @escaping (_: ConsumerToken?, _: GetTokenError?) ->Void) {
         processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
-                    case .genericError(let errorData) : do {
-                        switch(errorData.code) {
-                            case "invalid_access_token": callback(nil, .invalidAccessToken)
-                            default:  callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
-                        }
+                case .genericError(let errorData) : do {
+                    switch(errorData.code) {
+                    case "invalid_access_token": responseHandler(nil, .invalidAccessToken)
+                    default:  responseHandler(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
                     }
-                    default : callback(nil, .invalidProtocol(error: apiError))
+                    }
+                default : responseHandler(nil, .invalidProtocol(error: apiError))
                 }
                 return
             }
             if let data = data {
                 let decodedToken : ConsumerToken? = tryDecode(data: data)
                 if let token = decodedToken {
-                    callback(token, nil)
+                    responseHandler(token, nil)
                 } else {
-                    callback(nil, .invalidProtocol(error: .decodingError))
+                    responseHandler(nil, .invalidProtocol(error: .decodingError))
                 }
             }
-            
         }
-       
+    }
+    
+    public func getToken(callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
+        let request = newRequest(url: tokenUrl())
+        procesGetToken(with: request, responseHandler: callback)
+    }
+    
+    public func getToken(token: String, callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
+        let url = URL.init(string: token, relativeTo: tokenUrl())!
+        let request = newRequest(url: url)
+        procesGetToken(with: request, responseHandler: callback)
     }
 }
 

@@ -16,17 +16,17 @@ class ProfileTest: XCTestCase {
     var accessToken: ConsumerToken?
     
     override func setUp() {
-        let tokenResponse = program.getToken().await(timeout: DispatchTime.now() + .seconds(10))
-        self.accessToken = tokenResponse
-        XCTAssert(accessToken != nil)
-        XCTAssert(!accessToken!.access_token.isEmpty)
+        let promise = expectation(description: "invalid token response")
+        program.getToken() { token, error in
+            XCTAssert(token != nil)
+            XCTAssert(!token!.access_token.isEmpty)
+            self.accessToken = token
+            promise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
     }
 
     func testProfile() {
-        let tokenResponse = program.getToken()
-        let accessToken = tokenResponse.await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssert(accessToken != nil)
-        XCTAssert(!accessToken!.access_token.isEmpty)
         let myProfile = MyProfile(email: "testprofile@extole.com",
                                   first_name: "Test",
                                   last_name: "Profile",

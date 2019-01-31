@@ -115,7 +115,7 @@ class ExtoleApp {
             }
         }
     }
-    
+
     func signalEmailShare() {
         os_log("shared via system-email", log: Logger.AppLog, type: .info)
     }

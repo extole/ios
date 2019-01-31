@@ -20,5 +20,20 @@ class TokenTest: XCTestCase {
         XCTAssert(accessToken != nil)
         XCTAssert(!accessToken!.access_token.isEmpty)
     }
+    
+    func testInvalidToken() {
+        let promise = expectation(description: "invalid token response")
+        program.verifyToken(token: "invalid") { token, error in
+            if let verifyTokenError = error {
+                switch(verifyTokenError) {
+                    case .invalidAccessToken : do {
+                        promise.fulfill()
+                    }
+                    default : XCTFail("Unexpected error: \(verifyTokenError)")
+                }
+            }
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
 
 }

@@ -10,11 +10,12 @@ import Foundation
 
 public class APIResponse<T: Codable> {
     var data: T?
-    var error: Error?
+    var error: ExtoleError?
     let waitGroup : DispatchGroup
     
     let completeLock = DispatchQueue(label: "com.extole.APIResponse")
     var complete: ((_ : T?) -> Void)?
+    var errorHandler: ((_ : ExtoleError) -> Void)?
     
     init() {
         waitGroup = DispatchGroup.init()
@@ -32,9 +33,14 @@ public class APIResponse<T: Codable> {
         waitGroup.leave()
     }
     
-    func setError(error: Error) -> Void{
+    func setError(error: ExtoleError) -> Void{
         Logger.Error(message: "API error \(error)")
         self.error = error
+        completeLock.sync {
+            if let onError = errorHandler {
+                onError(error)
+            }
+        }
         waitGroup.leave()
     }
     
@@ -43,6 +49,16 @@ public class APIResponse<T: Codable> {
             self.complete = callback
             if let dataComplete = data {
                 callback(dataComplete)
+            }
+        }
+        return self
+    }
+    
+    func onError(errorHandler: @escaping (_ : ExtoleError) -> Void) -> Self {
+        completeLock.sync {
+            self.errorHandler = errorHandler
+            if let existingError = error {
+                errorHandler(existingError)
             }
         }
         return self

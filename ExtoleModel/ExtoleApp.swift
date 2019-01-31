@@ -10,7 +10,7 @@ import Foundation
 
 class ExtoleApp {
     
-    enum State {
+    public enum State {
         case Init
         case Inactive
         case Online
@@ -55,12 +55,17 @@ class ExtoleApp {
         Logger.Info(message: "application active")
         dispatchQueue.async {
             if let existingToken = self.savedToken {
-                self.program.getToken(token: existingToken)
-                    .onComplete(callback: { (token : ConsumerToken?) in
-                        if let verifiedToken = token {
-                            self.onVerifiedToken(verifiedToken: verifiedToken)
+                self.program.verifyToken(token: existingToken) { token, error in
+                    if let verifiedToken = token {
+                        self.onVerifiedToken(verifiedToken: verifiedToken)
+                    }
+                    if let verifyTokenError = error {
+                        switch(verifyTokenError) {
+                            case .invalidAccessToken : self.onTokenInvalid()
+                            default: self.onServerError()
                         }
-                })
+                    }
+                }
             } else {
                 self.program.getToken().onComplete(callback: { (token : ConsumerToken?) in
                     if let newToken = token {
@@ -69,6 +74,14 @@ class ExtoleApp {
                 })
             }
         }
+    }
+    
+    func onTokenInvalid() {
+        
+    }
+    
+    func onServerError() {
+        
     }
     
     func onVerifiedToken(verifiedToken: ConsumerToken) {

@@ -28,7 +28,7 @@ extension Program {
         let task = newSession.dataTask(with: urlRequest) { data, response, error in
             Logger.Debug(message: "dataTask.response with data: \(data), reponse: \(response), error: \(error)")
             if let error = error {
-                apiResponse.setError(error: error)
+                apiResponse.setError(error: ExtoleError.networkError(error: error))
                 return
             }
             guard let httpResponse = response as? HTTPURLResponse,
@@ -36,19 +36,19 @@ extension Program {
                     if let responseData = data {
                         let decodedError: ErrorData? = tryDecode(data: responseData)
                         if let decodedError = decodedError {
-                            apiResponse.setError(error: ExtoleServerError.serverError(errorData: decodedError))
+                            apiResponse.setError(error: ExtoleError.serverError(errorData: decodedError))
                         } else {
-                            apiResponse.setError(error: ExtoleServerError.encodingError)
+                            apiResponse.setError(error: ExtoleError.encodingError)
                         }
                     } else {
-                        apiResponse.setError(error: ExtoleServerError.noContent)
+                        apiResponse.setError(error: ExtoleError.noContent)
                     }
                     return
             }
             if let responseData = data {
                 apiResponse.setData(data: responseData)
             } else {
-                apiResponse.setError(error: ExtoleServerError.noContent)
+                apiResponse.setError(error: ExtoleError.noContent)
             }
             
         }

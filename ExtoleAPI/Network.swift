@@ -12,6 +12,14 @@ func tryDecode<T: Codable>(data: Data) -> T? {
     let decoder = JSONDecoder.init()
     return try? decoder.decode(T.self, from: data)
 }
+
+func newSession() -> URLSession {
+    return URLSession.init(configuration: URLSessionConfiguration.ephemeral)
+}
+
+func newRequest(url: URL) -> URLRequest {
+    return URLRequest(url: url)
+}
     
 func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) -> APIResponse<T> {
     let apiResponse = APIResponse<T>.init()
@@ -30,7 +38,7 @@ func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) ->
     let task = newSession.dataTask(with: urlRequest) { data, response, error in
         Logger.Debug(message: "dataTask.response with data: \(data), reponse: \(response), error: \(error)")
         if let error = error {
-            apiResponse.setError(error: error)
+            apiResponse.setError(error: ExtoleError.networkError(error: error))
             return
         }
         guard let httpResponse = response as? HTTPURLResponse,
@@ -38,12 +46,12 @@ func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) ->
                 if let responseData = data {
                     let decodedError: ErrorData? = tryDecode(data: responseData)
                     if let decodedError = decodedError {
-                        apiResponse.setError(error: ExtoleServerError.serverError(errorData: decodedError))
+                        apiResponse.setError(error: ExtoleError.serverError(errorData: decodedError))
                     } else {
-                        apiResponse.setError(error: ExtoleServerError.encodingError)
+                        apiResponse.setError(error: ExtoleError.encodingError)
                     }
                 } else {
-                    apiResponse.setError(error: ExtoleServerError.noContent)
+                    apiResponse.setError(error: ExtoleError.noContent)
                 }
                 return
         }
@@ -53,10 +61,10 @@ func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) ->
             if let decodedData = decodedData {
                 apiResponse.setData(data: decodedData)
             } else {
-                apiResponse.setError(error: ExtoleServerError.encodingError)
+                apiResponse.setError(error: ExtoleError.encodingError)
             }
         } else {
-            apiResponse.setError(error: ExtoleServerError.noContent)
+            apiResponse.setError(error: ExtoleError.noContent)
         }
         
     }

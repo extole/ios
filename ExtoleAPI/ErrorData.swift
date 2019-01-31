@@ -12,12 +12,10 @@ public struct ErrorData: Codable {
     let code: String
 }
 
-enum ExtoleServerError : Error {
+enum ExtoleError : Error {
     case serverError(errorData: ErrorData)
     case encodingError
+    case networkError(error: Error)
     case noContent
-}
-
-enum ExtoleClientError : Error {
     case pollingTimeout
 }

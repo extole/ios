@@ -46,7 +46,7 @@ extension Program {
                             sleep(1)
                             poll(retries: retries - 1)
                         } else {
-                            response.setError(error: ExtoleClientError.pollingTimeout)
+                            response.setError(error: ExtoleError.pollingTimeout)
                         }
                 }
             }

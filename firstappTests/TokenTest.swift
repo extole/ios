@@ -23,7 +23,7 @@ class TokenTest: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
     }
-    
+
     func testInvalidToken() {
         let promise = expectation(description: "invalid token response")
         program.getToken(token: "invalid") { token, error in

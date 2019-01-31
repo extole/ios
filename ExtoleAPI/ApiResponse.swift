@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 public class APIResponse<T: Codable> {
     var data: T?
@@ -34,7 +35,7 @@ public class APIResponse<T: Codable> {
     }
     
     func setError(error: ExtoleError) -> Void{
-        Logger.Error(message: "API error \(error)")
+        os_log("API error %s", log: Logger.NetworkLog, type: .debug, error.localizedDescription)
         self.error = error
         completeLock.sync {
             if let onError = errorHandler {

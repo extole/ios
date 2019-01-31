@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 extension Program {
     
@@ -17,16 +18,15 @@ extension Program {
     
     func contentTask(url: URL, accessToken: String?) -> APIResponse<Data> {
         let apiResponse = APIResponse<Data>.init()
-        Logger.Info(message: "dataTask with \(url)")
+        os_log("requesting %s", log: Logger.NetworkLog, type: .debug, url.absoluteString)
         let newSession = URLSession.init(configuration: URLSessionConfiguration.ephemeral)
         var urlRequest = URLRequest(url: url)
         urlRequest.addValue("*/*", forHTTPHeaderField: "Accept")
         if let existingToken = accessToken {
-            Logger.Info(message: "using accessToken \(existingToken)")
+            os_log("using accessToken %s", log: Logger.NetworkLog, type: .debug, existingToken)
             urlRequest.addValue(existingToken, forHTTPHeaderField: "Authorization")
         }
         let task = newSession.dataTask(with: urlRequest) { data, response, error in
-            Logger.Debug(message: "dataTask.response with data: \(data), reponse: \(response), error: \(error)")
             if let error = error {
                 apiResponse.setError(error: ExtoleError.networkError(error: error))
                 return

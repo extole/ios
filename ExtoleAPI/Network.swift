@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 func tryDecode<T: Codable>(data: Data) -> T? {
     let decoder = JSONDecoder.init()
@@ -43,7 +44,9 @@ func processRequest(with request: URLRequest,
                 return
         }
         if let responseData = data {
-            Logger.Debug(message: String(data: responseData, encoding: String.Encoding.utf8)!)
+            let responseDataString = String(data: responseData, encoding: .utf8)!
+            let logCategory = OSLog.init(subsystem: "com.extole", category: "network")
+            os_log("processRequest : %{public}@", log: logCategory, type: OSLogType.debug, responseDataString)
             callback(responseData, nil)
         } else {
             callback(nil, .noContent)
@@ -54,11 +57,11 @@ func processRequest(with request: URLRequest,
     
 func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) -> APIResponse<T> {
     let apiResponse = APIResponse<T>.init()
-    Logger.Info(message: "dataTask with \(url)")
+    os_log("dataTask %s", log: Logger.NetworkLog, type: .debug, url.absoluteString)
     let newSession = URLSession.init(configuration: URLSessionConfiguration.ephemeral)
     var urlRequest = URLRequest(url: url)
     if let existingToken = accessToken {
-        Logger.Info(message: "using accessToken \(existingToken)")
+        os_log("using accessToken %s", log: Logger.NetworkLog, type: .debug, existingToken)
         urlRequest.addValue(existingToken, forHTTPHeaderField: "Authorization")
     }
     if let postData = postData {
@@ -67,7 +70,7 @@ func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) ->
         urlRequest.httpBody = postData
     }
     let task = newSession.dataTask(with: urlRequest) { data, response, error in
-        Logger.Debug(message: "dataTask.response with data: \(data), reponse: \(response), error: \(error)")
+        // Logger.Debug(message: "dataTask.response with data: \(data), reponse: \(response), error: \(error)")
         if let error = error {
             apiResponse.setError(error: ExtoleError.networkError(error: error))
             return
@@ -87,7 +90,7 @@ func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) ->
                 return
         }
         if let responseData = data {
-            Logger.Debug(message: String(data: responseData, encoding: String.Encoding.utf8)!)
+            os_log("reponseData :%s", log: .default, type: .debug, String(data: responseData, encoding: String.Encoding.utf8)!)
             let decodedData: T? = tryDecode(data: responseData)
             if let decodedData = decodedData {
                 apiResponse.setData(data: decodedData)

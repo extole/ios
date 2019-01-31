@@ -7,18 +7,11 @@
 //
 
 import Foundation
+import os.log
 
 public class Logger {
     
-    static func Debug(message : String) {
-        print("DEBUG : \(message)")
-    }
+    static let NetworkLog = OSLog.init(subsystem: "com.extole", category: "network")
     
-    static func Info(message : String) {
-        print("INFO : \(message)")
-    }
-    
-    static func Error(message : String) {
-        print("ERROR : \(message)")
-    }
+    static let AppLog = OSLog.init(subsystem: "com.extole", category: "app")
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 class ExtoleApp {
     
@@ -54,7 +55,7 @@ class ExtoleApp {
     var lastShareResult: CustomSharePollingResult?
     
     func applicationDidBecomeActive() {
-        Logger.Info(message: "application active")
+        os_log("applicationDidBecomeActive", log: Logger.AppLog, type: .info)
         dispatchQueue.async {
             if let existingToken = self.savedToken {
                 self.program.getToken(token: existingToken) { token, error in
@@ -116,19 +117,19 @@ class ExtoleApp {
     }
     
     func signalEmailShare() {
-        Logger.Info(message: "shared via system-email")
+        os_log("shared via system-email", log: Logger.AppLog, type: .info)
     }
     
     func signalMessageShare() {
-        Logger.Info(message: "shared via system-message")
+        os_log("shared via system-message", log: Logger.AppLog, type: .info)
     }
     
     func signalFacebookShare() {
-        Logger.Info(message: "shared via system-facebook")
+        os_log("shared via system-facebook", log: Logger.AppLog, type: .info)
     }
     
     func signalShare(channel: String) {
-        Logger.Info(message: "shared via \(channel)")
+        os_log("shared via custom channel %s", log: Logger.AppLog, type: .info, channel)
     }
     
     func share(recepient: String, message: String) {
@@ -169,7 +170,7 @@ class ExtoleApp {
     }
     
     func applicationWillResignActive() {
-        Logger.Info(message: "application resign active")
+        os_log("application resign active", log: Logger.AppLog, type: .info)
         self.state = .Inactive
     }
 }

@@ -11,7 +11,7 @@ import Foundation
 
 enum ExtoleApiError {
     case serverError(error: Error)
-    case decodingError
+    case decodingError(data: Data)
     case noContent
     case genericError(errorData: ErrorData)
 }
@@ -53,7 +53,7 @@ extension Program {
                 if let token = decodedToken {
                     responseHandler(token, nil)
                 } else {
-                    responseHandler(nil, .invalidProtocol(error: .decodingError))
+                    responseHandler(nil, .invalidProtocol(error: .decodingError(data: data)))
                 }
             }
         }
@@ -70,10 +70,24 @@ extension Program {
         procesTokenRequest(with: request, responseHandler: callback)
     }
     
-    public func deleteToken(token: String, callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
+    public func deleteToken(token: String, callback : @escaping (_: GetTokenError?) -> Void) {
         let url = URL.init(string: token, relativeTo: tokenUrl())!
         let request = newRequest(url: url, method: "DELETE")
-        procesTokenRequest(with: request, responseHandler: callback)
+        processRequest(with: request) { data, error in
+            if let apiError = error {
+                switch(apiError) {
+                case .genericError(let errorData) : do {
+                    switch(errorData.code) {
+                    case "invalid_access_token": callback(.invalidAccessToken)
+                    default:  callback(.invalidProtocol(error: .genericError(errorData: errorData)))
+                    }
+                    }
+                default : callback(.invalidProtocol(error: apiError))
+                }
+                return
+            }
+            callback(nil)
+        }
     }
 }
 

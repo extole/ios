@@ -44,7 +44,7 @@ func processRequest(with request: URLRequest,
                     if let decodedError = decodedError {
                         callback(nil, .genericError(errorData: decodedError))
                     } else {
-                        callback(nil, .decodingError)
+                        callback(nil, .decodingError(data: responseData))
                     }
                 } else {
                     callback(nil, .noContent)

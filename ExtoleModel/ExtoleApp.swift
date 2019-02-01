@@ -15,6 +15,7 @@ class ExtoleApp {
     
     public enum State {
         case Init
+        case LoggedOut
         case Inactive
         case InvalidToken
         case ServerError
@@ -81,7 +82,7 @@ class ExtoleApp {
         }
     }
     
-    func onTokenInvalid() {
+    private func onTokenInvalid() {
         self.state = State.InvalidToken
         self.savedToken = nil
         self.program.getToken(){ token, error in
@@ -91,11 +92,22 @@ class ExtoleApp {
         }
     }
 
+    func newSession() {
+        self.state = State.Init
+        self.program.getToken(){ token, error in
+            if let newToken = token {
+                self.onVerifiedToken(verifiedToken: newToken)
+            }
+        }
+    }
+
     func logout() {
-        program.deleteToken(token: self.savedToken!) { token, error in
-            if let _ = token {
+        program.deleteToken(token: self.savedToken!) { error in
+            if let _ = error {
+                self.state = .ServerError
+            } else {
                 self.savedToken = nil
-                self.state = .Inactive
+                self.state = .LoggedOut
                 self.profile = nil
                 self.selectedShareable = nil
                 self.lastShareResult = nil
@@ -104,11 +116,11 @@ class ExtoleApp {
         }
     }
 
-    func onServerError() {
+    private func onServerError() {
         self.state = State.ServerError
     }
 
-    func onVerifiedToken(verifiedToken: ConsumerToken) {
+    private func onVerifiedToken(verifiedToken: ConsumerToken) {
         self.savedToken = verifiedToken.access_token
         self.accessToken = verifiedToken
         self.state = State.Online
@@ -125,7 +137,13 @@ class ExtoleApp {
             self.state = State.Busy
             self.program.updateProfile(accessToken: self.accessToken!, profile: profile).onComplete { (_: SuccessResponse?) in
                 if !(profile.email?.isEmpty ?? true) {
-                    self.onProfileIdentified(identified: profile)
+                    //self.onProfileIdentified(identified: profile)
+                    self.program.getProfile(accessToken: self.accessToken!)
+                        .onComplete { (profile: MyProfile?) in
+                            if let identified = profile, !(identified.email?.isEmpty ?? true) {
+                                self.onProfileIdentified(identified: identified)
+                            }
+                    }
                 }
             }
         }
@@ -161,13 +179,13 @@ class ExtoleApp {
         }
     }
     
-    func onProfileIdentified(identified: MyProfile) {
+    private func onProfileIdentified(identified: MyProfile) {
         self.profile = identified
         self.state = State.Identified
         self.program.getShareables(accessToken: accessToken!).onComplete(callback: onShareablesLoaded)
     }
     
-    func onShareablesLoaded(shareables: [MyShareable]?) {
+    private func onShareablesLoaded(shareables: [MyShareable]?) {
         if let shareable = shareables?.filter({ (shareable : MyShareable) -> Bool in
             return shareable.label == self.label
         }).first {

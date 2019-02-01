@@ -11,13 +11,7 @@ import Foundation
 import UIKit
 
 class ShareViewController: UIViewController {
-    var stateLabel: UILabel!
-    
-    var recepientText: UITextField!
-    
     var messageText: UITextView!
-    
-    var shareButton: UIButton!
     
     var shareLink: UITextField!
     
@@ -33,44 +27,41 @@ class ShareViewController: UIViewController {
     }
     
     @objc func doShare(_ sender: UIButton) {
-       
         let message = messageText.text
-        if let recepient = recepientText.text, !recepient.isEmpty {
-            extoleApp.share(recepient: recepient, message: message!)
-        } else {
-            let shareItem = ShareItem.init(subject: "Check this out",
-                                           message: messageText.text!,
-                                           shortMessage: shareLink.text!)
-            let textToShare = [ shareItem  ]
-            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-            
-            // exclude some activity types from the list (optional)
-            activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop ]
-            
-            // present the view controller
-            self.present(activityViewController, animated: true, completion: nil)
-            activityViewController.completionWithItemsHandler =  {(activityType : UIActivity.ActivityType?, completed : Bool, returnedItems: [Any]?, activityError : Error?) in
-                if let completedActivity = activityType, completed {
-                    switch(completedActivity) {
-                        case UIActivity.ActivityType.mail : do {
-                           self.extoleApp.signalEmailShare()
-                        }
-                        case UIActivity.ActivityType.message : do {
-                            self.extoleApp.signalMessageShare()
-                        }
-                        case UIActivity.ActivityType.postToFacebook : do {
-                            self.extoleApp.signalFacebookShare()
-                        }
-                        default : do {
-                            self.extoleApp.signalShare(channel: completedActivity.rawValue)
-                        }
-                    }
-                    
-                }
-            }
 
+        let shareItem = ShareItem.init(subject: "Check this out",
+                                       message: message!,
+                                       shortMessage: shareLink.text!)
+        let textToShare = [ shareItem  ]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        
+        // exclude some activity types from the list (optional)
+        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop ]
+        
+        // present the view controller
+        self.present(activityViewController, animated: true, completion: nil)
+        activityViewController.completionWithItemsHandler =  {(activityType : UIActivity.ActivityType?, completed : Bool, returnedItems: [Any]?, activityError : Error?) in
+            if let completedActivity = activityType, completed {
+                switch(completedActivity) {
+                    case UIActivity.ActivityType.mail : do {
+                       self.extoleApp.signalEmailShare()
+                    }
+                    case UIActivity.ActivityType.message : do {
+                        self.extoleApp.signalMessageShare()
+                    }
+                    case UIActivity.ActivityType.postToFacebook : do {
+                        self.extoleApp.signalFacebookShare()
+                    }
+                    default : do {
+                        self.extoleApp.signalShare(channel: completedActivity.rawValue)
+                    }
+                }
+                
+            }
         }
+
+        
     }
     
     func newLabel(parentView: UIView, text: String) -> UILabel {
@@ -107,65 +98,46 @@ class ShareViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let navBar = UINavigationBar.init(frame: CGRect(x: 0, y: 32, width: self.view.frame.width, height: 64))
-        let navItem = UINavigationItem(title: "Share Link");
-        navBar.setItems([navItem], animated: false)
-        let share = UIBarButtonItem.init(title: "Next", style: .plain, target: self, action: #selector(doShare))
-        navItem.rightBarButtonItem = share
-        
-        self.view.addSubview(navBar)
         
         self.navigationItem.title = "Share Link"
         self.view.backgroundColor = UIColor.white
+        let primary = UIBarButtonItem.init(barButtonSystemItem: .action, target: self
+            , action: #selector(doShare))
+        navigationItem.rightBarButtonItem = primary
         
-        let headerView = UIView()
-        self.view.addSubview(headerView)
+        let messageLabel = newLabel(parentView: view, text: "Message:")
+        messageLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        messageLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        messageLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        messageLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        headerView.backgroundColor = .white
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        headerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        headerView.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
-        headerView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier :1 ).isActive = true
-        headerView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1).isActive = true
-        
-        stateLabel = newLabel(parentView: headerView, text: "State:")
-        stateLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-        stateLabel.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
-        stateLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 1).isActive = true
-        stateLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
-        
-        
-        let recepientLabel = newLabel(parentView: headerView, text: "Recepient:")
-        recepientLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-        recepientLabel.topAnchor.constraint(equalTo: stateLabel.bottomAnchor).isActive = true
-        recepientLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        recepientLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
-        
-        recepientText = newText(parentView: headerView, placeholder: "friend@email.com")
-        recepientText.leadingAnchor.constraint(equalTo: recepientLabel.trailingAnchor).isActive = true
-        recepientText.topAnchor.constraint(equalTo: recepientLabel.topAnchor).isActive = true
-        recepientText.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        recepientText.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
-        
-        messageText = newTextView(parentView: headerView)
-        messageText.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-        messageText.topAnchor.constraint(equalTo: recepientLabel.bottomAnchor).isActive = true
-        messageText.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 1).isActive = true
-        messageText.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.3).isActive = true
+        messageText = newTextView(parentView: view)
+        messageText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        messageText.topAnchor.constraint(equalTo: messageLabel.bottomAnchor).isActive = true
+        messageText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
+        messageText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.3).isActive = true
         messageText.text = "Check this out"
         
-        shareLink = newText(parentView: headerView, placeholder: "your share link")
-        shareLink.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
+        shareLink = newText(parentView: view, placeholder: "your share link")
+        shareLink.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         shareLink.topAnchor.constraint(equalTo: messageText.bottomAnchor).isActive = true
-        shareLink.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 1).isActive = true
-        shareLink.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
+        shareLink.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
+        shareLink.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
+        /*
+        let toolbar = UIToolbar.init()
+        view.addSubview(toolbar)
+        toolbar.translatesAutoresizingMaskIntoConstraints = false
+        toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        toolbar.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
+        toolbar.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        shareButton = newButton(parentView: headerView, text: "Share!")
-        shareButton.topAnchor.constraint(equalTo: shareLink.bottomAnchor).isActive = true
-        shareButton.leadingAnchor.constraint(equalTo: recepientLabel.trailingAnchor).isActive = true
-        shareButton.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        shareButton.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
-        shareButton.addTarget(self, action: #selector(doShare), for: UIControl.Event.touchUpInside)
+        let space = UIBarButtonItem.init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let actionButton = UIBarButtonItem.init(barButtonSystemItem: .action, target: self
+            , action: #selector(doShare))
+        toolbar.items = [space, actionButton]
+        view.addSubview(toolbar)
+        */
         
         ExtoleApp.default.notification.addObserver(self, selector: #selector(stateChanged),
                                            name: NSNotification.Name.state, object: nil)
@@ -174,7 +146,6 @@ class ShareViewController: UIViewController {
     
     func showState(app: ExtoleApp) {
         DispatchQueue.main.async {
-            self.stateLabel.text = "State \(app.state)"
             switch app.state {
                 case .ReadyToShare : do {
                     self.shareLink.text = app.selectedShareable?.link

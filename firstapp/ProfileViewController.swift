@@ -11,11 +11,14 @@ import UIKit
 class ProfileViewController: UIViewController {
 
     var extoleApp: ExtoleApp!
-
+    var shareController : ShareViewController!
+    var profileController: ProfileViewController!
+    var historyController: HistoryViewController!
 
     init(with extoleApp: ExtoleApp) {
         self.extoleApp = extoleApp
-        
+        shareController = ShareViewController(with: extoleApp)
+        historyController = HistoryViewController()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -23,15 +26,11 @@ class ProfileViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var stateLabel: UILabel!
-    
     var emailText: UITextField!
     
     var firstNameText: UITextField!
     
     var lastNameText: UITextField!
-    
-  
     
     @objc func profileChanged(_ sender: UITextField) {
         let updatedProfile = MyProfile.init(email: emailText.text,
@@ -54,13 +53,31 @@ class ProfileViewController: UIViewController {
     
     func showState(app: ExtoleApp) {
         DispatchQueue.main.async {
-            self.stateLabel.text = "State: \(app.state)"
-           
-            if let profile = app.profile {
-                self.emailText.text = profile.email
-                self.firstNameText.text = profile.first_name
-                self.lastNameText.text = profile.last_name
+            switch(app.state) {
+                case .LoggedOut: do {
+                    let newSession = UIBarButtonItem.init(title: "New Session", style: .plain, target: self, action: #selector(self.newSessionClick))
+                    self.navigationItem.rightBarButtonItem = newSession
+                    self.emailText.text = nil
+                    self.firstNameText.text = nil
+                    self.lastNameText.text = nil
+                    self.navigationItem.leftBarButtonItem = nil
+                }
+                case .ReadyToShare : do {
+                    let next = UIBarButtonItem.init(title: "Next", style: .plain, target: self, action: #selector(self.nextClick))
+                    self.navigationItem.rightBarButtonItem = next
+                }
+                default : do {
+                    if let profile = app.profile {
+                        self.emailText.text = profile.email
+                        self.firstNameText.text = profile.first_name
+                        self.lastNameText.text = profile.last_name
+                    }
+                    let logout = UIBarButtonItem.init(title: "\(app.state)", style: .plain, target: self, action: #selector(self.logoutClick))
+                    self.navigationItem.leftBarButtonItem = logout
+                    self.navigationItem.rightBarButtonItem = nil
+                }
             }
+            
         }
     }
 
@@ -89,78 +106,68 @@ class ProfileViewController: UIViewController {
         return newButton
     }
     
+    @objc func nextClick(_ sender: UIButton) {
+        navigationController?.pushViewController(shareController, animated: true)
+    }
+    
     @objc func logoutClick(_ sender: UIButton) {
-        extoleApp.logout()
+        let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
+        
+        logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
+            self.extoleApp.logout()
+        }))
+        logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
+        self.present(logoutConfimation, animated: true, completion: nil)
+    }
+    
+    @objc func newSessionClick(_ sender: UIButton) {
+        extoleApp.newSession()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Profile"
+        self.title = "Advocate"
         self.view.backgroundColor = UIColor.white
         
-        let navBar = UINavigationBar.init(frame: CGRect(x: 0, y: 32, width: self.view.frame.width, height: 64))
-        let navItem = UINavigationItem(title: "Profile");
-        navBar.setItems([navItem], animated: false)
+        let emailLabel = newLabel(parentView: view, text: "Email:")
+        emailLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        emailLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        emailLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(logoutClick))
-        navItem.rightBarButtonItem = logout
-        
-        self.view.addSubview(navBar)
-        
-        let headerView = UIView()
-        self.view.addSubview(headerView)
-        
-        headerView.backgroundColor = .white
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        headerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        headerView.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
-        headerView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier :1 ).isActive = true
-        headerView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1).isActive = true
-        
-        stateLabel = newLabel(parentView: headerView, text: "State:")
-        stateLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-        stateLabel.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
-        stateLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 1).isActive = true
-        stateLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
-        //
-        let emailLabel = newLabel(parentView: headerView, text: "Email:")
-        emailLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: stateLabel.bottomAnchor).isActive = true
-        emailLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        emailLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
-        
-        emailText = newText(parentView: headerView, placeholder: "me@email.com")
+        emailText = newText(parentView: view, placeholder: "me@email.com")
+        emailText.autocapitalizationType = .none
         emailText.topAnchor.constraint(equalTo: emailLabel.topAnchor).isActive = true
         emailText.leadingAnchor.constraint(equalTo: emailLabel.trailingAnchor).isActive = true
-        emailText.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        emailText.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
+        emailText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        emailText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         emailText.addTarget(self, action: #selector(profileChanged), for: .editingDidEnd)
         //
-        let firstNameLabel = newLabel(parentView: headerView, text: "FirstName:")
-        firstNameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
+        let firstNameLabel = newLabel(parentView: view, text: "FirstName:")
+        firstNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         firstNameLabel.topAnchor.constraint(equalTo: emailLabel.bottomAnchor).isActive = true
-        firstNameLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        firstNameLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
+        firstNameLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        firstNameLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
 
-        firstNameText =  newText(parentView: headerView, placeholder: "Joe")
+        firstNameText =  newText(parentView: view, placeholder: "Joe")
         firstNameText.topAnchor.constraint(equalTo: firstNameLabel.topAnchor).isActive = true
         firstNameText.leadingAnchor.constraint(equalTo: firstNameLabel.trailingAnchor).isActive = true
-        firstNameText.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        firstNameText.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
+        firstNameText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        firstNameText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         firstNameText.addTarget(self, action: #selector(profileChanged), for: .editingDidEnd)
         
         //
-        let lastNameLabel = newLabel(parentView: headerView, text: "LastName:")
-        lastNameLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
+        let lastNameLabel = newLabel(parentView: view, text: "LastName:")
+        lastNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         lastNameLabel.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor).isActive = true
-        lastNameLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        lastNameLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
+        lastNameLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        lastNameLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        lastNameText = newText(parentView: headerView, placeholder: "Doe")
+        lastNameText = newText(parentView: view, placeholder: "Doe")
         lastNameText.topAnchor.constraint(equalTo: lastNameLabel.topAnchor).isActive = true
         lastNameText.leadingAnchor.constraint(equalTo: lastNameLabel.trailingAnchor).isActive = true
-        lastNameText.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        lastNameText.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
+        lastNameText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        lastNameText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         lastNameText.addTarget(self, action: #selector(profileChanged), for: .editingDidEnd)
         
         extoleApp.notification.addObserver(self, selector: #selector(stateChanged),

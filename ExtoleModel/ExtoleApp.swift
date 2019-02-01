@@ -91,6 +91,19 @@ class ExtoleApp {
         }
     }
 
+    func logout() {
+        program.deleteToken(token: self.savedToken!) { token, error in
+            if let _ = token {
+                self.savedToken = nil
+                self.state = .Inactive
+                self.profile = nil
+                self.selectedShareable = nil
+                self.lastShareResult = nil
+            }
+            
+        }
+    }
+
     func onServerError() {
         self.state = State.ServerError
     }

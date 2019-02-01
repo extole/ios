@@ -24,8 +24,8 @@ class ShareViewController: UIViewController {
     var extoleApp: ExtoleApp!
     
     init(with extoleApp: ExtoleApp) {
-        super.init(nibName: nil, bundle: nil)
         self.extoleApp = extoleApp
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -107,8 +107,16 @@ class ShareViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let navBar = UINavigationBar.init(frame: CGRect(x: 0, y: 32, width: self.view.frame.width, height: 64))
+        let navItem = UINavigationItem(title: "Share Link");
+        navBar.setItems([navItem], animated: false)
+        let share = UIBarButtonItem.init(title: "Next", style: .plain, target: self, action: #selector(doShare))
+        navItem.rightBarButtonItem = share
+        
+        self.view.addSubview(navBar)
         
         self.navigationItem.title = "Share Link"
+        self.view.backgroundColor = UIColor.white
         
         let headerView = UIView()
         self.view.addSubview(headerView)
@@ -116,7 +124,7 @@ class ShareViewController: UIViewController {
         headerView.backgroundColor = .white
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        headerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        headerView.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
         headerView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier :1 ).isActive = true
         headerView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1).isActive = true
         

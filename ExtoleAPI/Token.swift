@@ -34,7 +34,7 @@ extension Program {
         return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
     }
 
-    private func procesGetToken(with request: URLRequest, responseHandler: @escaping (_: ConsumerToken?, _: GetTokenError?) ->Void) {
+    private func procesTokenRequest(with request: URLRequest, responseHandler: @escaping (_: ConsumerToken?, _: GetTokenError?) ->Void) {
         processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
@@ -61,13 +61,19 @@ extension Program {
     
     public func getToken(callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
         let request = newRequest(url: tokenUrl())
-        procesGetToken(with: request, responseHandler: callback)
+        procesTokenRequest(with: request, responseHandler: callback)
     }
     
     public func getToken(token: String, callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
         let url = URL.init(string: token, relativeTo: tokenUrl())!
         let request = newRequest(url: url)
-        procesGetToken(with: request, responseHandler: callback)
+        procesTokenRequest(with: request, responseHandler: callback)
+    }
+    
+    public func deleteToken(token: String, callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
+        let url = URL.init(string: token, relativeTo: tokenUrl())!
+        let request = newRequest(url: url, method: "DELETE")
+        procesTokenRequest(with: request, responseHandler: callback)
     }
 }
 

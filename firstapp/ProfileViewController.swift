@@ -11,13 +11,12 @@ import UIKit
 class ProfileViewController: UIViewController {
 
     var extoleApp: ExtoleApp!
-    
-    var shareController : ShareViewController!
+
 
     init(with extoleApp: ExtoleApp) {
-        super.init(nibName: nil, bundle: nil)
         self.extoleApp = extoleApp
-        shareController = ShareViewController(with: extoleApp)
+        
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -32,13 +31,9 @@ class ProfileViewController: UIViewController {
     
     var lastNameText: UITextField!
     
+  
     
-    
-    @objc func shareClick(_ sender: UIButton) {
-        self.navigationController?.pushViewController(shareController, animated: true)
-    }
-    
-    @IBAction func profileChanged(_ sender: UITextField) {
+    @objc func profileChanged(_ sender: UITextField) {
         let updatedProfile = MyProfile.init(email: emailText.text,
                                             first_name: firstNameText.text,
                                             last_name: lastNameText.text,
@@ -94,19 +89,23 @@ class ProfileViewController: UIViewController {
         return newButton
     }
     
+    @objc func logoutClick(_ sender: UIButton) {
+        extoleApp.logout()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Profile"
+        self.view.backgroundColor = UIColor.white
         
-        self.navigationItem.title = "Advocate Profile"
-        let nextButton = UIBarButtonItem.init(title: "Share", style: .plain, target: self, action: #selector(shareClick))
-        self.navigationItem.rightBarButtonItem = nextButton
+        let navBar = UINavigationBar.init(frame: CGRect(x: 0, y: 32, width: self.view.frame.width, height: 64))
+        let navItem = UINavigationItem(title: "Profile");
+        navBar.setItems([navItem], animated: false)
         
-        let share = UITabBarItem.init(title: "Share", image: nil, selectedImage: nil)
-        //self.tabBar.setItems([share], animated: true)
-        //self.tabBar.backgroundColor = .red
-        //self.view.addSubview(self.tabBar)
-        shareController.tabBarItem = share
-        //viewControllers = [shareController]
+        let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(logoutClick))
+        navItem.rightBarButtonItem = logout
+        
+        self.view.addSubview(navBar)
         
         let headerView = UIView()
         self.view.addSubview(headerView)
@@ -114,7 +113,7 @@ class ProfileViewController: UIViewController {
         headerView.backgroundColor = .white
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        headerView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        headerView.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
         headerView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier :1 ).isActive = true
         headerView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1).isActive = true
         
@@ -169,6 +168,8 @@ class ProfileViewController: UIViewController {
         showState(app: extoleApp)
         
     }
+    
+  
     
 }
 

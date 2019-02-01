@@ -24,6 +24,12 @@ func newRequest(url: URL) -> URLRequest {
     return URLRequest(url: url)
 }
 
+func newRequest(url: URL, method: String) -> URLRequest {
+    var result = URLRequest(url: url)
+    result.httpMethod = method
+    return result
+}
+
 func processRequest(with request: URLRequest,
                     callback:  @escaping (_: Data?, _: ExtoleApiError?) -> Void) {
     let session = newSession()

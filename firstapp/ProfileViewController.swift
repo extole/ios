@@ -12,9 +12,19 @@ class ProfileViewController: UIViewController {
 
     var extoleApp: ExtoleApp!
     
-    var stateLabel: UILabel!
+    var shareController : ShareViewController!
+
+    init(with extoleApp: ExtoleApp) {
+        super.init(nibName: nil, bundle: nil)
+        self.extoleApp = extoleApp
+        shareController = ShareViewController(with: extoleApp)
+    }
     
-    var accessTokenLabel: UILabel!
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    var stateLabel: UILabel!
     
     var emailText: UITextField!
     
@@ -22,12 +32,9 @@ class ProfileViewController: UIViewController {
     
     var lastNameText: UITextField!
     
-    var nextButton: UIButton!
     
-    let shareController = ShareViewController()
     
     @objc func shareClick(_ sender: UIButton) {
-        shareController.extoleApp = self.extoleApp
         self.navigationController?.pushViewController(shareController, animated: true)
     }
     
@@ -36,19 +43,11 @@ class ProfileViewController: UIViewController {
                                             first_name: firstNameText.text,
                                             last_name: lastNameText.text,
                                             partner_user_id: nil)
-        extoleApp.updateProfile(profile: updatedProfile)
+        extoleApp?.updateProfile(profile: updatedProfile)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-    }
-    
-    
-    
-    func showAccessToken(text: String) {
-        DispatchQueue.main.async {
-            self.accessTokenLabel.text = text
-        }
     }
     
     @objc private func stateChanged(_ notification: Notification) {
@@ -59,23 +58,13 @@ class ProfileViewController: UIViewController {
     }
     
     func showState(app: ExtoleApp) {
-        return
         DispatchQueue.main.async {
-            self.stateLabel.text = "State \(app.state)"
-            self.accessTokenLabel.text = app.savedToken
-            
+            self.stateLabel.text = "State: \(app.state)"
+           
             if let profile = app.profile {
                 self.emailText.text = profile.email
                 self.firstNameText.text = profile.first_name
                 self.lastNameText.text = profile.last_name
-            }
-            switch (app.state) {
-                case .ReadyToShare : do {
-                    self.nextButton.isEnabled = true
-                }
-                default : do {
-                    self.nextButton.isEnabled = false
-                }
             }
         }
     }
@@ -109,6 +98,15 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationItem.title = "Advocate Profile"
+        let nextButton = UIBarButtonItem.init(title: "Share", style: .plain, target: self, action: #selector(shareClick))
+        self.navigationItem.rightBarButtonItem = nextButton
+        
+        let share = UITabBarItem.init(title: "Share", image: nil, selectedImage: nil)
+        //self.tabBar.setItems([share], animated: true)
+        //self.tabBar.backgroundColor = .red
+        //self.view.addSubview(self.tabBar)
+        shareController.tabBarItem = share
+        //viewControllers = [shareController]
         
         let headerView = UIView()
         self.view.addSubview(headerView)
@@ -125,21 +123,15 @@ class ProfileViewController: UIViewController {
         stateLabel.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
         stateLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 1).isActive = true
         stateLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
-        
-        accessTokenLabel = newLabel(parentView: headerView, text: "Token:")
-        accessTokenLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-        accessTokenLabel.topAnchor.constraint(equalTo: stateLabel.bottomAnchor).isActive = true
-        accessTokenLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 1).isActive = true
-        accessTokenLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
         //
         let emailLabel = newLabel(parentView: headerView, text: "Email:")
         emailLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: accessTokenLabel.bottomAnchor).isActive = true
+        emailLabel.topAnchor.constraint(equalTo: stateLabel.bottomAnchor).isActive = true
         emailLabel.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
         emailLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
         
         emailText = newText(parentView: headerView, placeholder: "me@email.com")
-        emailText.topAnchor.constraint(equalTo: accessTokenLabel.bottomAnchor).isActive = true
+        emailText.topAnchor.constraint(equalTo: emailLabel.topAnchor).isActive = true
         emailText.leadingAnchor.constraint(equalTo: emailLabel.trailingAnchor).isActive = true
         emailText.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
         emailText.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
@@ -171,14 +163,6 @@ class ProfileViewController: UIViewController {
         lastNameText.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
         lastNameText.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
         lastNameText.addTarget(self, action: #selector(profileChanged), for: .editingDidEnd)
-        
-        nextButton = newButton(parentView: headerView, text: "Next")
-        nextButton.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor).isActive = true
-        nextButton.leadingAnchor.constraint(equalTo: lastNameText.leadingAnchor).isActive = true
-        nextButton.widthAnchor.constraint(equalTo: headerView.widthAnchor, multiplier: 0.5).isActive = true
-        nextButton.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
-        nextButton.isEnabled = false
-        nextButton.addTarget(self, action: #selector(shareClick), for: UIControl.Event.touchUpInside)
         
         extoleApp.notification.addObserver(self, selector: #selector(stateChanged),
                                                    name: NSNotification.Name.state, object: nil)

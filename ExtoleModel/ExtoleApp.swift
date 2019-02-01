@@ -11,6 +11,8 @@ import os.log
 
 class ExtoleApp {
     
+    let modelLog = OSLog.init(subsystem: "com.extole", category: "model")
+    
     public enum State {
         case Init
         case Inactive
@@ -55,7 +57,7 @@ class ExtoleApp {
     var lastShareResult: CustomSharePollingResult?
     
     func applicationDidBecomeActive() {
-        os_log("applicationDidBecomeActive", log: Logger.AppLog, type: .info)
+        os_log("applicationDidBecomeActive", log: appLog, type: .info)
         dispatchQueue.async {
             if let existingToken = self.savedToken {
                 self.program.getToken(token: existingToken) { token, error in
@@ -88,11 +90,11 @@ class ExtoleApp {
             }
         }
     }
-    
+
     func onServerError() {
         self.state = State.ServerError
     }
-    
+
     func onVerifiedToken(verifiedToken: ConsumerToken) {
         self.savedToken = verifiedToken.access_token
         self.accessToken = verifiedToken
@@ -117,19 +119,19 @@ class ExtoleApp {
     }
 
     func signalEmailShare() {
-        os_log("shared via system-email", log: Logger.AppLog, type: .info)
+        os_log("shared via system-email", log: modelLog, type: .info)
     }
     
     func signalMessageShare() {
-        os_log("shared via system-message", log: Logger.AppLog, type: .info)
+        os_log("shared via system-message", log: modelLog, type: .info)
     }
     
     func signalFacebookShare() {
-        os_log("shared via system-facebook", log: Logger.AppLog, type: .info)
+        os_log("shared via system-facebook", log: modelLog, type: .info)
     }
     
     func signalShare(channel: String) {
-        os_log("shared via custom channel %s", log: Logger.AppLog, type: .info, channel)
+        os_log("shared via custom channel %s", log: modelLog, type: .info, channel)
     }
     
     func share(recepient: String, message: String) {
@@ -170,7 +172,7 @@ class ExtoleApp {
     }
     
     func applicationWillResignActive() {
-        os_log("application resign active", log: Logger.AppLog, type: .info)
+        os_log("application resign active", log: modelLog, type: .info)
         self.state = .Inactive
     }
 }

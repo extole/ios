@@ -23,6 +23,15 @@ class ShareViewController: UIViewController {
     
     var extoleApp: ExtoleApp!
     
+    init(with extoleApp: ExtoleApp) {
+        super.init(nibName: nil, bundle: nil)
+        self.extoleApp = extoleApp
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     @objc func doShare(_ sender: UIButton) {
        
         let message = messageText.text
@@ -150,7 +159,7 @@ class ShareViewController: UIViewController {
         shareButton.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.1).isActive = true
         shareButton.addTarget(self, action: #selector(doShare), for: UIControl.Event.touchUpInside)
         
-        extoleApp.notification.addObserver(self, selector: #selector(stateChanged),
+        ExtoleApp.default.notification.addObserver(self, selector: #selector(stateChanged),
                                            name: NSNotification.Name.state, object: nil)
         showState(app: extoleApp)
     }

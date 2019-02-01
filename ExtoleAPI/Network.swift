@@ -9,6 +9,8 @@
 import Foundation
 import os.log
 
+let NetworkLog = OSLog.init(subsystem: "com.extole", category: "network")
+
 func tryDecode<T: Codable>(data: Data) -> T? {
     let decoder = JSONDecoder.init()
     return try? decoder.decode(T.self, from: data)
@@ -57,11 +59,11 @@ func processRequest(with request: URLRequest,
     
 func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) -> APIResponse<T> {
     let apiResponse = APIResponse<T>.init()
-    os_log("dataTask %s", log: Logger.NetworkLog, type: .debug, url.absoluteString)
+    os_log("dataTask %s", log: NetworkLog, type: .debug, url.absoluteString)
     let newSession = URLSession.init(configuration: URLSessionConfiguration.ephemeral)
     var urlRequest = URLRequest(url: url)
     if let existingToken = accessToken {
-        os_log("using accessToken %s", log: Logger.NetworkLog, type: .debug, existingToken)
+        os_log("using accessToken %s", log: NetworkLog, type: .debug, existingToken)
         urlRequest.addValue(existingToken, forHTTPHeaderField: "Authorization")
     }
     if let postData = postData {

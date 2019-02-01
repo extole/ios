@@ -18,8 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let homeViewController = ProfileViewController()
-        homeViewController.extoleApp = self.extoleApp
+        let homeViewController = ProfileViewController(with: extoleApp)
+        //homeViewController.extoleApp = self.extoleApp
         
         let navigationController = UINavigationController(rootViewController: homeViewController)
         window!.rootViewController = navigationController

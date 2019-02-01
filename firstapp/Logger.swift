@@ -9,9 +9,4 @@
 import Foundation
 import os.log
 
-public class Logger {
-    
-    static let NetworkLog = OSLog.init(subsystem: "com.extole", category: "network")
-    
-    static let AppLog = OSLog.init(subsystem: "com.extole", category: "app")
-}
+let appLog = OSLog.init(subsystem: "com.extole", category: "app")

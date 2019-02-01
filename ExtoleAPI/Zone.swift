@@ -18,12 +18,12 @@ extension Program {
     
     func contentTask(url: URL, accessToken: String?) -> APIResponse<Data> {
         let apiResponse = APIResponse<Data>.init()
-        os_log("requesting %s", log: Logger.NetworkLog, type: .debug, url.absoluteString)
+        os_log("requesting %s", log: NetworkLog, type: .debug, url.absoluteString)
         let newSession = URLSession.init(configuration: URLSessionConfiguration.ephemeral)
         var urlRequest = URLRequest(url: url)
         urlRequest.addValue("*/*", forHTTPHeaderField: "Accept")
         if let existingToken = accessToken {
-            os_log("using accessToken %s", log: Logger.NetworkLog, type: .debug, existingToken)
+            os_log("using accessToken %s", log: NetworkLog, type: .debug, existingToken)
             urlRequest.addValue(existingToken, forHTTPHeaderField: "Authorization")
         }
         let task = newSession.dataTask(with: urlRequest) { data, response, error in

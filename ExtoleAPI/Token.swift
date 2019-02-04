@@ -60,13 +60,13 @@ extension Program {
     }
     
     public func getToken(callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
-        let request = newRequest(url: tokenUrl())
+        let request = getRequest(url: tokenUrl())
         procesTokenRequest(with: request, responseHandler: callback)
     }
     
     public func getToken(token: String, callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
         let url = URL.init(string: token, relativeTo: tokenUrl())!
-        let request = newRequest(url: url)
+        let request = getRequest(url: url)
         procesTokenRequest(with: request, responseHandler: callback)
     }
     

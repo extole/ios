@@ -40,35 +40,14 @@ class ProfileViewController: UIViewController {
         view.endEditing(true)
     }
     
-    @objc private func stateChanged(_ notification: Notification) {
-        guard let extoleApp = notification.object as? ExtoleApp else {
-            return
-        }
-        showState(app: extoleApp)
-    }
-    
     func showState(app: ExtoleApp) {
         DispatchQueue.main.async {
-            switch(app.state) {
-                case .LoggedOut: do {
-                    let newSession = UIBarButtonItem.init(title: "New Session", style: .plain, target: self, action: #selector(self.newSessionClick))
-                    self.navigationItem.rightBarButtonItem = newSession
-                    self.firstNameText.text = nil
-                    self.lastNameText.text = nil
-                    self.navigationItem.leftBarButtonItem = nil
-                }
-                case .ReadyToShare : do {
-                    let next = UIBarButtonItem.init(title: "Next", style: .plain, target: self, action: #selector(self.nextClick))
-                    self.navigationItem.rightBarButtonItem = next
-                }
-                default : do {
-                    if let profile = app.profile {
-                        self.firstNameText.text = profile.first_name
-                        self.lastNameText.text = profile.last_name
-                    }
-                }
+            let next = UIBarButtonItem.init(title: "Share", style: .plain, target: self, action: #selector(self.nextClick))
+            self.navigationItem.rightBarButtonItem = next
+            if let profile = app.profile {
+                self.firstNameText.text = profile.first_name
+                self.lastNameText.text = profile.last_name
             }
-            
         }
     }
 
@@ -98,16 +77,13 @@ class ProfileViewController: UIViewController {
     }
     
     @objc func nextClick(_ sender: UIButton) {
-        navigationController?.pushViewController(shareController, animated: true)
-    }
-    
-    @objc func newSessionClick(_ sender: UIButton) {
-        extoleApp.newSession()
+        extoleApp.prepareShare()
+        //navigationController?.pushViewController(shareController, animated: true)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Advocate"
+        self.title = "Profile"
         self.view.backgroundColor = UIColor.white
        
         let firstNameLabel = newLabel(parentView: view, text: "FirstName:")
@@ -136,14 +112,11 @@ class ProfileViewController: UIViewController {
         lastNameText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         lastNameText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         lastNameText.addTarget(self, action: #selector(profileChanged), for: .editingDidEnd)
-        
-        extoleApp.notification.addObserver(self, selector: #selector(stateChanged),
-                                                   name: NSNotification.Name.state, object: nil)
-        showState(app: extoleApp)
-        
     }
     
-  
+    override func viewWillAppear(_ animated: Bool) {
+        showState(app: extoleApp)
+    }
     
 }
 

@@ -26,20 +26,46 @@ class ProfileTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
 
-    func testProfile() {
+    
+    func testIdentify() {
+        let identify = expectation(description: "identify response")
+        program.identify(accessToken: accessToken!,
+                        email: "testidentify@extole.com") { error in
+            identify.fulfill()
+            XCTAssertNil(error)
+        }
+        wait(for: [identify], timeout: 10)
+        
+        let verifyIdentity = expectation(description: "verifyIdentity response")
+        self.program.getProfile(accessToken: self.accessToken!) { profile, error in
+            XCTAssertNil(error)
+            XCTAssertEqual("testidentify@extole.com", profile?.email)
+            verifyIdentity.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+
+    func testUpdateProfile() {
         let myProfile = MyProfile(email: "testprofile@extole.com",
                                   partner_user_id: "Zorro",
                                   first_name: "Test",
                                   last_name: "Profile")
+        let identify = expectation(description: "identify response")
+        program.updateProfile(accessToken: accessToken!, profile: myProfile) { error in
+            XCTAssertNil(error)
+            identify.fulfill()
+        }
+        wait(for: [identify], timeout: 10)
         
-        let updateResponse = program.updateProfile(accessToken: accessToken!,
-                                                   profile: myProfile)
-            .await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertEqual("success", updateResponse?.status)
-        
-        let profileResponse = program.getProfile(accessToken: accessToken!)
-            .await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertEqual(profileResponse?.email, myProfile.email)
+        let verifyIdentity = expectation(description: "verifyIdentity response")
+        program.getProfile(accessToken: accessToken!) { profile, callback in
+            XCTAssertEqual(profile?.email, myProfile.email)
+            XCTAssertEqual(profile?.partner_user_id, myProfile.partner_user_id)
+            XCTAssertEqual(profile?.first_name, myProfile.first_name)
+            XCTAssertEqual(profile?.last_name, myProfile.last_name)
+            verifyIdentity.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
     }
 
 }

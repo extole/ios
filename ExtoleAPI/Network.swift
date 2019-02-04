@@ -20,13 +20,30 @@ func newSession() -> URLSession {
     return URLSession.init(configuration: URLSessionConfiguration.ephemeral)
 }
 
-func newRequest(url: URL) -> URLRequest {
-    return URLRequest(url: url)
+func getRequest(accessToken: ConsumerToken? = nil, url: URL) -> URLRequest {
+    var result = URLRequest(url: url)
+    if let existingToken = accessToken {
+        os_log("using accessToken %{private}@", log: NetworkLog, type: .debug, existingToken.access_token)
+        result.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
+    }
+    return result
 }
 
 func newRequest(url: URL, method: String) -> URLRequest {
     var result = URLRequest(url: url)
     result.httpMethod = method
+    return result
+}
+
+func postRequest<T : Encodable>(accessToken: ConsumerToken? = nil, url: URL, data: T) -> URLRequest {
+    var result = URLRequest(url: url)
+    result.httpMethod = "POST"
+    result.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    result.httpBody =  try? JSONEncoder().encode(data)
+    if let existingToken = accessToken {
+        os_log("using accessToken %{private}@", log: NetworkLog, type: .debug, existingToken.access_token)
+        result.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
+    }
     return result
 }
 

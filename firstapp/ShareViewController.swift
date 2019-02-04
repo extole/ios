@@ -185,7 +185,7 @@ class ShareViewController: UIViewController {
                 default: return message
             }
         }
-        
+    
         func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
             return subject
         }

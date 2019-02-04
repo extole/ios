@@ -18,9 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let identifyController = IdentifyViewController(with: extoleApp)
+        let sessionController = SessionViewController(with: extoleApp)
 
-        window!.rootViewController = UINavigationController(rootViewController: identifyController)
+        window!.rootViewController = UINavigationController(rootViewController: sessionController)
         window!.makeKeyAndVisible()
         return true
     }

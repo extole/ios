@@ -26,17 +26,13 @@ class ProfileViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var emailText: UITextField!
-    
     var firstNameText: UITextField!
     
     var lastNameText: UITextField!
     
     @objc func profileChanged(_ sender: UITextField) {
-        let updatedProfile = MyProfile.init(email: emailText.text,
-                                            first_name: firstNameText.text,
-                                            last_name: lastNameText.text,
-                                            partner_user_id: nil)
+        let updatedProfile = MyProfile.init(first_name: firstNameText.text,
+                                            last_name: lastNameText.text)
         extoleApp?.updateProfile(profile: updatedProfile)
     }
     
@@ -57,7 +53,6 @@ class ProfileViewController: UIViewController {
                 case .LoggedOut: do {
                     let newSession = UIBarButtonItem.init(title: "New Session", style: .plain, target: self, action: #selector(self.newSessionClick))
                     self.navigationItem.rightBarButtonItem = newSession
-                    self.emailText.text = nil
                     self.firstNameText.text = nil
                     self.lastNameText.text = nil
                     self.navigationItem.leftBarButtonItem = nil
@@ -68,13 +63,9 @@ class ProfileViewController: UIViewController {
                 }
                 default : do {
                     if let profile = app.profile {
-                        self.emailText.text = profile.email
                         self.firstNameText.text = profile.first_name
                         self.lastNameText.text = profile.last_name
                     }
-                    let logout = UIBarButtonItem.init(title: "\(app.state)", style: .plain, target: self, action: #selector(self.logoutClick))
-                    self.navigationItem.leftBarButtonItem = logout
-                    self.navigationItem.rightBarButtonItem = nil
                 }
             }
             
@@ -110,16 +101,6 @@ class ProfileViewController: UIViewController {
         navigationController?.pushViewController(shareController, animated: true)
     }
     
-    @objc func logoutClick(_ sender: UIButton) {
-        let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
-        
-        logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
-            self.extoleApp.logout()
-        }))
-        logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
-        self.present(logoutConfimation, animated: true, completion: nil)
-    }
-    
     @objc func newSessionClick(_ sender: UIButton) {
         extoleApp.newSession()
     }
@@ -128,24 +109,10 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         self.title = "Advocate"
         self.view.backgroundColor = UIColor.white
-        
-        let emailLabel = newLabel(parentView: view, text: "Email:")
-        emailLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        emailLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
-        emailLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
-        
-        emailText = newText(parentView: view, placeholder: "me@email.com")
-        emailText.autocapitalizationType = .none
-        emailText.topAnchor.constraint(equalTo: emailLabel.topAnchor).isActive = true
-        emailText.leadingAnchor.constraint(equalTo: emailLabel.trailingAnchor).isActive = true
-        emailText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
-        emailText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
-        emailText.addTarget(self, action: #selector(profileChanged), for: .editingDidEnd)
-        //
+       
         let firstNameLabel = newLabel(parentView: view, text: "FirstName:")
         firstNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        firstNameLabel.topAnchor.constraint(equalTo: emailLabel.bottomAnchor).isActive = true
+        firstNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         firstNameLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         firstNameLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
 

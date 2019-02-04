@@ -60,8 +60,6 @@ class ShareViewController: UIViewController {
                 
             }
         }
-
-        
     }
     
     func newLabel(parentView: UIView, text: String) -> UILabel {

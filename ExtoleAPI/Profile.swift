@@ -9,6 +9,13 @@
 import Foundation
 
 public struct MyProfile : Codable {
+    init(email: String? = nil, partner_user_id: String? = nil,
+         first_name:String? = nil, last_name:String? = nil) {
+        self.email = email
+        self.partner_user_id = partner_user_id
+        self.first_name = first_name
+        self.last_name = last_name
+    }
     let email: String?
     let first_name: String?
     let last_name: String?

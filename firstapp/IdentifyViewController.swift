@@ -70,7 +70,7 @@ class IdentifyViewController: UIViewController {
     
     func showState(app: ExtoleApp) {
         DispatchQueue.main.async {
-            let next = UIBarButtonItem.init(title: "Profile", style: .plain, target: self, action: #selector(self.nextClick))
+            let next = UIBarButtonItem.init(title: "Done", style: .plain, target: self, action: #selector(self.nextClick))
             self.navigationItem.rightBarButtonItem = next
             
             if let profile = app.profile, !(app.profile?.email?.isEmpty ?? true) {

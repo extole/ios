@@ -42,7 +42,7 @@ class ProfileViewController: UIViewController {
     
     func showState(app: ExtoleApp) {
         DispatchQueue.main.async {
-            let next = UIBarButtonItem.init(title: "Share", style: .plain, target: self, action: #selector(self.nextClick))
+            let next = UIBarButtonItem.init(title: "Done", style: .plain, target: self, action: #selector(self.nextClick))
             self.navigationItem.rightBarButtonItem = next
             if let profile = app.profile {
                 self.firstNameText.text = profile.first_name

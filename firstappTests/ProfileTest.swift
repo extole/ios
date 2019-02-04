@@ -28,9 +28,9 @@ class ProfileTest: XCTestCase {
 
     func testProfile() {
         let myProfile = MyProfile(email: "testprofile@extole.com",
+                                  partner_user_id: "Zorro",
                                   first_name: "Test",
-                                  last_name: "Profile",
-                                  partner_user_id: "Zorro")
+                                  last_name: "Profile")
         
         let updateResponse = program.updateProfile(accessToken: accessToken!,
                                                    profile: myProfile)

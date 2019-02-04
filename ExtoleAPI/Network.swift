@@ -53,8 +53,7 @@ func processRequest(with request: URLRequest,
         }
         if let responseData = data {
             let responseDataString = String(data: responseData, encoding: .utf8)!
-            let logCategory = OSLog.init(subsystem: "com.extole", category: "network")
-            os_log("processRequest : %{public}@", log: logCategory, type: OSLogType.debug, responseDataString)
+            os_log("processRequest : %{public}@", log: NetworkLog, type: OSLogType.debug, responseDataString)
             callback(responseData, nil)
         } else {
             callback(nil, .noContent)

@@ -9,10 +9,30 @@
 import Foundation
 import UIKit
 
+extension ExtoleApp {
+    var shareMessage: String? {
+        get {
+            return settings.string(forKey: "app.shareMessage")
+        }
+        set(newValue) {
+            settings.setValue(newValue, forKey: "app.shareMessage")
+        }
+    }
+}
+
 class SessionViewController : UITableViewController, StateChanged {
-    
+
     func onStateChanged(state: ExtoleApp.State) {
-        showState(app: extoleApp)
+        switch state {
+        case .Identified:
+            extoleApp.fetchObject(zone: "settings") { (settings: ShareSettings?, error) in
+                self.extoleApp.shareMessage = settings?.shareMessage
+                self.showState(app: self.extoleApp)
+            }
+        default:
+            showState(app: extoleApp)
+            break;
+        }
     }
     
     var extoleApp: ExtoleApp!
@@ -52,7 +72,7 @@ class SessionViewController : UITableViewController, StateChanged {
             
             case .Share :
                 return MainSection(name: "Share", controls: [{
-                    return app.shareSettings?.shareMessage
+                    return app.shareMessage
                 }, {
                     return app.selectedShareable?.link
                 }])
@@ -212,7 +232,7 @@ class SessionViewController : UITableViewController, StateChanged {
             showError(view: self, message: "No Shareable")
             return
         }
-        guard let message = extoleApp.shareSettings?.shareMessage else {
+        guard let message = extoleApp.shareMessage else {
             return
         }
         let shareItem = ShareItem.init(subject: "Check this out",

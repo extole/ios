@@ -13,7 +13,7 @@ protocol StateChanged : AnyObject {
     func onStateChanged(state: ExtoleApp.State)
 }
 
-class ExtoleApp {
+final class ExtoleApp {
     let modelLog = OSLog.init(subsystem: "com.extole", category: "model")
     
     public enum State {
@@ -30,6 +30,7 @@ class ExtoleApp {
     }
     
     private let program: Program
+    
     weak var stateListener: StateChanged?
     
     init(programUrl: URL, stateListener: StateChanged? = nil) {
@@ -38,7 +39,7 @@ class ExtoleApp {
     
     private let label = "refer-a-friend"
     
-    private let settings = UserDefaults.init()
+    let settings = UserDefaults.init()
     
     var state = State.Init {
         didSet {
@@ -61,12 +62,6 @@ class ExtoleApp {
     var profile: MyProfile?
     var selectedShareable : MyShareable?
     var lastShareResult: CustomSharePollingResult?
-    
-    struct Settings : Codable {
-        let shareMessage: String
-    }
-    
-    var shareSettings : Settings?
     
     func applicationDidBecomeActive() {
         os_log("applicationDidBecomeActive", log: appLog, type: .info)
@@ -141,11 +136,12 @@ class ExtoleApp {
                 self.onProfileIdentified(identified: identified)
             }
         }
-        self.program.fetchObject(accessToken: verifiedToken, zone: "settings") { (settings: Settings?, error) in
-            self.shareSettings = settings
-        }
     }
 
+    func fetchObject<T: Codable>(zone: String, callback : @escaping (T?, Program.GetObjectError?) -> Void) {
+        self.program.fetchObject(accessToken: self.accessToken!, zone: zone, callback: callback)
+    }
+    
     func identify(email: String, callback: @escaping (UpdateProfileError?) -> Void) {
         dispatchQueue.async {
             self.program.identify(accessToken: self.accessToken!, email: email) { error in

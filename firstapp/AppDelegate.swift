@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let extoleApp = ExtoleApp.default
+    let extoleApp = ExtoleApp.init(programUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        ExtoleApp.default.applicationWillResignActive()
+        extoleApp.applicationWillResignActive()
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        ExtoleApp.default.applicationDidBecomeActive()
+        extoleApp.applicationDidBecomeActive()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

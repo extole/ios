@@ -61,9 +61,6 @@ class ShareViewController: UIViewController {
         shareLink.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
         shareLink.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        
-        ExtoleApp.default.notification.addObserver(self, selector: #selector(stateChanged),
-                                           name: NSNotification.Name.state, object: nil)
         showState(app: extoleApp)
     }
     
@@ -78,13 +75,6 @@ class ShareViewController: UIViewController {
                 }
             }
         }
-    }
-    
-    @objc private func stateChanged(_ notification: Notification) {
-        guard let extoleApp = notification.object as? ExtoleApp else {
-            return
-        }
-        showState(app: extoleApp)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

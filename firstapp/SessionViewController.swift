@@ -9,7 +9,12 @@
 import Foundation
 import UIKit
 
-class SessionViewController : UITableViewController {
+class SessionViewController : UITableViewController, StateChanged {
+    
+    func onStateChanged(state: ExtoleApp.State) {
+        showState(app: extoleApp)
+    }
+    
     var extoleApp: ExtoleApp!
     
     var identifyViewController: IdentifyViewController!
@@ -89,9 +94,8 @@ class SessionViewController : UITableViewController {
         self.title = "Home"
         self.view.backgroundColor = UIColor.white
         
-        extoleApp.notification.addObserver(self, selector: #selector(stateChanged),
-                                           name: NSNotification.Name.state, object: nil)
-        
+        extoleApp.stateListener = self
+
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         showState(app: extoleApp)
         let refreshControl = UIRefreshControl()

@@ -9,8 +9,11 @@
 import Foundation
 import os.log
 
+protocol StateChanged : AnyObject {
+    func onStateChanged(state: ExtoleApp.State)
+}
+
 class ExtoleApp {
-    
     let modelLog = OSLog.init(subsystem: "com.extole", category: "model")
     
     public enum State {
@@ -26,23 +29,24 @@ class ExtoleApp {
         case ReadyToShare
     }
     
-    private let program = Program.init(baseUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
+    private let program: Program
+    weak var stateListener: StateChanged?
+    
+    init(programUrl: URL, stateListener: StateChanged? = nil) {
+        self.program = Program.init(baseUrl: programUrl)
+    }
     
     private let label = "refer-a-friend"
     
     private let settings = UserDefaults.init()
     
-    let notification = NotificationCenter.init()
-    
     var state = State.Init {
         didSet {
-            notification.post(name: Notification.Name.state, object: self)
+            stateListener?.onStateChanged(state: state)
         }
     }
     
     private let dispatchQueue = DispatchQueue(label : "Extole", qos:.background)
-    
-    static let `default` = ExtoleApp()
     
     var savedToken : String? {
         get {

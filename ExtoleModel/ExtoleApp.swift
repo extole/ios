@@ -57,13 +57,12 @@ class ExtoleApp {
     var profile: MyProfile?
     var selectedShareable : MyShareable?
     var lastShareResult: CustomSharePollingResult?
-    var shareMessage : String? {
-        get {
-            return selectedShareable.map { (MyShareable) -> String in
-                return "Aliquam felis sem, dictum ut."
-            }
-        }
+    
+    struct Settings : Codable {
+        let shareMessage: String
     }
+    
+    var shareSettings : Settings?
     
     func applicationDidBecomeActive() {
         os_log("applicationDidBecomeActive", log: appLog, type: .info)
@@ -137,6 +136,9 @@ class ExtoleApp {
             if let identified = profile, !(identified.email?.isEmpty ?? true) {
                 self.onProfileIdentified(identified: identified)
             }
+        }
+        self.program.fetchObject(accessToken: verifiedToken, zone: "settings") { (settings: Settings?, error) in
+            self.shareSettings = settings
         }
     }
 

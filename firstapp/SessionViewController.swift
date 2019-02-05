@@ -47,7 +47,7 @@ class SessionViewController : UITableViewController {
             
             case .Share :
                 return MainSection(name: "Share", controls: [{
-                    return app.shareMessage
+                    return app.shareSettings?.shareMessage
                 }, {
                     return app.selectedShareable?.link
                 }])
@@ -94,8 +94,16 @@ class SessionViewController : UITableViewController {
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         showState(app: extoleApp)
+        let refreshControl = UIRefreshControl()
+        self.tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
     }
     
+    @objc private func refreshData(_ sender: Any) {
+        tableView.reloadData()
+        self.refreshControl?.endRefreshing()
+    }
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let selectedSection = sections[section]
         return selectedSection.getMainSection(app: extoleApp).controls.count
@@ -200,7 +208,7 @@ class SessionViewController : UITableViewController {
             showError(view: self, message: "No Shareable")
             return
         }
-        guard let message = extoleApp.shareMessage else {
+        guard let message = extoleApp.shareSettings?.shareMessage else {
             return
         }
         let shareItem = ShareItem.init(subject: "Check this out",

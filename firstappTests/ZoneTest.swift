@@ -30,7 +30,7 @@ class ZoneTest: XCTestCase {
         let shareMessage: String
     }
     
-    func testFetchZone() {
+    func testFetchSettings() {
         let promise = expectation(description: "fetch object")
         program.fetchObject(accessToken: accessToken!,
                             zone: "settings") { (settings: Settings?, error) in

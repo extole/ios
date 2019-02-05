@@ -13,14 +13,31 @@ import XCTest
 class ZoneTest: XCTestCase {
 
     let program = Program(baseUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
-
+    var accessToken: ConsumerToken?
+    
+    override func setUp() {
+        let promise = expectation(description: "invalid token response")
+        program.getToken() { token, error in
+            XCTAssert(token != nil)
+            XCTAssert(!token!.access_token.isEmpty)
+            self.accessToken = token
+            promise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    struct Settings : Codable {
+        let shareMessage: String
+    }
+    
     func testFetchZone() {
-        let shareLinkResponse = program.fetchZone(accessToken: nil,
-                                                    zone: "share_experience")
-        let shareLink = shareLinkResponse.await(timeout: DispatchTime.now() + .seconds(100))
-        XCTAssert(shareLink != nil)
-        let linkData = String.init(data: shareLink!, encoding: String.Encoding.utf8)!
-        XCTAssert(linkData.contains("extole.define"))
+        let promise = expectation(description: "fetch object")
+        program.fetchObject(accessToken: accessToken!,
+                            zone: "settings") { (settings: Settings?, error) in
+            XCTAssertEqual("Share message", settings?.shareMessage)
+            promise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
     }
 
 }

@@ -26,82 +26,21 @@ class ShareViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func doShare(_ sender: UIButton) {
-        let message = messageText.text
-
-        let shareItem = ShareItem.init(subject: "Check this out",
-                                       message: message!,
-                                       shortMessage: shareLink.text!)
-        let textToShare = [ shareItem  ]
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-        
-        // exclude some activity types from the list (optional)
-        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop ]
-        
-        // present the view controller
-        self.present(activityViewController, animated: true, completion: nil)
-        activityViewController.completionWithItemsHandler =  {(activityType : UIActivity.ActivityType?, completed : Bool, returnedItems: [Any]?, activityError : Error?) in
-            if let completedActivity = activityType, completed {
-                switch(completedActivity) {
-                    case UIActivity.ActivityType.mail : do {
-                       self.extoleApp.signalEmailShare()
-                    }
-                    case UIActivity.ActivityType.message : do {
-                        self.extoleApp.signalMessageShare()
-                    }
-                    case UIActivity.ActivityType.postToFacebook : do {
-                        self.extoleApp.signalFacebookShare()
-                    }
-                    default : do {
-                        self.extoleApp.signalShare(channel: completedActivity.rawValue)
-                    }
-                }
-                
-            }
+    @objc func doneClick(_ sender: UITextField) {
+        DispatchQueue.main.async {
+            self.navigationController?.popViewController(animated: true)
         }
     }
+
     
-    func newLabel(parentView: UIView, text: String) -> UILabel {
-        let newLabel = UILabel()
-        parentView.addSubview(newLabel)
-        newLabel.translatesAutoresizingMaskIntoConstraints = false
-        newLabel.text = text
-        return newLabel
-    }
-    
-    func newText(parentView: UIView, placeholder: String) -> UITextField {
-        let newText = UITextField()
-        parentView.addSubview(newText)
-        newText.translatesAutoresizingMaskIntoConstraints = false
-        newText.placeholder = placeholder
-        return newText
-    }
-    
-    func newTextView(parentView: UIView) -> UITextView {
-        let newText = UITextView()
-        parentView.addSubview(newText)
-        newText.translatesAutoresizingMaskIntoConstraints = false
-        return newText
-    }
-    
-    func newButton(parentView: UIView, text: String) -> UIButton {
-        let newButton = UIButton()
-        parentView.addSubview(newButton)
-        newButton.translatesAutoresizingMaskIntoConstraints = false
-        newButton.setTitle(text, for: .normal)
-        newButton.backgroundColor = .blue
-        return newButton
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationItem.title = "Share Link"
         self.view.backgroundColor = UIColor.white
-        let primary = UIBarButtonItem.init(barButtonSystemItem: .action, target: self
-            , action: #selector(doShare))
-        navigationItem.rightBarButtonItem = primary
+        let done = UIBarButtonItem.init(title: "Done", style: .plain, target: self, action: #selector(self.doneClick))
+        self.navigationItem.rightBarButtonItem = done
         
         let messageLabel = newLabel(parentView: view, text: "Message:")
         messageLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -121,21 +60,7 @@ class ShareViewController: UIViewController {
         shareLink.topAnchor.constraint(equalTo: messageText.bottomAnchor).isActive = true
         shareLink.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
         shareLink.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
-        /*
-        let toolbar = UIToolbar.init()
-        view.addSubview(toolbar)
-        toolbar.translatesAutoresizingMaskIntoConstraints = false
-        toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        toolbar.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
-        toolbar.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        let space = UIBarButtonItem.init(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let actionButton = UIBarButtonItem.init(barButtonSystemItem: .action, target: self
-            , action: #selector(doShare))
-        toolbar.items = [space, actionButton]
-        view.addSubview(toolbar)
-        */
         
         ExtoleApp.default.notification.addObserver(self, selector: #selector(stateChanged),
                                            name: NSNotification.Name.state, object: nil)
@@ -166,28 +91,5 @@ class ShareViewController: UIViewController {
         view.endEditing(true)
     }
     
-    @objc class ShareItem : NSObject, UIActivityItemSource {
-        let message: String
-        let shortMessage: String
-        let subject: String
-        init (subject: String, message: String, shortMessage: String) {
-            self.subject = subject
-            self.message = message
-            self.shortMessage = shortMessage
-        }
-        func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-            return shortMessage
-        }
-        
-        func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-            switch activityType {
-                case UIActivity.ActivityType.message: return shortMessage
-                default: return message
-            }
-        }
     
-        func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
-            return subject
-        }
-    }
 }

@@ -13,13 +13,10 @@ class IdentifyViewController: UIViewController {
     
     var extoleApp: ExtoleApp!
     
-    var profileViewController: ProfileViewController!
-    
     var emailText: UITextField!
     
     init(with extoleApp: ExtoleApp) {
         self.extoleApp = extoleApp
-        self.profileViewController = ProfileViewController.init(with : extoleApp)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -27,7 +24,7 @@ class IdentifyViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func nextClick(_ sender: UIButton) {
+    @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
             extoleApp.identify(email: email) { error in
                 DispatchQueue.main.async {
@@ -37,11 +34,11 @@ class IdentifyViewController: UIViewController {
                             //
                         }))
                         self.present(errorAlert, animated: true, completion: nil)
+                    } else {
+                        self.navigationController?.popViewController(animated: true)
                     }
                 }
             }
-        } else {
-            extoleApp.populateProfile()
         }
     }
     
@@ -62,21 +59,12 @@ class IdentifyViewController: UIViewController {
         emailText.leadingAnchor.constraint(equalTo: emailLabel.trailingAnchor).isActive = true
         emailText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         emailText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
+        
+        let done = UIBarButtonItem.init(title: "Done", style: .plain, target: self, action: #selector(self.done))
+        self.navigationItem.rightBarButtonItem = done
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        showState(app: extoleApp)
-    }
-    
-    func showState(app: ExtoleApp) {
-        DispatchQueue.main.async {
-            let next = UIBarButtonItem.init(title: "Done", style: .plain, target: self, action: #selector(self.nextClick))
-            self.navigationItem.rightBarButtonItem = next
-            
-            if let profile = app.profile, !(app.profile?.email?.isEmpty ?? true) {
-                self.emailText.text = profile.email
-                
-            }
-        }
+        self.emailText.text = extoleApp.profile?.email ?? ""
     }
 }

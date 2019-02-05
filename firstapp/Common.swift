@@ -34,3 +34,20 @@ func newButton(parentView: UIView, text: String) -> UIButton {
     newButton.backgroundColor = .blue
     return newButton
 }
+
+func newTextView(parentView: UIView) -> UITextView {
+    let newText = UITextView()
+    parentView.addSubview(newText)
+    newText.translatesAutoresizingMaskIntoConstraints = false
+    return newText
+}
+
+func showError(view: UIViewController, message : String) {
+    DispatchQueue.main.async {
+        let errorAlert = UIAlertController(title: "Identify Error", message: message, preferredStyle: .alert)
+        errorAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: { _ in
+            //
+        }))
+        view.present(errorAlert, animated: true, completion: nil)
+    }
+}

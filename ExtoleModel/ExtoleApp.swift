@@ -60,6 +60,13 @@ class ExtoleApp {
     var profile: MyProfile?
     var selectedShareable : MyShareable?
     var lastShareResult: CustomSharePollingResult?
+    var shareMessage : String? {
+        get {
+            return selectedShareable.map { (MyShareable) -> String in
+                return "Aliquam felis sem, dictum ut."
+            }
+        }
+    }
     
     func applicationDidBecomeActive() {
         os_log("applicationDidBecomeActive", log: appLog, type: .info)
@@ -152,20 +159,14 @@ class ExtoleApp {
             }
         }
     }
-    
-    func populateProfile() {
-        self.state = .PopulateProfile
-    }
 
-    func updateProfile(profile: MyProfile) {
+    func updateProfile(profile: MyProfile, callback: @escaping (UpdateProfileError?) -> Void) {
         dispatchQueue.async {
             self.program.updateProfile(accessToken: self.accessToken!, profile: profile) { error in
-                if !(profile.email?.isEmpty ?? true) {
-                    //self.onProfileIdentified(identified: profile)
-                    self.program.getProfile(accessToken: self.accessToken!) { profile, error in
-                        if let identified = profile, !(identified.email?.isEmpty ?? true) {
-                            self.onProfileIdentified(identified: identified)
-                        }
+                callback(error)
+                self.program.getProfile(accessToken: self.accessToken!) { profile, error in
+                    if let identified = profile {
+                        self.onProfileIdentified(identified: identified)
                     }
                 }
             }
@@ -199,10 +200,6 @@ class ExtoleApp {
                     })
             })
         }
-    }
-
-    func prepareShare(){
-        self.program.getShareables(accessToken: accessToken!).onComplete(callback: onShareablesLoaded)
     }
     
     private func onProfileIdentified(identified: MyProfile) {

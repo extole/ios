@@ -13,6 +13,8 @@ class SessionViewController : UITableViewController {
     var extoleApp: ExtoleApp!
     
     var identifyViewController: IdentifyViewController!
+    var profileViewController: ProfileViewController!
+    var shareController : ShareViewController!
     
     let cellId = "cellId"
     
@@ -28,6 +30,7 @@ class SessionViewController : UITableViewController {
     enum Section {
         case Identity
         case Profile
+        case Share
         
         func getMainSection(app: ExtoleApp) -> MainSection{
             switch self {
@@ -41,6 +44,13 @@ class SessionViewController : UITableViewController {
                     }, {
                         return app.profile?.last_name
                     }])
+            
+            case .Share :
+                return MainSection(name: "Share", controls: [{
+                    return app.shareMessage
+                }, {
+                    return app.selectedShareable?.link
+                }])
             }
         }
         
@@ -49,16 +59,21 @@ class SessionViewController : UITableViewController {
             case .Identity:
                 return controller.identifyViewController
             case .Profile:
-                return controller.identifyViewController.profileViewController
+                return controller.profileViewController
+            
+            case .Share:
+                return controller.shareController
             }
         }
     }
     
-    let sections: [Section] = [.Identity, .Profile]
+    let sections: [Section] = [.Identity, .Profile, .Share]
     
     init(with extoleApp: ExtoleApp) {
         self.extoleApp = extoleApp
         self.identifyViewController = IdentifyViewController.init(with : extoleApp)
+        self.profileViewController = ProfileViewController.init(with : extoleApp)
+        self.shareController = ShareViewController(with: extoleApp)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -67,7 +82,7 @@ class SessionViewController : UITableViewController {
     }
     
     @objc func nextClick(_ sender: UIButton) {
-        navigationController?.pushViewController(identifyViewController.profileViewController.shareController, animated: true)
+        navigationController?.pushViewController(shareController, animated: true)
     }
     
     override func viewDidLoad() {
@@ -105,7 +120,7 @@ class SessionViewController : UITableViewController {
             cell.textLabel?.backgroundColor = UIColor.lightGray
             
         }
-        cell.accessoryType = .detailDisclosureButton
+        cell.accessoryType = .disclosureIndicator
         cell.accessibilityLabel = "Edit"
         cell.detailTextLabel?.text = "Detail"
         
@@ -148,6 +163,11 @@ class SessionViewController : UITableViewController {
                 self.navigationItem.rightBarButtonItem = nextSession
                 self.navigationItem.leftBarButtonItem = nil
                 }
+            case .ReadyToShare : do {
+                let share = UIBarButtonItem.init(barButtonSystemItem: .action, target: self
+                    , action: #selector(self.doShare))
+                self.navigationItem.rightBarButtonItem = share
+                }
                 /*
             case .Identify : do {
                 self.navigationController?.pushViewController(self.identifyViewController, animated: true)
@@ -174,6 +194,73 @@ class SessionViewController : UITableViewController {
                 }
             }
             
+        }
+    }
+    
+    
+    @objc class ShareItem : NSObject, UIActivityItemSource {
+        let message: String
+        let shortMessage: String
+        let subject: String
+        init (subject: String, message: String, shortMessage: String) {
+            self.subject = subject
+            self.message = message
+            self.shortMessage = shortMessage
+        }
+        func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+            return shortMessage
+        }
+        
+        func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+            switch activityType {
+            case UIActivity.ActivityType.message: return shortMessage
+            default: return message
+            }
+        }
+        
+        func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
+            return subject
+        }
+    }
+    
+    @objc func doShare(_ sender: UIButton) {
+        guard let shareLink = extoleApp.selectedShareable?.link else {
+            showError(view: self, message: "No Shareable")
+            return
+        }
+        guard let message = extoleApp.shareMessage else {
+            return
+        }
+        let shareItem = ShareItem.init(subject: "Check this out",
+                                       message: message,
+                                       shortMessage: shareLink)
+        let textToShare = [ shareItem  ]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        
+        // exclude some activity types from the list (optional)
+        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop ]
+        
+        // present the view controller
+        self.present(activityViewController, animated: true, completion: nil)
+        activityViewController.completionWithItemsHandler =  {(activityType : UIActivity.ActivityType?, completed : Bool, returnedItems: [Any]?, activityError : Error?) in
+            if let completedActivity = activityType, completed {
+                switch(completedActivity) {
+                case UIActivity.ActivityType.mail : do {
+                    self.extoleApp.signalEmailShare()
+                    }
+                case UIActivity.ActivityType.message : do {
+                    self.extoleApp.signalMessageShare()
+                    }
+                case UIActivity.ActivityType.postToFacebook : do {
+                    self.extoleApp.signalFacebookShare()
+                    }
+                default : do {
+                    self.extoleApp.signalShare(channel: completedActivity.rawValue)
+                    }
+                }
+                
+            }
         }
     }
     

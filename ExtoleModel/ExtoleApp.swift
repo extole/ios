@@ -9,7 +9,7 @@
 import Foundation
 import os.log
 
-protocol StateChanged : AnyObject {
+protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleApp.State)
 }
 
@@ -31,9 +31,9 @@ final class ExtoleApp {
     
     private let program: Program
     
-    weak var stateListener: StateChanged?
+    weak var stateListener: ExtoleAppStateListener?
     
-    init(programUrl: URL, stateListener: StateChanged? = nil) {
+    init(programUrl: URL, stateListener: ExtoleAppStateListener? = nil) {
         self.program = Program.init(baseUrl: programUrl)
     }
     

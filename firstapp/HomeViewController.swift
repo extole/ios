@@ -9,18 +9,20 @@
 import Foundation
 import UIKit
 
+
+let SHARE_MESSAGE_KEY = "app.shareMessage"
 extension ExtoleApp {
     var shareMessage: String? {
         get {
-            return settings.string(forKey: "app.shareMessage")
+            return settings.string(forKey: SHARE_MESSAGE_KEY)
         }
         set(newValue) {
-            settings.setValue(newValue, forKey: "app.shareMessage")
+            settings.setValue(newValue, forKey: SHARE_MESSAGE_KEY)
         }
     }
 }
 
-class SessionViewController : UITableViewController, StateChanged {
+class HomeViewController : UITableViewController, ExtoleAppStateListener {
 
     func onStateChanged(state: ExtoleApp.State) {
         switch state {
@@ -79,7 +81,7 @@ class SessionViewController : UITableViewController, StateChanged {
             }
         }
         
-        func getEditController(controller: SessionViewController) -> UIViewController {
+        func getEditController(controller: HomeViewController) -> UIViewController {
             switch self {
             case .Identity:
                 return controller.identifyViewController
@@ -117,10 +119,12 @@ class SessionViewController : UITableViewController, StateChanged {
         extoleApp.stateListener = self
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
-        showState(app: extoleApp)
+        
         let refreshControl = UIRefreshControl()
         self.tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        
+        showState(app: extoleApp)
     }
     
     @objc private func refreshData(_ sender: Any) {
@@ -134,26 +138,19 @@ class SessionViewController : UITableViewController, StateChanged {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var reusableCell = tableView.dequeueReusableCell(withIdentifier: cellId)
-        if (reusableCell == nil) {
-            reusableCell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle,
-                               reuseIdentifier: cellId)
-        }
-        let cell = reusableCell!
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         let section = sections[indexPath.section]
         let value = section.getMainSection(app: extoleApp).controls[indexPath.row]()
         
         if let presentValue = value {
             cell.textLabel?.text = presentValue
-            cell.textLabel?.backgroundColor = .white
+            cell.textLabel?.isEnabled = true
         } else {
             cell.textLabel?.text = "(none)"
-            cell.textLabel?.backgroundColor = UIColor.lightGray
+            cell.textLabel?.isEnabled = false
             
         }
         cell.accessoryType = .disclosureIndicator
-        cell.accessibilityLabel = "Edit"
-        cell.detailTextLabel?.text = "Detail"
         
         return cell
     }
@@ -167,13 +164,6 @@ class SessionViewController : UITableViewController, StateChanged {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
-    }
-    
-    @objc private func stateChanged(_ notification: Notification) {
-        guard let extoleApp = notification.object as? ExtoleApp else {
-            return
-        }
-        showState(app: extoleApp)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

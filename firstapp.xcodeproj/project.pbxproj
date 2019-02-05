@@ -22,7 +22,7 @@
 		49B52C4221F0A39F00AC2DFC /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B52C4121F0A39F00AC2DFC /* Logger.swift */; };
 		49BE2C052208372300A45CED /* IdentifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BE2C042208372300A45CED /* IdentifyViewController.swift */; };
 		49BE2C072208392E00A45CED /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BE2C062208392E00A45CED /* Common.swift */; };
-		49BE2C09220878C200A45CED /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BE2C08220878C200A45CED /* SessionViewController.swift */; };
+		49BE2C09220878C200A45CED /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BE2C08220878C200A45CED /* HomeViewController.swift */; };
 		49D6DF3F21F9FF240036B7DD /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D6DF3E21F9FF240036B7DD /* Network.swift */; };
 		49D6DF4121F9FFC20036B7DD /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D6DF4021F9FFC20036B7DD /* ApiResponse.swift */; };
 		49D6DF4321FA001A0036B7DD /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D6DF4221FA001A0036B7DD /* ErrorData.swift */; };
@@ -73,7 +73,7 @@
 		49B52C4121F0A39F00AC2DFC /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		49BE2C042208372300A45CED /* IdentifyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyViewController.swift; sourceTree = "<group>"; };
 		49BE2C062208392E00A45CED /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
-		49BE2C08220878C200A45CED /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
+		49BE2C08220878C200A45CED /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		49D6DF3E21F9FF240036B7DD /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		49D6DF4021F9FFC20036B7DD /* ApiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
 		49D6DF4221FA001A0036B7DD /* ErrorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorData.swift; sourceTree = "<group>"; };
@@ -143,7 +143,7 @@
 				498FE16721FB670300052D9F /* ShareViewController.swift */,
 				49BE2C042208372300A45CED /* IdentifyViewController.swift */,
 				49BE2C062208392E00A45CED /* Common.swift */,
-				49BE2C08220878C200A45CED /* SessionViewController.swift */,
+				49BE2C08220878C200A45CED /* HomeViewController.swift */,
 				4986DF1B22098750003CAA00 /* ShareItem.swift */,
 			);
 			path = firstapp;
@@ -336,7 +336,7 @@
 				49B52C4221F0A39F00AC2DFC /* Logger.swift in Sources */,
 				49D6DF4D21FA04B60036B7DD /* Program.swift in Sources */,
 				49D6DF4B21FA02A20036B7DD /* Share.swift in Sources */,
-				49BE2C09220878C200A45CED /* SessionViewController.swift in Sources */,
+				49BE2C09220878C200A45CED /* HomeViewController.swift in Sources */,
 				498FE16B21FB6CE500052D9F /* ExtoleApp.swift in Sources */,
 				49D6DF4321FA001A0036B7DD /* ErrorData.swift in Sources */,
 				49BE2C052208372300A45CED /* IdentifyViewController.swift in Sources */,

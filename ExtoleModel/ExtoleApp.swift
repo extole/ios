@@ -23,10 +23,7 @@ class ExtoleApp {
         case Identify
         case Identified
         
-        case PopulateProfile
-        
         case ReadyToShare
-        //case Busy
     }
     
     private let program = Program.init(baseUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)

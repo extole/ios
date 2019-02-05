@@ -60,7 +60,6 @@ class SessionViewController : UITableViewController {
                 return controller.identifyViewController
             case .Profile:
                 return controller.profileViewController
-            
             case .Share:
                 return controller.shareController
             }
@@ -156,6 +155,7 @@ class SessionViewController : UITableViewController {
     
     func showState(app: ExtoleApp) {
         DispatchQueue.main.async {
+            self.navigationItem.title = "Home"
             self.tableView.reloadData()
             switch(app.state) {
             case .LoggedOut : do {
@@ -164,33 +164,23 @@ class SessionViewController : UITableViewController {
                 self.navigationItem.leftBarButtonItem = nil
                 }
             case .ReadyToShare : do {
+                let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
+                self.navigationItem.leftBarButtonItem = logout
+                
                 let share = UIBarButtonItem.init(barButtonSystemItem: .action, target: self
                     , action: #selector(self.doShare))
                 self.navigationItem.rightBarButtonItem = share
                 }
-                /*
-            case .Identify : do {
-                self.navigationController?.pushViewController(self.identifyViewController, animated: true)
+            case .Identify: do {
+                self.navigationItem.title = "Anonymous"
+                let anonymous = UIBarButtonItem.init(title: "Generate Link", style: .plain, target: self, action: #selector(self.anonymousClick))
+                self.navigationItem.rightBarButtonItem = anonymous
+                self.navigationItem.leftBarButtonItem = nil
                 }
-            case .Identified : do {
-                self.navigationController?.pushViewController(
-                    self.identifyViewController.profileViewController, animated: false)
-                }
-            case .PopulateProfile : do {
-                self.navigationController?.pushViewController(
-                    self.identifyViewController.profileViewController, animated: false)
-                }
-            case .ReadyToShare : do {
-                self.navigationController?.pushViewController(
-                    self.identifyViewController.profileViewController.shareController, animated: false)
-                }
-    */
             default: do {
                 let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
                 self.navigationItem.leftBarButtonItem = logout
-
-                let nextSession = UIBarButtonItem.init(title: "Share", style: .plain, target: self, action: #selector(self.nextClick))
-                self.navigationItem.rightBarButtonItem = nextSession
+                self.navigationItem.title = "\(app.state)"
                 }
             }
             
@@ -220,6 +210,14 @@ class SessionViewController : UITableViewController {
         
         func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
             return subject
+        }
+    }
+    
+    @objc func anonymousClick(_ sender: UIButton) {
+        extoleApp.updateProfile(profile: MyProfile.init()) { error in
+            if let error = error {
+                showError(view: self, message: "\(error)")
+            }
         }
     }
     

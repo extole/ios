@@ -9,6 +9,7 @@
 import Foundation
 import os.log
 
+@available(iOS 10.0, *)
 let NetworkLog = OSLog.init(subsystem: "com.extole", category: "network")
 
 func tryDecode<T: Codable>(data: Data) -> T? {
@@ -23,7 +24,11 @@ func newSession() -> URLSession {
 func getRequest(accessToken: ConsumerToken? = nil, url: URL) -> URLRequest {
     var result = URLRequest(url: url)
     if let existingToken = accessToken {
-        os_log("using accessToken %{private}@", log: NetworkLog, type: .debug, existingToken.access_token)
+        if #available(iOS 10.0, *) {
+            os_log("using accessToken %{private}@", log: NetworkLog, type: .debug, existingToken.access_token)
+        } else {
+            // Fallback on earlier versions
+        }
         result.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
     }
     return result
@@ -41,7 +46,11 @@ func postRequest<T : Encodable>(accessToken: ConsumerToken? = nil, url: URL, dat
     result.addValue("application/json", forHTTPHeaderField: "Content-Type")
     result.httpBody =  try? JSONEncoder().encode(data)
     if let existingToken = accessToken {
-        os_log("using accessToken %{private}@", log: NetworkLog, type: .debug, existingToken.access_token)
+        if #available(iOS 10.0, *) {
+            os_log("using accessToken %{private}@", log: NetworkLog, type: .debug, existingToken.access_token)
+        } else {
+            // Fallback on earlier versions
+        }
         result.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
     }
     return result
@@ -70,7 +79,11 @@ func processRequest(with request: URLRequest,
         }
         if let responseData = data {
             let responseDataString = String(data: responseData, encoding: .utf8)!
-            os_log("processRequest : %{public}@", log: NetworkLog, type: OSLogType.debug, responseDataString)
+            if #available(iOS 10.0, *) {
+                os_log("processRequest : %{public}@", log: NetworkLog, type: OSLogType.debug, responseDataString)
+            } else {
+                // Fallback on earlier versions
+            }
             callback(responseData, nil)
         } else {
             callback(nil, .noContent)
@@ -81,11 +94,19 @@ func processRequest(with request: URLRequest,
     
 func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) -> APIResponse<T> {
     let apiResponse = APIResponse<T>.init()
-    os_log("dataTask %s", log: NetworkLog, type: .debug, url.absoluteString)
+    if #available(iOS 10.0, *) {
+        os_log("dataTask %s", log: NetworkLog, type: .debug, url.absoluteString)
+    } else {
+        // Fallback on earlier versions
+    }
     let newSession = URLSession.init(configuration: URLSessionConfiguration.ephemeral)
     var urlRequest = URLRequest(url: url)
     if let existingToken = accessToken {
-        os_log("using accessToken %s", log: NetworkLog, type: .debug, existingToken)
+        if #available(iOS 10.0, *) {
+            os_log("using accessToken %s", log: NetworkLog, type: .debug, existingToken)
+        } else {
+            // Fallback on earlier versions
+        }
         urlRequest.addValue(existingToken, forHTTPHeaderField: "Authorization")
     }
     if let postData = postData {
@@ -114,7 +135,11 @@ func dataTask<T: Decodable> (url: URL, accessToken: String?, postData: Data?) ->
                 return
         }
         if let responseData = data {
-            os_log("reponseData :%s", log: .default, type: .debug, String(data: responseData, encoding: String.Encoding.utf8)!)
+            if #available(iOS 10.0, *) {
+                os_log("reponseData :%s", log: .default, type: .debug, String(data: responseData, encoding: String.Encoding.utf8)!)
+            } else {
+                // Fallback on earlier versions
+            }
             let decodedData: T? = tryDecode(data: responseData)
             if let decodedData = decodedData {
                 apiResponse.setData(data: decodedData)

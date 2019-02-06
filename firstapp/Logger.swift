@@ -9,4 +9,5 @@
 import Foundation
 import os.log
 
+@available(iOS 10.0, *)
 let appLog = OSLog.init(subsystem: "com.extole", category: "app")

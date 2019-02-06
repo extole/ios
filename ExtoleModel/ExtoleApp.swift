@@ -13,9 +13,11 @@ protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleApp.State)
 }
 
+@available(iOS 10.0, *)
+let modelLog = OSLog.init(subsystem: "com.extole", category: "model")
+
 final class ExtoleApp {
-    let modelLog = OSLog.init(subsystem: "com.extole", category: "model")
-    
+
     public enum State {
         case Init
         case LoggedOut
@@ -64,7 +66,11 @@ final class ExtoleApp {
     var lastShareResult: CustomSharePollingResult?
     
     func applicationDidBecomeActive() {
-        os_log("applicationDidBecomeActive", log: appLog, type: .info)
+        if #available(iOS 10.0, *) {
+            os_log("applicationDidBecomeActive", log: appLog, type: .info)
+        } else {
+            // Fallback on earlier versions
+        }
         dispatchQueue.async {
             if let existingToken = self.savedToken {
                 self.program.getToken(token: existingToken) { token, error in
@@ -173,19 +179,45 @@ final class ExtoleApp {
     }
 
     func signalEmailShare() {
-        os_log("shared via system-email", log: modelLog, type: .info)
+        if #available(iOS 10.0, *) {
+            os_log("shared via system-email", log: modelLog, type: .info)
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     func signalMessageShare() {
-        os_log("shared via system-message", log: modelLog, type: .info)
+        if #available(iOS 10.0, *) {
+            os_log("shared via system-message", log: modelLog, type: .info)
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     func signalFacebookShare() {
-        os_log("shared via system-facebook", log: modelLog, type: .info)
+        if #available(iOS 10.0, *) {
+            os_log("shared via system-facebook", log: modelLog, type: .info)
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     func signalShare(channel: String) {
-        os_log("shared via custom channel %s", log: modelLog, type: .info, channel)
+        if #available(iOS 10.0, *) {
+            os_log("shared via custom channel %s", log: modelLog, type: .info, channel)
+        } else {
+            // Fallback on earlier versions
+        }
+        dispatchQueue.async {
+            let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: channel)
+            self.program.customShare(accessToken: self.accessToken!, share: share)
+                .onComplete(callback: { (pollingResponse: PollingIdResponse?) in
+                    self.program.pollCustomShare(accessToken: self.accessToken!, pollingResponse: pollingResponse!).onComplete(callback: { (shareResult: CustomSharePollingResult?) in
+                        self.state = State.ReadyToShare
+                        self.lastShareResult = shareResult
+                    })
+                })
+        }
     }
     
     func share(recepient: String, message: String) {
@@ -225,7 +257,11 @@ final class ExtoleApp {
     }
     
     func applicationWillResignActive() {
-        os_log("application resign active", log: modelLog, type: .info)
+        if #available(iOS 10.0, *) {
+            os_log("application resign active", log: modelLog, type: .info)
+        } else {
+            // Fallback on earlier versions
+        }
         self.state = .Inactive
     }
 }

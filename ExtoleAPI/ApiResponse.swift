@@ -35,7 +35,11 @@ public class APIResponse<T: Codable> {
     }
     
     func setError(error: ExtoleError) -> Void{
-        os_log("API error %s", log: NetworkLog, type: .debug, error.localizedDescription)
+        if #available(iOS 10.0, *) {
+            os_log("API error %s", log: NetworkLog, type: .debug, error.localizedDescription)
+        } else {
+            // Fallback on earlier versions
+        }
         self.error = error
         completeLock.sync {
             if let onError = errorHandler {

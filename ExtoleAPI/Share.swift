@@ -9,11 +9,19 @@
 import Foundation
 
 public struct CustomShare : Codable {
+    init(advocate_code: String, channel: String, message : String? = nil, recipient_email: String? = nil,
+         data: [String:String]? = nil) {
+        self.advocate_code = advocate_code
+        self.channel = channel
+        self.message = message
+        self.recipient_email = recipient_email
+        self.data = data
+    }
     let advocate_code: String
     let channel: String
-    let message: String
-    let recipient_email: String
-    let data: [String:String]
+    let message: String?
+    let recipient_email: String?
+    let data: [String:String]?
 }
 
 public struct CustomSharePollingResult : Codable {

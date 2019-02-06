@@ -42,20 +42,24 @@ class ShareViewController: UIViewController {
         let done = UIBarButtonItem.init(title: "Done", style: .plain, target: self, action: #selector(self.doneClick))
         self.navigationItem.rightBarButtonItem = done
         
-        let messageLabel = newLabel(parentView: view, text: "Message:")
+        let messageLabel = view.newLabel(text: "Message:")
         messageLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        messageLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        if #available(iOS 11.0, *) {
+            messageLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        } else {
+            // Fallback on earlier versions
+        }
         messageLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         messageLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        messageText = newTextView(parentView: view)
+        messageText = view.newTextView()
         messageText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         messageText.topAnchor.constraint(equalTo: messageLabel.bottomAnchor).isActive = true
         messageText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
         messageText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.3).isActive = true
         messageText.text = "Check this out"
         
-        shareLink = newText(parentView: view, placeholder: "your share link")
+        shareLink = view.newText(placeholder: "your share link")
         shareLink.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         shareLink.topAnchor.constraint(equalTo: messageText.bottomAnchor).isActive = true
         shareLink.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true

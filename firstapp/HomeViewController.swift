@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-
 let SHARE_MESSAGE_KEY = "app.shareMessage"
+
 extension ExtoleApp {
     var shareMessage: String? {
         get {
@@ -121,10 +121,15 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
         let refreshControl = UIRefreshControl()
-        self.tableView.refreshControl = refreshControl
+        if #available(iOS 10.0, *) {
+            self.tableView.refreshControl = refreshControl
+        } else {
+            // Fallback on earlier versions
+        }
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
         showState(app: extoleApp)
+        tableView.separatorStyle = .singleLine
     }
     
     @objc private func refreshData(_ sender: Any) {
@@ -155,13 +160,10 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let label = UILabel()
-        label.text = "\(sections[section])"
-        label.backgroundColor = UIColor.gray
-        return label
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "\(sections[section])"
     }
-    
+
     override func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
     }
@@ -212,14 +214,14 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     @objc func anonymousClick(_ sender: UIButton) {
         extoleApp.updateProfile(profile: MyProfile.init()) { error in
             if let error = error {
-                showError(view: self, message: "\(error)")
+                self.showError(message: "\(error)")
             }
         }
     }
     
     @objc func doShare(_ sender: UIButton) {
         guard let shareLink = extoleApp.selectedShareable?.link else {
-            showError(view: self, message: "No Shareable")
+            self.showError(message: "No Shareable")
             return
         }
         guard let message = extoleApp.shareMessage else {

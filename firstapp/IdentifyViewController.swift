@@ -47,13 +47,18 @@ class IdentifyViewController: UIViewController {
         self.title = "Identify"
         self.view.backgroundColor = UIColor.white
         
-        let emailLabel = newLabel(parentView: view, text: "Email:")
+        let emailLabel = view.newLabel(text: "Email:")
         emailLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        emailLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        if #available(iOS 11.0, *) {
+            emailLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        } else {
+            emailLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: self.safeArea()).isActive = true
+            // Fallback on earlier versions
+        }
         emailLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         emailLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        emailText = newText(parentView: view, placeholder: "me@email.com")
+        emailText = view.newText(placeholder: "me@email.com")
         emailText.autocapitalizationType = .none
         emailText.topAnchor.constraint(equalTo: emailLabel.topAnchor).isActive = true
         emailText.leadingAnchor.constraint(equalTo: emailLabel.trailingAnchor).isActive = true

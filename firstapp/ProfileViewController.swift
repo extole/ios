@@ -31,7 +31,7 @@ class ProfileViewController: UIViewController {
                                             last_name: lastNameText.text)
         extoleApp?.updateProfile(profile: updatedProfile) { error in
             if let error = error {
-                showError(view: self, message: "\(error)")
+                self.showError(message: "\(error)")
             } else {
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)
@@ -45,26 +45,31 @@ class ProfileViewController: UIViewController {
         self.title = "Profile"
         self.view.backgroundColor = UIColor.white
        
-        let firstNameLabel = newLabel(parentView: view, text: "FirstName:")
+        let firstNameLabel = view.newLabel(text: "FirstName:")
         firstNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        firstNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        if #available(iOS 11.0, *) {
+            firstNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        } else {
+            firstNameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: self.safeArea()).isActive = true
+            // Fallback on earlier versions
+        }
         firstNameLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         firstNameLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
 
-        firstNameText =  newText(parentView: view, placeholder: "Joe")
+        firstNameText =  view.newText(placeholder: "Joe")
         firstNameText.topAnchor.constraint(equalTo: firstNameLabel.topAnchor).isActive = true
         firstNameText.leadingAnchor.constraint(equalTo: firstNameLabel.trailingAnchor).isActive = true
         firstNameText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         firstNameText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
         //
-        let lastNameLabel = newLabel(parentView: view, text: "LastName:")
+        let lastNameLabel = view.newLabel(text: "LastName:")
         lastNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         lastNameLabel.topAnchor.constraint(equalTo: firstNameLabel.bottomAnchor).isActive = true
         lastNameLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         lastNameLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        lastNameText = newText(parentView: view, placeholder: "Doe")
+        lastNameText = view.newText(placeholder: "Doe")
         lastNameText.topAnchor.constraint(equalTo: lastNameLabel.topAnchor).isActive = true
         lastNameText.leadingAnchor.constraint(equalTo: lastNameLabel.trailingAnchor).isActive = true
         lastNameText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true

@@ -7,28 +7,25 @@
 //
 
 import Foundation
-import os.log
 
 protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleApp.State)
 }
 
-@available(iOS 10.0, *)
-let modelLog = OSLog.init(subsystem: "com.extole", category: "model")
 
 final class ExtoleApp {
 
-    public enum State {
-        case Init
-        case LoggedOut
-        case Inactive
-        case InvalidToken
-        case ServerError
+    public enum State : String {
+        case Init = "Init"
+        case LoggedOut = "LoggedOut"
+        case Inactive = "Inactive"
+        case InvalidToken = "InvalidToken"
+        case ServerError = "ServerError"
         
-        case Identify
-        case Identified
+        case Identify = "Identify"
+        case Identified = "Identified"
         
-        case ReadyToShare
+        case ReadyToShare = "ReadyToShare"
     }
     
     private let program: Program
@@ -45,6 +42,7 @@ final class ExtoleApp {
     
     var state = State.Init {
         didSet {
+            extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
             stateListener?.onStateChanged(state: state)
         }
     }
@@ -66,11 +64,7 @@ final class ExtoleApp {
     var lastShareResult: CustomSharePollingResult?
     
     func applicationDidBecomeActive() {
-        if #available(iOS 10.0, *) {
-            os_log("applicationDidBecomeActive", log: appLog, type: .info)
-        } else {
-            // Fallback on earlier versions
-        }
+        extoleInfo(format: "applicationDidBecomeActive")
         dispatchQueue.async {
             if let existingToken = self.savedToken {
                 self.program.getToken(token: existingToken) { token, error in
@@ -179,11 +173,7 @@ final class ExtoleApp {
     }
 
     func signalShare(channel: String) {
-        if #available(iOS 10.0, *) {
-            os_log("shared via custom channel %s", log: modelLog, type: .info, channel)
-        } else {
-            // Fallback on earlier versions
-        }
+        extoleInfo(format: "shared via custom channel %s", arg: channel)
         let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: channel)
         self.program.customShare(accessToken: self.accessToken!, share: share) { pollingResponse, error in
 
@@ -218,11 +208,7 @@ final class ExtoleApp {
     }
     
     func applicationWillResignActive() {
-        if #available(iOS 10.0, *) {
-            os_log("application resign active", log: modelLog, type: .info)
-        } else {
-            // Fallback on earlier versions
-        }
+        extoleInfo(format: "application resign active")
         self.state = .Inactive
     }
 }

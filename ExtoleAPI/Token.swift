@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os.log
 
 enum ExtoleApiError {
     case serverError(error: Error)
@@ -73,11 +72,7 @@ extension Program {
     public func deleteToken(token: String, callback : @escaping (_: GetTokenError?) -> Void) {
         let url = URL.init(string: token, relativeTo: tokenUrl())!
         let request = newRequest(url: url, method: "DELETE")
-        if #available(iOS 10.0, *) {
-            os_log("deleteToken : %{public}@", log: NetworkLog, type: OSLogType.debug, url.absoluteString)
-        } else {
-            // Fallback on earlier versions
-        }
+        extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
         processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {

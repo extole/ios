@@ -178,58 +178,19 @@ final class ExtoleApp {
         }
     }
 
-    func signalEmailShare() {
-        if #available(iOS 10.0, *) {
-            os_log("shared via system-email", log: modelLog, type: .info)
-        } else {
-            // Fallback on earlier versions
-        }
-    }
-    
-    func signalMessageShare() {
-        if #available(iOS 10.0, *) {
-            os_log("shared via system-message", log: modelLog, type: .info)
-        } else {
-            // Fallback on earlier versions
-        }
-    }
-    
-    func signalFacebookShare() {
-        if #available(iOS 10.0, *) {
-            os_log("shared via system-facebook", log: modelLog, type: .info)
-        } else {
-            // Fallback on earlier versions
-        }
-    }
-    
     func signalShare(channel: String) {
         if #available(iOS 10.0, *) {
             os_log("shared via custom channel %s", log: modelLog, type: .info, channel)
         } else {
             // Fallback on earlier versions
         }
-        dispatchQueue.async {
-            let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: channel)
-            self.program.customShare(accessToken: self.accessToken!, share: share)
-                .onComplete(callback: { (pollingResponse: PollingIdResponse?) in
-                    self.program.pollCustomShare(accessToken: self.accessToken!, pollingResponse: pollingResponse!).onComplete(callback: { (shareResult: CustomSharePollingResult?) in
-                        self.state = State.ReadyToShare
-                        self.lastShareResult = shareResult
-                    })
-                })
-        }
-    }
-    
-    func share(recepient: String, message: String) {
-        dispatchQueue.async {
-            let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: "EMAIL", message: message, recipient_email: recepient, data: [:])
-            self.program.customShare(accessToken: self.accessToken!, share: share)
-                .onComplete(callback: { (pollingResponse: PollingIdResponse?) in
-                    self.program.pollCustomShare(accessToken: self.accessToken!, pollingResponse: pollingResponse!).onComplete(callback: { (shareResult: CustomSharePollingResult?) in
-                        self.state = State.ReadyToShare
-                        self.lastShareResult = shareResult
-                    })
-            })
+        let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: channel)
+        self.program.customShare(accessToken: self.accessToken!, share: share) { pollingResponse, error in
+
+            self.program.pollCustomShare(accessToken: self.accessToken!, pollingResponse: pollingResponse!) { shareResponse, error in
+                self.state = State.ReadyToShare
+                self.lastShareResult = shareResponse
+            }
         }
     }
     

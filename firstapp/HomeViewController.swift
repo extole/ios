@@ -38,6 +38,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     }
     
     var extoleApp: ExtoleApp!
+    var refreshControlCompat: UIRefreshControl?
     
     var identifyViewController: IdentifyViewController!
     var profileViewController: ProfileViewController!
@@ -120,13 +121,13 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
-        let refreshControl = UIRefreshControl()
+        self.refreshControlCompat = UIRefreshControl()
         if #available(iOS 10.0, *) {
-            self.tableView.refreshControl = refreshControl
+            self.tableView.refreshControl = refreshControlCompat
         } else {
-            // Fallback on earlier versions
+            self.tableView.addSubview(refreshControlCompat!)
         }
-        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        refreshControlCompat?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
         showState(app: extoleApp)
         tableView.separatorStyle = .singleLine
@@ -134,7 +135,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     
     @objc private func refreshData(_ sender: Any) {
         tableView.reloadData()
-        self.refreshControl?.endRefreshing()
+        self.refreshControlCompat?.endRefreshing()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -241,21 +242,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         self.present(activityViewController, animated: true, completion: nil)
         activityViewController.completionWithItemsHandler =  {(activityType : UIActivity.ActivityType?, completed : Bool, returnedItems: [Any]?, activityError : Error?) in
             if let completedActivity = activityType, completed {
-                switch(completedActivity) {
-                case UIActivity.ActivityType.mail : do {
-                    self.extoleApp.signalEmailShare()
-                    }
-                case UIActivity.ActivityType.message : do {
-                    self.extoleApp.signalMessageShare()
-                    }
-                case UIActivity.ActivityType.postToFacebook : do {
-                    self.extoleApp.signalFacebookShare()
-                    }
-                default : do {
-                    self.extoleApp.signalShare(channel: completedActivity.rawValue)
-                    }
-                }
-                
+                self.extoleApp.signalShare(channel: completedActivity.rawValue)
             }
         }
     }

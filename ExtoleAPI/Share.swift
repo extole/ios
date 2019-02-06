@@ -24,6 +24,15 @@ public struct CustomShare : Codable {
     let data: [String:String]?
 }
 
+enum CustomShareError : Error {
+    case invalidProtocol(error: ExtoleApiError)
+}
+
+enum PollShareError : Error {
+    case invalidProtocol(error: ExtoleApiError)
+    case pollingTimeout
+}
+
 public struct CustomSharePollingResult : Codable {
     let polling_id : String
     let status : String
@@ -32,36 +41,68 @@ public struct CustomSharePollingResult : Codable {
 
 extension Program {
     
-    public func customShare(accessToken: ConsumerToken, share: CustomShare)
-        -> APIResponse<PollingIdResponse> {
+    public func customShare(accessToken: ConsumerToken, share: CustomShare, callback : @escaping (PollingIdResponse?, CustomShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
-        let shareData = try? JSONEncoder().encode(share)
-        return dataTask(url: url, accessToken: accessToken.access_token, postData: shareData)
-    }
-
-    public func pollCustomShare(accessToken: ConsumerToken, pollingResponse: PollingIdResponse)
-        -> APIResponse<CustomSharePollingResult> {
-            let response = APIResponse<CustomSharePollingResult>.init()
-            let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
-            
-            func poll(retries: UInt = 10) {
-                dataTask(url: url, accessToken: accessToken.access_token, postData: nil)
-                    .onComplete { (pollingResult: CustomSharePollingResult?) in
-                        let polingStatus = pollingResult?.status
-                        if polingStatus == "SUCCEEDED" {
-                            response.setData(data: pollingResult!)
-                        } else if retries > 0 {
-                            sleep(1)
-                            poll(retries: retries - 1)
-                        } else {
-                            response.setError(error: ExtoleError.pollingTimeout)
-                        }
+        let request = postRequest(accessToken: accessToken,
+                                 url: url,
+                                 data: share)
+        processRequest(with: request) { data, error in
+            if let apiError = error {
+                switch(apiError) {
+                case .genericError(let errorData) : do {
+                    callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
+                    }
+                default : callback(nil, .invalidProtocol(error: apiError))
+                }
+                return
+            }
+            if let data = data {
+                let decodedResponse : PollingIdResponse? = tryDecode(data: data)
+                if let decodedResponse = decodedResponse {
+                    callback(decodedResponse, nil)
+                } else {
+                    callback(nil, .invalidProtocol(error: .decodingError(data: data)))
                 }
             }
-            
+        }
+    }
+
+    public func pollCustomShare(accessToken: ConsumerToken, pollingResponse: PollingIdResponse,
+                                callback : @escaping (CustomSharePollingResult?, PollShareError?) -> Void) {
+            let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
+            let request = getRequest(accessToken: accessToken,
+                                      url: url)
+
+            func poll(retries: UInt = 10) {
+                processRequest(with: request) { data, error in
+                    if let apiError = error {
+                        switch(apiError) {
+                        case .genericError(let errorData) : do {
+                            callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
+                            }
+                        default : callback(nil, .invalidProtocol(error: apiError))
+                        }
+                        return
+                    }
+                    if let data = data {
+                        let decodedResponse : CustomSharePollingResult? = tryDecode(data: data)
+                        if let decodedResponse = decodedResponse {
+                            let pollingStatus = decodedResponse.status
+                            if pollingStatus == "SUCCEEDED" {
+                                callback(decodedResponse, nil)
+                            } else if retries > 0 {
+                                sleep(1)
+                                poll(retries: retries - 1)
+                            } else {
+                                callback(nil, .pollingTimeout)
+                            }
+                        } else {
+                            callback(nil, .invalidProtocol(error: .decodingError(data: data)))
+                        }
+                    }
+                }
+            }
             poll(retries: 10)
-            
-            return response
     }
 
 }

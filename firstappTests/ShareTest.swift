@@ -40,20 +40,37 @@ class ShareTest: XCTestCase {
     
     func testCustomShare() {
         let customShare = CustomShare(advocate_code: advocateCode!,
-                                      channel: "EMAIL",
+                                      channel: "test",
                                       message: "testmessage",
                                       recipient_email: "rtibin@extole.com",
                                       data: [:])
         
-        let shareResponse = program.customShare(accessToken : accessToken!, share: customShare)
-            .await(timeout: DispatchTime.now() + .seconds(10))
-        
-        XCTAssertGreaterThan(shareResponse!.polling_id, "1111")
-        let customShareResult = program.pollCustomShare(accessToken: accessToken!,
-                                                        pollingResponse: shareResponse!)
-            .await(timeout: DispatchTime.now() + .seconds(10))
-        
-        XCTAssertGreaterThan(customShareResult!.share_id, "1111")
+        let shareExpectation = expectation(description: "share")
+        var sharePollingId : PollingIdResponse!
+        program.customShare(accessToken : accessToken!, share: customShare) {
+            shareResponse, error in
+            if let error = error {
+                XCTFail("\(error)")
+                return
+            }
+            XCTAssertGreaterThan(shareResponse!.polling_id, "1111")
+            sharePollingId = shareResponse!
+            shareExpectation.fulfill()
+        }
+        wait(for: [shareExpectation], timeout: 10)
+
+        let pollingExpectation = expectation(description: "share polling")
+        program.pollCustomShare(accessToken: accessToken!, pollingResponse: sharePollingId) {
+                        customShareResult, error in
+            if let error = error {
+                XCTFail("\(error)")
+                return
+            }
+            XCTAssertGreaterThan(customShareResult!.share_id, "1111")
+            pollingExpectation.fulfill()
+        }
+        wait(for: [pollingExpectation], timeout: 10)
+
     }
 
 }

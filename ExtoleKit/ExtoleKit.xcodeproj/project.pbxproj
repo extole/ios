@@ -1,0 +1,528 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4925B851220DABE000D9CD4A /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B847220DABE000D9CD4A /* ExtoleKit.framework */; };
+		4925B858220DABE000D9CD4A /* ExtoleKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4925B84A220DABE000D9CD4A /* ExtoleKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4925B8AE220DAED800D9CD4A /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A4220DAED800D9CD4A /* ApiResponse.swift */; };
+		4925B8AF220DAED800D9CD4A /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A5220DAED800D9CD4A /* Network.swift */; };
+		4925B8B0220DAED800D9CD4A /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A6220DAED800D9CD4A /* Zone.swift */; };
+		4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A7220DAED800D9CD4A /* Shareable.swift */; };
+		4925B8B2220DAED800D9CD4A /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A8220DAED800D9CD4A /* Token.swift */; };
+		4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A9220DAED800D9CD4A /* Profile.swift */; };
+		4925B8B4220DAED800D9CD4A /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AA220DAED800D9CD4A /* ErrorData.swift */; };
+		4925B8B5220DAED800D9CD4A /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AB220DAED800D9CD4A /* Program.swift */; };
+		4925B8B6220DAED800D9CD4A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AC220DAED800D9CD4A /* Log.swift */; };
+		4925B8B7220DAED800D9CD4A /* Share.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AD220DAED800D9CD4A /* Share.swift */; };
+		4925B8BA220DB02100D9CD4A /* ExtoleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8B9220DB02100D9CD4A /* ExtoleApp.swift */; };
+		4925B8CE220DB66F00D9CD4A /* ShareableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8C9220DB66F00D9CD4A /* ShareableTest.swift */; };
+		4925B8CF220DB66F00D9CD4A /* ZoneTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */; };
+		4925B8D0220DB66F00D9CD4A /* ProfileTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */; };
+		4925B8D1220DB66F00D9CD4A /* TokenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CC220DB66F00D9CD4A /* TokenTest.swift */; };
+		4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CD220DB66F00D9CD4A /* ShareTest.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4925B852220DABE000D9CD4A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4925B83E220DABE000D9CD4A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4925B846220DABE000D9CD4A;
+			remoteInfo = ExtoleKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4925B847220DABE000D9CD4A /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4925B84A220DABE000D9CD4A /* ExtoleKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtoleKit.h; sourceTree = "<group>"; };
+		4925B84B220DABE000D9CD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4925B850220DABE000D9CD4A /* ExtoleKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExtoleKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4925B857220DABE000D9CD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4925B8A4220DAED800D9CD4A /* ApiResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
+		4925B8A5220DAED800D9CD4A /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		4925B8A6220DAED800D9CD4A /* Zone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Zone.swift; sourceTree = "<group>"; };
+		4925B8A7220DAED800D9CD4A /* Shareable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shareable.swift; sourceTree = "<group>"; };
+		4925B8A8220DAED800D9CD4A /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		4925B8A9220DAED800D9CD4A /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		4925B8AA220DAED800D9CD4A /* ErrorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorData.swift; sourceTree = "<group>"; };
+		4925B8AB220DAED800D9CD4A /* Program.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
+		4925B8AC220DAED800D9CD4A /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		4925B8AD220DAED800D9CD4A /* Share.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Share.swift; sourceTree = "<group>"; };
+		4925B8B9220DB02100D9CD4A /* ExtoleApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtoleApp.swift; sourceTree = "<group>"; };
+		4925B8C9220DB66F00D9CD4A /* ShareableTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareableTest.swift; sourceTree = "<group>"; };
+		4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoneTest.swift; sourceTree = "<group>"; };
+		4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTest.swift; sourceTree = "<group>"; };
+		4925B8CC220DB66F00D9CD4A /* TokenTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenTest.swift; sourceTree = "<group>"; };
+		4925B8CD220DB66F00D9CD4A /* ShareTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareTest.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4925B844220DABE000D9CD4A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4925B84D220DABE000D9CD4A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4925B851220DABE000D9CD4A /* ExtoleKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4925B83D220DABE000D9CD4A = {
+			isa = PBXGroup;
+			children = (
+				4925B849220DABE000D9CD4A /* ExtoleKit */,
+				4925B854220DABE000D9CD4A /* ExtoleKitTests */,
+				4925B848220DABE000D9CD4A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4925B848220DABE000D9CD4A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4925B847220DABE000D9CD4A /* ExtoleKit.framework */,
+				4925B850220DABE000D9CD4A /* ExtoleKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4925B849220DABE000D9CD4A /* ExtoleKit */ = {
+			isa = PBXGroup;
+			children = (
+				4925B8B9220DB02100D9CD4A /* ExtoleApp.swift */,
+				4925B8A4220DAED800D9CD4A /* ApiResponse.swift */,
+				4925B8AA220DAED800D9CD4A /* ErrorData.swift */,
+				4925B8AC220DAED800D9CD4A /* Log.swift */,
+				4925B8A5220DAED800D9CD4A /* Network.swift */,
+				4925B8A9220DAED800D9CD4A /* Profile.swift */,
+				4925B8AB220DAED800D9CD4A /* Program.swift */,
+				4925B8AD220DAED800D9CD4A /* Share.swift */,
+				4925B8A7220DAED800D9CD4A /* Shareable.swift */,
+				4925B8A8220DAED800D9CD4A /* Token.swift */,
+				4925B8A6220DAED800D9CD4A /* Zone.swift */,
+				4925B84A220DABE000D9CD4A /* ExtoleKit.h */,
+				4925B84B220DABE000D9CD4A /* Info.plist */,
+			);
+			path = ExtoleKit;
+			sourceTree = "<group>";
+		};
+		4925B854220DABE000D9CD4A /* ExtoleKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */,
+				4925B8C9220DB66F00D9CD4A /* ShareableTest.swift */,
+				4925B8CD220DB66F00D9CD4A /* ShareTest.swift */,
+				4925B8CC220DB66F00D9CD4A /* TokenTest.swift */,
+				4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */,
+				4925B857220DABE000D9CD4A /* Info.plist */,
+			);
+			path = ExtoleKitTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		4925B842220DABE000D9CD4A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4925B858220DABE000D9CD4A /* ExtoleKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4925B846220DABE000D9CD4A /* ExtoleKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4925B85B220DABE000D9CD4A /* Build configuration list for PBXNativeTarget "ExtoleKit" */;
+			buildPhases = (
+				4925B842220DABE000D9CD4A /* Headers */,
+				4925B843220DABE000D9CD4A /* Sources */,
+				4925B844220DABE000D9CD4A /* Frameworks */,
+				4925B845220DABE000D9CD4A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ExtoleKit;
+			productName = ExtoleKit;
+			productReference = 4925B847220DABE000D9CD4A /* ExtoleKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		4925B84F220DABE000D9CD4A /* ExtoleKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4925B85E220DABE000D9CD4A /* Build configuration list for PBXNativeTarget "ExtoleKitTests" */;
+			buildPhases = (
+				4925B84C220DABE000D9CD4A /* Sources */,
+				4925B84D220DABE000D9CD4A /* Frameworks */,
+				4925B84E220DABE000D9CD4A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4925B853220DABE000D9CD4A /* PBXTargetDependency */,
+			);
+			name = ExtoleKitTests;
+			productName = ExtoleKitTests;
+			productReference = 4925B850220DABE000D9CD4A /* ExtoleKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4925B83E220DABE000D9CD4A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = rtibin;
+				TargetAttributes = {
+					4925B846220DABE000D9CD4A = {
+						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
+					};
+					4925B84F220DABE000D9CD4A = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 4925B841220DABE000D9CD4A /* Build configuration list for PBXProject "ExtoleKit" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4925B83D220DABE000D9CD4A;
+			productRefGroup = 4925B848220DABE000D9CD4A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4925B846220DABE000D9CD4A /* ExtoleKit */,
+				4925B84F220DABE000D9CD4A /* ExtoleKitTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4925B845220DABE000D9CD4A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4925B84E220DABE000D9CD4A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4925B843220DABE000D9CD4A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4925B8B5220DAED800D9CD4A /* Program.swift in Sources */,
+				4925B8AF220DAED800D9CD4A /* Network.swift in Sources */,
+				4925B8B6220DAED800D9CD4A /* Log.swift in Sources */,
+				4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */,
+				4925B8B2220DAED800D9CD4A /* Token.swift in Sources */,
+				4925B8B7220DAED800D9CD4A /* Share.swift in Sources */,
+				4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */,
+				4925B8AE220DAED800D9CD4A /* ApiResponse.swift in Sources */,
+				4925B8B4220DAED800D9CD4A /* ErrorData.swift in Sources */,
+				4925B8BA220DB02100D9CD4A /* ExtoleApp.swift in Sources */,
+				4925B8B0220DAED800D9CD4A /* Zone.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4925B84C220DABE000D9CD4A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4925B8D0220DB66F00D9CD4A /* ProfileTest.swift in Sources */,
+				4925B8D1220DB66F00D9CD4A /* TokenTest.swift in Sources */,
+				4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */,
+				4925B8CF220DB66F00D9CD4A /* ZoneTest.swift in Sources */,
+				4925B8CE220DB66F00D9CD4A /* ShareableTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4925B853220DABE000D9CD4A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4925B846220DABE000D9CD4A /* ExtoleKit */;
+			targetProxy = 4925B852220DABE000D9CD4A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		4925B859220DABE000D9CD4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		4925B85A220DABE000D9CD4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		4925B85C220DABE000D9CD4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = C699M5548C;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ExtoleKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.extole.ExtoleKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4925B85D220DABE000D9CD4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = C699M5548C;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ExtoleKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.extole.ExtoleKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4925B85F220DABE000D9CD4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C699M5548C;
+				INFOPLIST_FILE = ExtoleKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.extole.ExtoleKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4925B860220DABE000D9CD4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C699M5548C;
+				INFOPLIST_FILE = ExtoleKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.extole.ExtoleKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4925B841220DABE000D9CD4A /* Build configuration list for PBXProject "ExtoleKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4925B859220DABE000D9CD4A /* Debug */,
+				4925B85A220DABE000D9CD4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4925B85B220DABE000D9CD4A /* Build configuration list for PBXNativeTarget "ExtoleKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4925B85C220DABE000D9CD4A /* Debug */,
+				4925B85D220DABE000D9CD4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4925B85E220DABE000D9CD4A /* Build configuration list for PBXNativeTarget "ExtoleKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4925B85F220DABE000D9CD4A /* Debug */,
+				4925B860220DABE000D9CD4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4925B83E220DABE000D9CD4A /* Project object */;
+}

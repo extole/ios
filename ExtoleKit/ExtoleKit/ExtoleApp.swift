@@ -8,12 +8,12 @@
 
 import Foundation
 
-protocol ExtoleAppStateListener : AnyObject {
+public protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleApp.State)
 }
 
 
-final class ExtoleApp {
+public final class ExtoleApp {
 
     public enum State : String {
         case Init = "Init"
@@ -30,17 +30,17 @@ final class ExtoleApp {
     
     private let program: Program
     
-    weak var stateListener: ExtoleAppStateListener?
+    public weak var stateListener: ExtoleAppStateListener?
     
-    init(programUrl: URL, stateListener: ExtoleAppStateListener? = nil) {
+    public init(programUrl: URL, stateListener: ExtoleAppStateListener? = nil) {
         self.program = Program.init(baseUrl: programUrl)
     }
     
     private let label = "refer-a-friend"
     
-    let settings = UserDefaults.init()
+    public let settings = UserDefaults.init()
     
-    var state = State.Init {
+    public var state = State.Init {
         didSet {
             extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
             stateListener?.onStateChanged(state: state)
@@ -59,11 +59,11 @@ final class ExtoleApp {
     }
     
     var accessToken: ConsumerToken?
-    var profile: MyProfile?
-    var selectedShareable : MyShareable?
-    var lastShareResult: CustomSharePollingResult?
+    public var profile: MyProfile?
+    public var selectedShareable : MyShareable?
+    public var lastShareResult: CustomSharePollingResult?
     
-    func applicationDidBecomeActive() {
+    public func applicationDidBecomeActive() {
         // SFSafariViewController - to restore session
         extoleInfo(format: "applicationDidBecomeActive")
         dispatchQueue.async {
@@ -99,7 +99,7 @@ final class ExtoleApp {
         }
     }
 
-    func newSession() {
+    public func newSession() {
         self.state = State.Init
         self.program.getToken(){ token, error in
             if let newToken = token {
@@ -108,7 +108,7 @@ final class ExtoleApp {
         }
     }
 
-    func logout() {
+    public func logout() {
         program.deleteToken(token: self.savedToken!) { error in
             if let _ = error {
                 self.state = .ServerError
@@ -139,11 +139,11 @@ final class ExtoleApp {
         }
     }
 
-    func fetchObject<T: Codable>(zone: String, callback : @escaping (T?, Program.GetObjectError?) -> Void) {
+    public func fetchObject<T: Codable>(zone: String, callback : @escaping (T?, Program.GetObjectError?) -> Void) {
         self.program.fetchObject(accessToken: self.accessToken!, zone: zone, callback: callback)
     }
     
-    func identify(email: String, callback: @escaping (UpdateProfileError?) -> Void) {
+    public func identify(email: String, callback: @escaping (UpdateProfileError?) -> Void) {
         dispatchQueue.async {
             self.program.identify(accessToken: self.accessToken!, email: email) { error in
                 if let _ = error {
@@ -160,7 +160,7 @@ final class ExtoleApp {
         }
     }
 
-    func updateProfile(profile: MyProfile, callback: @escaping (UpdateProfileError?) -> Void) {
+    public func updateProfile(profile: MyProfile, callback: @escaping (UpdateProfileError?) -> Void) {
         dispatchQueue.async {
             self.program.updateProfile(accessToken: self.accessToken!, profile: profile) { error in
                 callback(error)
@@ -173,7 +173,7 @@ final class ExtoleApp {
         }
     }
 
-    func signalShare(channel: String) {
+    public func signalShare(channel: String) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
         let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: channel)
         self.program.customShare(accessToken: self.accessToken!, share: share) { pollingResponse, error in
@@ -208,7 +208,7 @@ final class ExtoleApp {
         }
     }
     
-    func applicationWillResignActive() {
+    public func applicationWillResignActive() {
         extoleInfo(format: "application resign active")
         self.state = .Inactive
     }

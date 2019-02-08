@@ -55,7 +55,7 @@ Control is then passed to HomeViewController that displays:
 
 Share action is available when ExtoleApp goes to ReadyToShare state.
 ReadyToShare means that access_token is valid, and shareable is present.
-```
+```swift
 // HomeViewController.swift
 class HomeViewController : ExtoleAppStateListener { // implements ExtoleAppStateListener
 
@@ -98,7 +98,7 @@ class HomeViewController : ExtoleAppStateListener { // implements ExtoleAppState
 It is possible to share without setting identity, but in that case Santa wont give you presents.
 When user clicks on empty email details - control is passed to IdentifyViewController.
 
-```
+```swift
 // IdentifyViewController.swift
 
 // event handler for Done button
@@ -111,7 +111,7 @@ func editDone() {
 ### Logout and New Session
 Normaly we want to keep access_token across application runs, but in case user wants to Logout:
 
-```
+```swift
 // HomeViewController.swift
 func logoutClick() {
   // this will delete access_token in application and in Extole

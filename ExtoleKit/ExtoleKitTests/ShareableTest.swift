@@ -12,7 +12,7 @@ import XCTest
 
 class ShareableTest: XCTestCase {
 
-    let program = Program(baseUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
+    let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
     var accessToken: ConsumerToken?
     
     override func setUp() {

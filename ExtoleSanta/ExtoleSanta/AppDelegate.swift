@@ -14,12 +14,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let extoleApp = ExtoleApp.init(programUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
+    let iosSanta = ExtoleApp.init(programUrl: URL.init(string: "https://ios-santa.extole.com")!)
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let sessionController = HomeViewController(with: extoleApp)
+        let sessionController = HomeViewController(with: iosSanta)
 
         window!.rootViewController = UINavigationController(rootViewController: sessionController)
         window!.makeKeyAndVisible()
@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        extoleApp.applicationWillResignActive()
+        iosSanta.applicationWillResignActive()
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        extoleApp.applicationDidBecomeActive()
+        iosSanta.applicationDidBecomeActive()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

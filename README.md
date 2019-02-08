@@ -29,6 +29,21 @@ ExtoleKit includes a set of integration tests, execute following to ensure your 
 * ExtoleKit is a library that should be distributed with your application
  
 ### ExtoleSanta
-ExtoleSanta app lets you share your Santa withlist with your friends
+ExtoleSanta app lets you share your Santa withlist with your friends, uses ExtoleKit library.
+
+#### First Run
+On first execution ExtoleApp fetches new access_token, and creates default shareable for anonymous profile.
+
+AppDeletegate.swift
+'''
+ let iosSanta = ExtoleApp.init(programUrl: URL.init(string: "https://ios-santa.extole.com")!)
+
+ func applicationDidBecomeActive(_ application: UIApplication) {
+        iosSanta.applicationDidBecomeActive()
+ }
+
+'''
+
+
 
 ### ExtoleKit

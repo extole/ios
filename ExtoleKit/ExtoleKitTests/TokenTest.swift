@@ -12,7 +12,7 @@ import XCTest
 
 class TokenTest: XCTestCase {
 
-    let program = Program(baseUrl: URL.init(string: "https://roman-tibin-test.extole.com")!)
+    let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
 
     func testGetToken() {
         let promise = expectation(description: "get token response")

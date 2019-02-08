@@ -13,13 +13,14 @@
 		4925B875220DAC4100D9CD4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4925B874220DAC4100D9CD4A /* Assets.xcassets */; };
 		4925B878220DAC4100D9CD4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4925B876220DAC4100D9CD4A /* LaunchScreen.storyboard */; };
 		4925B883220DAC4100D9CD4A /* ExtoleSantaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B882220DAC4100D9CD4A /* ExtoleSantaTests.swift */; };
-		4925B88F220DAC5E00D9CD4A /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B88E220DAC5E00D9CD4A /* ExtoleKit.framework */; };
 		4925B8C2220DB07200D9CD4A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BB220DB07200D9CD4A /* HomeViewController.swift */; };
 		4925B8C3220DB07200D9CD4A /* ShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BC220DB07200D9CD4A /* ShareItem.swift */; };
 		4925B8C4220DB07200D9CD4A /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BD220DB07200D9CD4A /* Common.swift */; };
 		4925B8C5220DB07200D9CD4A /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BE220DB07200D9CD4A /* ShareViewController.swift */; };
 		4925B8C6220DB07200D9CD4A /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BF220DB07200D9CD4A /* ProfileViewController.swift */; };
 		4925B8C8220DB07200D9CD4A /* IdentifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8C1220DB07200D9CD4A /* IdentifyViewController.swift */; };
+		4925B8D7220DC14D00D9CD4A /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B8D3220DC10100D9CD4A /* ExtoleKit.framework */; };
+		4925B8D8220DC14D00D9CD4A /* ExtoleKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B8D3220DC10100D9CD4A /* ExtoleKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,20 @@
 			remoteInfo = ExtoleSanta;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4925B8D9220DC14E00D9CD4A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4925B8D8220DC14D00D9CD4A /* ExtoleKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4925B86A220DAC4000D9CD4A /* ExtoleSanta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExtoleSanta.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,6 +65,7 @@
 		4925B8BE220DB07200D9CD4A /* ShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		4925B8BF220DB07200D9CD4A /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		4925B8C1220DB07200D9CD4A /* IdentifyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentifyViewController.swift; sourceTree = "<group>"; };
+		4925B8D3220DC10100D9CD4A /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4925B88F220DAC5E00D9CD4A /* ExtoleKit.framework in Frameworks */,
+				4925B8D7220DC14D00D9CD4A /* ExtoleKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +90,7 @@
 		4925B861220DAC4000D9CD4A = {
 			isa = PBXGroup;
 			children = (
+				4925B8D3220DC10100D9CD4A /* ExtoleKit.framework */,
 				4925B86C220DAC4000D9CD4A /* ExtoleSanta */,
 				4925B881220DAC4100D9CD4A /* ExtoleSantaTests */,
 				4925B86B220DAC4000D9CD4A /* Products */,
@@ -136,6 +153,7 @@
 				4925B866220DAC4000D9CD4A /* Sources */,
 				4925B867220DAC4000D9CD4A /* Frameworks */,
 				4925B868220DAC4000D9CD4A /* Resources */,
+				4925B8D9220DC14E00D9CD4A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

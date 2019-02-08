@@ -35,7 +35,7 @@ ExtoleSanta app lets you share your Santa withlist with your friends, uses Extol
 On first execution ExtoleApp fetches new access_token, and creates default shareable for anonymous profile.
 ExtoleApp saves access_token and re-uses it for subsequent runs.
 
-```
+```swift
  // AppDeletegate.swift
  let iosSanta = ExtoleApp.init(programUrl: URL.init(string: "https://ios-santa.extole.com")!)
 

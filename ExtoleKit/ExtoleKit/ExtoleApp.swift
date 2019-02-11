@@ -89,9 +89,15 @@ public final class ExtoleApp {
         }
     }
     
-    public func updateShareable(shareable: MyShareable, callback:
-                                @escaping (UpdateProfileError?) -> Void) {
-        
+    public func updateShareable(shareable: UpdateShareable, callback:
+                                @escaping (UpdateShareableError?) -> Void) {
+        dispatchQueue.async {
+            self.program.updateShareable(accessToken: self.accessToken!,
+                                         code: (self.selectedShareable?.code)!,
+                                         shareable: shareable) { error in
+                callback(error)
+            }
+        }
         
     }
     

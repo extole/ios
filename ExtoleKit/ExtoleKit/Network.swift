@@ -33,8 +33,18 @@ func newRequest(url: URL, method: String) -> URLRequest {
 }
 
 func postRequest<T : Encodable>(accessToken: ConsumerToken? = nil, url: URL, data: T) -> URLRequest {
+    return jsonRequest(method: "POST", accessToken: accessToken, url: url, data: data)
+}
+
+func putRequest<T : Encodable>(accessToken: ConsumerToken? = nil, url: URL, data: T) -> URLRequest {
+    return jsonRequest(method: "PUT", accessToken: accessToken, url: url, data: data)
+}
+
+func jsonRequest<T : Encodable>(method: String, accessToken: ConsumerToken? = nil, url: URL, data: T) -> URLRequest {
     var result = URLRequest(url: url)
-    result.httpMethod = "POST"
+    extoleDebug(format: "url %{public}@", arg: url.absoluteString)
+    extoleDebug(format: "method %{public}@", arg: method)
+    result.httpMethod = method
     result.addValue("application/json", forHTTPHeaderField: "Content-Type")
     result.httpBody =  try? JSONEncoder().encode(data)
     if let existingToken = accessToken {

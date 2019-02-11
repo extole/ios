@@ -15,17 +15,18 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     let cellId = "cellId"
     
-    var wishItems : [String] = []
+    var wishItems : [String: String] = [:]
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return wishItems.count
+        return wishItems.keys.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
-        let selectedItem = wishItems[indexPath.row]
-        cell.textLabel?.text = selectedItem
+        let selectedIndex = wishItems.index(wishItems.startIndex, offsetBy: indexPath.row)
+        let selectedValue = wishItems[selectedIndex]
+        cell.textLabel?.text = selectedValue.key
         cell.textLabel?.isEnabled = true
 
         return cell
@@ -99,14 +100,28 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
     }
     
+    func addWishToShareable(item: String) {
+        self.wishItems[item] = ""
+        let updateShareable = UpdateShareable.init(data: self.wishItems)
+        
+        self.extoleApp.updateShareable(shareable: updateShareable) { error in
+            if let error = error {
+                self.showError(message: "Update Error \(error)")
+            }
+        }
+        self.wishList.reloadData()
+        
+    }
+    
     @objc func addItem(_ sender: UIButton) {
         let wishPicker = UIAlertController(title: "Today Santa has", message: "Pick your wish", preferredStyle: .actionSheet)
         
         wishPicker.addAction(UIAlertAction(title: NSLocalizedString("Playstation", comment: "Great Education tool"), style: .default,  handler: { _ in
-            self.wishItems.append("Playstation")
-            
-            //self.extoleApp.updateShareable()
-            self.wishList.reloadData()
+            self.addWishToShareable(item: "Playstation")
+        }))
+        
+        wishPicker.addAction(UIAlertAction(title: NSLocalizedString("XBox", comment: "Great Education tool"), style: .default,  handler: { _ in
+            self.addWishToShareable(item: "XBox")
         }))
         wishPicker.addAction(UIAlertAction(title: NSLocalizedString("I am good", comment: "Dont add any wishes"), style: .cancel, handler: nil))
         self.present(wishPicker, animated: true, completion: nil)

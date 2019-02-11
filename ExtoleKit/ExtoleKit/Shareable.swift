@@ -22,17 +22,26 @@ public enum UpdateShareableError : Error {
     case invalidProtocol(error: ExtoleApiError)
 }
 
+public struct UpdateShareable : Codable {
+    public init(data: [String: String]) {
+        self.data = data
+    }
+    public let data: [String: String]?
+}
+
 public struct MyShareable : Codable {
     init(label: String, code:String? = nil, key:String? = nil) {
         self.label = label
         self.code = code
         self.key = key
         self.link = nil
+        self.data = nil
     }
     public let key: String?
     public let code: String?
     public let label: String?
     public let link: String?
+    public let data: [String: String]?
 }
 
 extension Program {
@@ -40,6 +49,27 @@ extension Program {
     public func getShareables(accessToken: ConsumerToken) -> APIResponse<[MyShareable]> {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
         return dataTask(url: url, accessToken: accessToken.access_token, postData: nil)
+    }
+    
+    public func updateShareable(accessToken: ConsumerToken, code: String, shareable: UpdateShareable,
+                                callback : @escaping (UpdateShareableError?) -> Void) {
+        let url = URL(string: "\(baseUrl)/api/v5/me/shareables/\(code)")!
+        let request = putRequest(accessToken: accessToken,
+                                  url: url,
+                                  data: shareable)
+        processRequest(with: request) { data, error in
+            if let apiError = error {
+                switch(apiError) {
+                case .genericError(let errorData) : do {
+                    callback(.invalidProtocol(error: .genericError(errorData: errorData)))
+                    }
+                default : callback(.invalidProtocol(error: apiError))
+                }
+                return
+            }
+            callback(nil)
+        }
+        
     }
 
     public func createShareable(accessToken: ConsumerToken, shareable: MyShareable)

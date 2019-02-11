@@ -89,6 +89,12 @@ public final class ExtoleApp {
         }
     }
     
+    public func updateShareable(shareable: MyShareable, callback:
+                                @escaping (UpdateProfileError?) -> Void) {
+        
+        
+    }
+    
     private func onTokenInvalid() {
         self.state = State.InvalidToken
         self.savedToken = nil

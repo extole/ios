@@ -42,6 +42,20 @@ extension UIView {
         return newText
     }
     
+    func newTableView() -> UITableView {
+        let tableView = UITableView()
+        self.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }
+    
+    func newToolbar() -> UIToolbar {
+        let uiToolbar = UIToolbar()
+        self.addSubview(uiToolbar)
+        uiToolbar.translatesAutoresizingMaskIntoConstraints = false
+        return uiToolbar
+    }
+    
 }
 
 extension  UIViewController {

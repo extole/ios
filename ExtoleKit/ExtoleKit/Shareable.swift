@@ -18,6 +18,10 @@ public struct ShareablePollingResult : Codable {
     let code : String?
 }
 
+public enum UpdateShareableError : Error {
+    case invalidProtocol(error: ExtoleApiError)
+}
+
 public struct MyShareable : Codable {
     init(label: String, code:String? = nil, key:String? = nil) {
         self.label = label

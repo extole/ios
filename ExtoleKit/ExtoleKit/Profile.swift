@@ -30,6 +30,7 @@ public enum GetProfileError : Error {
     case invalidProtocol(error: ExtoleApiError)
 }
 
+
 public enum UpdateProfileError : Error {
     case invalidProtocol(error: ExtoleApiError)
     case invalidPersonEmail

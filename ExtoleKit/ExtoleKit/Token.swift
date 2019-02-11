@@ -34,6 +34,7 @@ extension Program {
     }
 
     private func procesTokenRequest(with request: URLRequest, responseHandler: @escaping (_: ConsumerToken?, _: GetTokenError?) ->Void) {
+        extoleDebug(format: "request %{public}@ ", arg: request.url?.absoluteString ?? "url is empty")
         processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {

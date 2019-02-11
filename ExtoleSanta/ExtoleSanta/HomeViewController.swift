@@ -59,8 +59,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     enum Section {
         case Identity
         case Profile
-        case Share
-        
+
         func getMainSection(app: ExtoleApp) -> MainSection{
             switch self {
             case .Identity:
@@ -73,13 +72,6 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
                     }, {
                         return app.profile?.last_name
                     }])
-            
-            case .Share :
-                return MainSection(name: "Share", controls: [{
-                    return app.shareMessage
-                }, {
-                    return app.selectedShareable?.link
-                }])
             }
         }
         
@@ -89,13 +81,11 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
                 return controller.identifyViewController
             case .Profile:
                 return controller.profileViewController
-            case .Share:
-                return controller.shareController
             }
         }
     }
     
-    let sections: [Section] = [.Identity, .Profile, .Share]
+    let sections: [Section] = [.Identity, .Profile]
     
     init(with extoleApp: ExtoleApp) {
         self.extoleApp = extoleApp
@@ -130,6 +120,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         }
         refreshControlCompat?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
+
         showState(app: extoleApp)
         tableView.separatorStyle = .singleLine
     }
@@ -163,7 +154,8 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "\(sections[section])"
+        let selectedSection = sections[section]
+        return selectedSection.getMainSection(app: extoleApp).name;
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -193,9 +185,10 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
                 let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
                 self.navigationItem.leftBarButtonItem = logout
                 
-                let share = UIBarButtonItem.init(barButtonSystemItem: .action, target: self
-                    , action: #selector(self.doShare))
-                self.navigationItem.rightBarButtonItem = share
+                let wishButton = UIBarButtonItem.init(title: "To Wish List", style: .plain, target: self, action:
+                    #selector(self.toWishList))
+                
+                self.navigationItem.rightBarButtonItem = wishButton
                 }
             case .Identify: do {
                 self.navigationItem.title = "Anonymous"
@@ -220,32 +213,10 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
             }
         }
     }
-    
-    @objc func doShare(_ sender: UIButton) {
-        guard let shareLink = extoleApp.selectedShareable?.link else {
-            self.showError(message: "No Shareable")
-            return
-        }
-        guard let message = extoleApp.shareMessage else {
-            return
-        }
-        let shareItem = ShareItem.init(subject: "Check this out",
-                                       message: message,
-                                       shortMessage: shareLink)
-        let textToShare = [ shareItem  ]
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-        
-        // exclude some activity types from the list (optional)
-        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop ]
-        
-        // present the view controller
-        self.present(activityViewController, animated: true, completion: nil)
-        activityViewController.completionWithItemsHandler =  {(activityType : UIActivity.ActivityType?, completed : Bool, returnedItems: [Any]?, activityError : Error?) in
-            if let completedActivity = activityType, completed {
-                self.extoleApp.signalShare(channel: completedActivity.rawValue)
-            }
-        }
+
+
+    @objc func toWishList(_ sender: UIButton) {
+        navigationController?.pushViewController(shareController, animated: true)
     }
     
     @objc func logoutClick(_ sender: UIButton) {

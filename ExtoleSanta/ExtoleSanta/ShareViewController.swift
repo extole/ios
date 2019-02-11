@@ -32,7 +32,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return cell
     }
     
-    var messageText: UITextView!
+    var messageText: UILabel!
     var wishList: UITableView!
     
     var extoleApp: ExtoleApp!
@@ -61,29 +61,23 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
             , action: #selector(self.doShare))
         self.navigationItem.rightBarButtonItem = share
         
-        let messageLabel = view.newLabel(text: "Message:")
-        messageLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        let message = extoleApp.shareMessage ?? "Dear Santa, I would like"
+        messageText = view.newLabel(text: message)
+        messageText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         if #available(iOS 11.0, *) {
-            messageLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+            messageText.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         } else {
             // Fallback on earlier versions
         }
-        messageLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
-        messageLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
-        
-        messageText = view.newTextView()
-        messageText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        messageText.topAnchor.constraint(equalTo: messageLabel.bottomAnchor).isActive = true
         messageText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
-        messageText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2).isActive = true
-        messageText.text = "Dear Santa, I would like"
+        messageText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
         wishList = view.newTableView()
         wishList.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         wishList.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         wishList.topAnchor.constraint(equalTo: messageText.bottomAnchor).isActive = true
         wishList.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
-        wishList.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
+        wishList.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7).isActive = true
         wishList.dataSource = self
         wishList.delegate = self
         //wishList.setEditing(true, animated: true)
@@ -136,11 +130,9 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
             self.showError(message: "No Shareable")
             return
         }
-        guard let message = extoleApp.shareMessage else {
-            return
-        }
-        let shareItem = ShareItem.init(subject: "Check this out",
-                                       message: message,
+        let fullMessage = "\(messageText.text!) \(shareLink)"
+        let shareItem = ShareItem.init(subject: "Extole Santa Wish",
+                                       message: fullMessage,
                                        shortMessage: shareLink)
         let textToShare = [ shareItem  ]
         let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)

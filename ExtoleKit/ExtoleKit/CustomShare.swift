@@ -1,13 +1,12 @@
 //
-//  Share.swift
-//  firstapp
+//  CustomShare.swift
+//  ExtoleKit
 //
-//  Created by rtibin on 1/24/19.
+//  Created by rtibin on 2/12/19.
 //  Copyright © 2019 rtibin. All rights reserved.
 //
 
 import Foundation
-
 public struct CustomShare : Codable {
     init(advocate_code: String, channel: String, message : String? = nil, recipient_email: String? = nil,
          data: [String:String]? = nil) {
@@ -44,8 +43,8 @@ extension Program {
     public func customShare(accessToken: ConsumerToken, share: CustomShare, callback : @escaping (PollingIdResponse?, CustomShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
         let request = postRequest(accessToken: accessToken,
-                                 url: url,
-                                 data: share)
+                                  url: url,
+                                  data: share)
         processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
@@ -66,43 +65,43 @@ extension Program {
             }
         }
     }
-
+    
     public func pollCustomShare(accessToken: ConsumerToken, pollingResponse: PollingIdResponse,
                                 callback : @escaping (CustomSharePollingResult?, PollShareError?) -> Void) {
-            let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
-            let request = getRequest(accessToken: accessToken,
-                                      url: url)
-
-            func poll(retries: UInt = 10) {
-                processRequest(with: request) { data, error in
-                    if let apiError = error {
-                        switch(apiError) {
-                        case .genericError(let errorData) : do {
-                            callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
-                            }
-                        default : callback(nil, .invalidProtocol(error: apiError))
+        let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
+        let request = getRequest(accessToken: accessToken,
+                                 url: url)
+        
+        func poll(retries: UInt = 10) {
+            processRequest(with: request) { data, error in
+                if let apiError = error {
+                    switch(apiError) {
+                    case .genericError(let errorData) : do {
+                        callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
                         }
-                        return
+                    default : callback(nil, .invalidProtocol(error: apiError))
                     }
-                    if let data = data {
-                        let decodedResponse : CustomSharePollingResult? = tryDecode(data: data)
-                        if let decodedResponse = decodedResponse {
-                            let pollingStatus = decodedResponse.status
-                            if pollingStatus == "SUCCEEDED" {
-                                callback(decodedResponse, nil)
-                            } else if retries > 0 {
-                                sleep(1)
-                                poll(retries: retries - 1)
-                            } else {
-                                callback(nil, .pollingTimeout)
-                            }
+                    return
+                }
+                if let data = data {
+                    let decodedResponse : CustomSharePollingResult? = tryDecode(data: data)
+                    if let decodedResponse = decodedResponse {
+                        let pollingStatus = decodedResponse.status
+                        if pollingStatus == "SUCCEEDED" {
+                            callback(decodedResponse, nil)
+                        } else if retries > 0 {
+                            sleep(1)
+                            poll(retries: retries - 1)
                         } else {
-                            callback(nil, .invalidProtocol(error: .decodingError(data: data)))
+                            callback(nil, .pollingTimeout)
                         }
+                    } else {
+                        callback(nil, .invalidProtocol(error: .decodingError(data: data)))
                     }
                 }
             }
-            poll(retries: 10)
+        }
+        poll(retries: 10)
     }
-
+    
 }

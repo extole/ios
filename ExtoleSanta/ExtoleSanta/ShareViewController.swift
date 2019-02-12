@@ -17,6 +17,8 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var wishItems : [String: String] = [:]
     
+    var extoleShare: ExtoleShareActivity!
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return wishItems.keys.count
     }
@@ -34,6 +36,10 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var messageText: UILabel!
     var wishList: UITableView!
+    
+    var addButton : UIBarButtonItem!
+    var shareButton : UIBarButtonItem!
+    var toolbar: UIToolbar!
     
     var extoleApp: ExtoleApp!
     
@@ -60,9 +66,13 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         self.navigationItem.title = "Wish List"
         self.view.backgroundColor = UIColor.white
-        let share = UIBarButtonItem.init(barButtonSystemItem: .add, target: self
-            , action: #selector(self.addItem))
-        self.navigationItem.rightBarButtonItem = share
+        self.addButton = UIBarButtonItem.init(barButtonSystemItem: .add, target: self,
+            action: #selector(self.addWish))
+        //self.navigationItem.rightBarButtonItem = addButton
+        
+        self.shareButton = UIBarButtonItem.init(barButtonSystemItem: .action, target: self, action: #selector(self.handleShare))
+        
+        navigationItem.rightBarButtonItems = [shareButton, addButton]
         
         let message = extoleApp.shareMessage ?? "Dear Santa, check my wishlist at"
         messageText = view.newLabel(text: message)
@@ -72,7 +82,6 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         } else {
             messageText.topAnchor.constraint(equalTo: view.topAnchor, constant: self.safeArea()).isActive = true
         }
-        
         
         messageText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
         messageText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
@@ -85,17 +94,10 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         wishList.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7).isActive = true
         wishList.dataSource = self
         wishList.delegate = self
-        //wishList.setEditing(true, animated: true)
-
-        let toolbar = view.newToolbar()
-        toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        toolbar.topAnchor.constraint(equalTo: wishList.bottomAnchor).isActive = true
-        toolbar.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
-        toolbar.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        let addItem = UIBarButtonItem.init(title: "Share", style: .plain, target: self, action: #selector(self.doShare))
-        toolbar.setItems([addItem], animated: false)
-        view.addSubview(toolbar)
+        
+        //toolbar.setItems([shareButton], animated: false)
+        
         
     }
     
@@ -112,8 +114,9 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
     }
     
-    @objc func addItem(_ sender: UIButton) {
-        let wishPicker = UIAlertController(title: "Today Santa has", message: "Pick your wish", preferredStyle: .actionSheet)
+    @objc func addWish(_ sender: UIButton) {
+        let wishPicker = UIAlertController(title: "Pick your wish", message: "Santa has following items", preferredStyle: .actionSheet)
+        wishPicker.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
         wishPicker.addAction(UIAlertAction(title: NSLocalizedString("Playstation", comment: "Great Education tool"), style: .default,  handler: { _ in
             self.addWishToShareable(item: "Playstation")
@@ -130,7 +133,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         view.endEditing(true)
     }
 
-    @objc func doShare(_ sender: UIButton) {
+    @objc func handleShare(_ sender: UIButton) {
         guard let shareLink = extoleApp.selectedShareable?.link else {
             self.showError(message: "No Shareable")
             return
@@ -140,7 +143,8 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
                                        message: fullMessage,
                                        shortMessage: shareLink)
         let textToShare = [ shareItem  ]
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        self.extoleShare = ExtoleShareActivity.init(extoleApp: self.extoleApp)
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: [self.extoleShare])
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
         // exclude some activity types from the list (optional)
@@ -149,7 +153,11 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // present the view controller
         activityViewController.completionWithItemsHandler =  {(activityType : UIActivity.ActivityType?, completed : Bool, returnedItems: [Any]?, activityError : Error?) in
             if let completedActivity = activityType, completed {
-                self.extoleApp.signalShare(channel: completedActivity.rawValue)
+                switch (completedActivity) {
+                    case ExtoleShare: break
+                    default : self.extoleApp.signalShare(channel: completedActivity.rawValue)
+                }
+                
             }
         }
         self.present(activityViewController, animated: true, completion: nil)

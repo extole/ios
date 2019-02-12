@@ -61,7 +61,7 @@ public final class ExtoleApp {
     var accessToken: ConsumerToken?
     public var profile: MyProfile?
     public var selectedShareable : MyShareable?
-    public var lastShareResult: CustomSharePollingResult?
+    //public var lastShareResult: CustomSharePollingResult?
     
     public func applicationDidBecomeActive() {
         // SFSafariViewController - to restore session
@@ -129,7 +129,7 @@ public final class ExtoleApp {
                 self.state = .LoggedOut
                 self.profile = nil
                 self.selectedShareable = nil
-                self.lastShareResult = nil
+                //self.lastShareResult = nil
                 self.accessToken = nil
             }
             
@@ -192,7 +192,21 @@ public final class ExtoleApp {
 
             self.program.pollCustomShare(accessToken: self.accessToken!, pollingResponse: pollingResponse!) { shareResponse, error in
                 self.state = State.ReadyToShare
-                self.lastShareResult = shareResponse
+                //self.lastShareResult = shareResponse
+            }
+        }
+    }
+    
+    public func share(email: String) {
+        extoleInfo(format: "sharing to email %s", arg: email)
+        let share = EmailShare.init(advocate_code: self.selectedShareable!.code!,
+                                     recipient_email: email)
+        self.program.emailShare(accessToken: self.accessToken!, share: share) { pollingResponse, error in
+            if let pollingResponse = pollingResponse {
+                self.program.pollEmailShare(accessToken: self.accessToken!, pollingResponse: pollingResponse) { shareResponse, error in
+                    self.state = State.ReadyToShare
+                    //self.lastShareResult = shareResponse
+                }
             }
         }
     }

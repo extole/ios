@@ -34,7 +34,7 @@ class ZoneTest: XCTestCase {
         let promise = expectation(description: "fetch object")
         program.fetchObject(accessToken: accessToken!,
                             zone: "settings") { (settings: Settings?, error) in
-            XCTAssertEqual("Share message", settings?.shareMessage)
+            XCTAssertEqual("Dear Santa, see my wishlist at", settings?.shareMessage)
             promise.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)

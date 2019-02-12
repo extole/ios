@@ -51,7 +51,10 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
             self.navigationController?.popViewController(animated: true)
         }
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        self.wishItems = extoleApp.selectedShareable?.data ?? [:]
+        wishList.reloadData()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,14 +64,16 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
             , action: #selector(self.addItem))
         self.navigationItem.rightBarButtonItem = share
         
-        let message = extoleApp.shareMessage ?? "Dear Santa, I would like"
+        let message = extoleApp.shareMessage ?? "Dear Santa, check my wishlist at"
         messageText = view.newLabel(text: message)
         messageText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         if #available(iOS 11.0, *) {
             messageText.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         } else {
-            // Fallback on earlier versions
+            messageText.topAnchor.constraint(equalTo: view.topAnchor, constant: self.safeArea()).isActive = true
         }
+        
+        
         messageText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
         messageText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         

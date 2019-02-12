@@ -51,7 +51,10 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
             self.navigationController?.popViewController(animated: true)
         }
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        self.wishItems = extoleApp.selectedShareable?.data ?? [:]
+        wishList.reloadData()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -69,7 +72,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         } else {
             messageText.topAnchor.constraint(equalTo: view.topAnchor, constant: self.safeArea()).isActive = true
         }
-        self.wishItems = extoleApp.selectedShareable?.data ?? [:]
+        
         
         messageText.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
         messageText.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true

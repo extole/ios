@@ -55,10 +55,10 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "Share Link"
+        self.navigationItem.title = "Wish List"
         self.view.backgroundColor = UIColor.white
-        let share = UIBarButtonItem.init(barButtonSystemItem: .action, target: self
-            , action: #selector(self.doShare))
+        let share = UIBarButtonItem.init(barButtonSystemItem: .add, target: self
+            , action: #selector(self.addItem))
         self.navigationItem.rightBarButtonItem = share
         
         let message = extoleApp.shareMessage ?? "Dear Santa, I would like"
@@ -88,7 +88,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         toolbar.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
         toolbar.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
         
-        let addItem = UIBarButtonItem.init(title: "Add Item", style: .plain, target: self, action: #selector(self.addItem))
+        let addItem = UIBarButtonItem.init(title: "Share", style: .plain, target: self, action: #selector(self.doShare))
         toolbar.setItems([addItem], animated: false)
         view.addSubview(toolbar)
         

@@ -12,22 +12,29 @@ public protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleApp.State)
 }
 
-public final class ExtoleApp: SessionStateListener {
+public final class ExtoleApp: SessionStateListener, ProfileStateListener {
     
+    public func onStateChanged(state: ProfileState) {
+        switch state {
+        case .Identified:
+            self.session!.getShareables().onComplete(callback: onShareablesLoaded)
+            self.state = .Identified
+        default:
+            self.state = .Identify
+        }
+    }
+
     public func onStateChanged(state: SessionState) {
         switch state {
         case .Verified:
-            self.session!.getProfile() { profile, error in
-                if let identified = profile, !(identified.email?.isEmpty ?? true) {
-                    self.onProfileIdentified(identified: identified)
-                }
-            }
+            self.savedToken = self.session?.token.access_token
+            profileManager = ProfileManager.init(session: self.session!, listener: self)
+            profileManager?.load()
             break
         default:
             break
         }
     }
-    
 
     public enum State : String {
         case Init = "Init"
@@ -53,6 +60,8 @@ public final class ExtoleApp: SessionStateListener {
     lazy public private(set) var sessionManager: SessionManager = {
         return SessionManager.init(program: self.program, listener: self)
     }()
+    
+    public private(set) var profileManager: ProfileManager?
     
     public weak var stateListener: ExtoleAppStateListener?
     
@@ -83,7 +92,6 @@ public final class ExtoleApp: SessionStateListener {
         }
     }
     
-    public var profile: MyProfile?
     public var selectedShareable : MyShareable?
     //public var lastShareResult: CustomSharePollingResult?
     
@@ -91,7 +99,6 @@ public final class ExtoleApp: SessionStateListener {
         // SFSafariViewController - to restore session
         extoleInfo(format: "applicationDidBecomeActive")
         dispatchQueue.async {
-            
             if let existingToken = self.savedToken {
                 self.sessionManager.activate(existingToken: existingToken)
             } else {
@@ -105,36 +112,6 @@ public final class ExtoleApp: SessionStateListener {
         self.state = State.ServerError
     }
     
-    public func identify(email: String, callback: @escaping (UpdateProfileError?) -> Void) {
-        dispatchQueue.async {
-            self.session!.identify(email: email) { error in
-                if let _ = error {
-                    callback(error)
-                } else {
-                    callback(nil)
-                    self.session!.getProfile() { profile, error in
-                        if let identified = profile, !(identified.email?.isEmpty ?? true) {
-                            self.onProfileIdentified(identified: identified)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public func updateProfile(profile: MyProfile, callback: @escaping (UpdateProfileError?) -> Void) {
-        dispatchQueue.async {
-            self.session!.updateProfile(profile: profile) { error in
-                callback(error)
-                self.session!.getProfile() { profile, error in
-                    if let identified = profile {
-                        self.onProfileIdentified(identified: identified)
-                    }
-                }
-            }
-        }
-    }
-
     public func signalShare(channel: String) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
         let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: channel)
@@ -159,12 +136,6 @@ public final class ExtoleApp: SessionStateListener {
                 }
             }
         }
-    }
-    
-    private func onProfileIdentified(identified: MyProfile) {
-        self.profile = identified
-        self.state = State.Identified
-        self.session!.getShareables().onComplete(callback: onShareablesLoaded)
     }
     
     private func onShareablesLoaded(shareables: [MyShareable]?) {

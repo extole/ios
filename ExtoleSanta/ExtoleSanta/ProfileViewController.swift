@@ -30,7 +30,7 @@ class ProfileViewController: UIViewController {
     @objc func doneClick(_ sender: UITextField) {
         let updatedProfile = MyProfile.init(first_name: firstNameText.text,
                                             last_name: lastNameText.text)
-        extoleApp?.updateProfile(profile: updatedProfile) { error in
+        extoleApp?.profileManager?.updateProfile(profile: updatedProfile) { error in
             if let error = error {
                 self.showError(message: "\(error)")
             } else {
@@ -81,8 +81,8 @@ class ProfileViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.firstNameText.text = extoleApp.profile?.first_name ?? ""
-        self.lastNameText.text = extoleApp.profile?.last_name ?? ""
+        self.firstNameText.text = extoleApp.profileManager?.profile?.first_name ?? ""
+        self.lastNameText.text = extoleApp.profileManager?.profile?.last_name ?? ""
     }
     
 }

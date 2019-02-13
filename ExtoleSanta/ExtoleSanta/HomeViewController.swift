@@ -64,13 +64,13 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
             switch self {
             case .Identity:
                 return MainSection(name: "Identity", controls: [{
-                    return app.profile?.email}
+                    return app.profileManager?.profile?.email}
                     ])
             case .Profile:
                 return MainSection(name: "Profile", controls: [{
-                        return app.profile?.first_name
+                        return app.profileManager?.profile?.first_name
                     }, {
-                        return app.profile?.last_name
+                        return app.profileManager?.profile?.last_name
                     }])
             }
         }
@@ -207,7 +207,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     }
     
     @objc func anonymousClick(_ sender: UIButton) {
-        extoleApp.updateProfile(profile: MyProfile.init()) { error in
+        extoleApp.profileManager?.updateProfile(profile: MyProfile.init()) { error in
             if let error = error {
                 self.showError(message: "\(error)")
             }

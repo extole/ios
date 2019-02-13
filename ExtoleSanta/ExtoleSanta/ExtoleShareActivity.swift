@@ -107,6 +107,6 @@ class ExtoleShareViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.emailText.text = extoleApp.profile?.email ?? ""
+        self.emailText.text = extoleApp.profileManager?.profile?.email ?? ""
     }
 }

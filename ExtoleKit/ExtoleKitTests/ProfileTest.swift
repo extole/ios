@@ -13,6 +13,7 @@ import XCTest
 class ProfileTest: XCTestCase {
 
     let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
+    var programSession : ProgramSession!
     var accessToken: ConsumerToken?
     
     override func setUp() {
@@ -23,21 +24,21 @@ class ProfileTest: XCTestCase {
             self.accessToken = token
             promise.fulfill()
         }
+        programSession = ProgramSession.init(program: program, token: accessToken!)
         waitForExpectations(timeout: 5, handler: nil)
     }
 
     
     func testIdentify() {
         let identify = expectation(description: "identify response")
-        program.identify(accessToken: accessToken!,
-                        email: "testidentify@extole.com") { error in
+        programSession.identify(email: "testidentify@extole.com") { error in
             identify.fulfill()
             XCTAssertNil(error)
         }
         wait(for: [identify], timeout: 10)
         
         let verifyIdentity = expectation(description: "verifyIdentity response")
-        self.program.getProfile(accessToken: self.accessToken!) { profile, error in
+        self.programSession.getProfile() { profile, error in
             XCTAssertNil(error)
             XCTAssertEqual("testidentify@extole.com", profile?.email)
             verifyIdentity.fulfill()
@@ -51,14 +52,14 @@ class ProfileTest: XCTestCase {
                                   first_name: "Test",
                                   last_name: "Profile")
         let identify = expectation(description: "identify response")
-        program.updateProfile(accessToken: accessToken!, profile: myProfile) { error in
+        programSession.updateProfile(profile: myProfile) { error in
             XCTAssertNil(error)
             identify.fulfill()
         }
         wait(for: [identify], timeout: 10)
         
         let verifyIdentity = expectation(description: "verifyIdentity response")
-        program.getProfile(accessToken: accessToken!) { profile, callback in
+        programSession.getProfile() { profile, callback in
             XCTAssertEqual(profile?.email, myProfile.email)
             XCTAssertEqual(profile?.partner_user_id, myProfile.partner_user_id)
             XCTAssertEqual(profile?.first_name, myProfile.first_name)

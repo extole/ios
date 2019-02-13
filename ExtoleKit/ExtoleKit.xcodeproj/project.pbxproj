@@ -18,7 +18,6 @@
 		4925B8B4220DAED800D9CD4A /* ErrorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AA220DAED800D9CD4A /* ErrorData.swift */; };
 		4925B8B5220DAED800D9CD4A /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AB220DAED800D9CD4A /* Program.swift */; };
 		4925B8B6220DAED800D9CD4A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AC220DAED800D9CD4A /* Log.swift */; };
-		4925B8BA220DB02100D9CD4A /* ExtoleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8B9220DB02100D9CD4A /* ExtoleApp.swift */; };
 		4925B8CE220DB66F00D9CD4A /* ShareableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8C9220DB66F00D9CD4A /* ShareableTest.swift */; };
 		4925B8CF220DB66F00D9CD4A /* ZoneTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */; };
 		4925B8D0220DB66F00D9CD4A /* ProfileTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */; };
@@ -57,7 +56,6 @@
 		4925B8AA220DAED800D9CD4A /* ErrorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorData.swift; sourceTree = "<group>"; };
 		4925B8AB220DAED800D9CD4A /* Program.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		4925B8AC220DAED800D9CD4A /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
-		4925B8B9220DB02100D9CD4A /* ExtoleApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtoleApp.swift; sourceTree = "<group>"; };
 		4925B8C9220DB66F00D9CD4A /* ShareableTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareableTest.swift; sourceTree = "<group>"; };
 		4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoneTest.swift; sourceTree = "<group>"; };
 		4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTest.swift; sourceTree = "<group>"; };
@@ -112,12 +110,10 @@
 			isa = PBXGroup;
 			children = (
 				49F221A5221440E40052670D /* Network */,
-				4925B8B9220DB02100D9CD4A /* ExtoleApp.swift */,
 				49F221A3221440DC0052670D /* ProfileManager.swift */,
 				4925B8AC220DAED800D9CD4A /* Log.swift */,
 				4925B84A220DABE000D9CD4A /* ExtoleKit.h */,
 				4925B84B220DABE000D9CD4A /* Info.plist */,
-				49F2219F221427160052670D /* ProgramSession.swift */,
 				49F221A122142C660052670D /* SessionManager.swift */,
 				4994A4642214498D00EF8666 /* ShareableManager.swift */,
 			);
@@ -140,6 +136,7 @@
 		49F221A5221440E40052670D /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				49F2219F221427160052670D /* ProgramSession.swift */,
 				4925B8A4220DAED800D9CD4A /* ApiResponse.swift */,
 				4925B8AA220DAED800D9CD4A /* ErrorData.swift */,
 				4925B8A5220DAED800D9CD4A /* Network.swift */,
@@ -276,7 +273,6 @@
 				4925B8AE220DAED800D9CD4A /* ApiResponse.swift in Sources */,
 				4925B8B4220DAED800D9CD4A /* ErrorData.swift in Sources */,
 				49F221A0221427160052670D /* ProgramSession.swift in Sources */,
-				4925B8BA220DB02100D9CD4A /* ExtoleApp.swift in Sources */,
 				49FBE84222130FAC006AEFEB /* CustomShare.swift in Sources */,
 				4925B8B0220DAED800D9CD4A /* Zone.swift in Sources */,
 			);

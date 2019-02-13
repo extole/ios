@@ -10,7 +10,7 @@ import Foundation
 
 public struct ProgramSession{
     let program: Program
-    let token: ConsumerToken
+    public let token: ConsumerToken
     var baseUrl: URL {
         get {
             return program.baseUrl

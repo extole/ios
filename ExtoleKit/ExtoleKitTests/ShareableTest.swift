@@ -13,14 +13,14 @@ import XCTest
 class ShareableTest: XCTestCase {
 
     let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
-    var accessToken: ConsumerToken?
+    var programSession: ProgramSession!
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
         program.getToken() { token, error in
             XCTAssert(token != nil)
             XCTAssert(!token!.access_token.isEmpty)
-            self.accessToken = token
+            self.programSession = ProgramSession.init(program: self.program, token: token!)
             promise.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)
@@ -29,20 +29,33 @@ class ShareableTest: XCTestCase {
 
     func testCreateWithCode() {
         let newShareable = MyShareable.init(label: "refer-a-friend")
-        let shareableResponse = program.createShareable(accessToken: accessToken!,
-                                                        shareable: newShareable)
-        let shareableResult = shareableResponse.await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertGreaterThan(shareableResult!.polling_id, "111111")
+        let createShareablePromise = expectation(description: "create shareable response")
+        var shareableResponse : PollingIdResponse!
         
-        let pollingResult = program.pollShareable(accessToken: accessToken!,
-                                                  pollingResponse: shareableResult!)
-            .await(timeout: DispatchTime.now() + .seconds(10))
-        let shareableCode = pollingResult!.code!
+        programSession.createShareable(shareable: newShareable) { shareableResult, error in
+            XCTAssertGreaterThan(shareableResult!.polling_id, "111111")
+            shareableResponse = shareableResult!
+            createShareablePromise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+
+        var pollResponse : ShareablePollingResult!
+        let pollShareablePromise = expectation(description: "poll shareable response")
         
-        XCTAssertGreaterThan(shareableCode, "1111")
-        XCTAssertEqual(pollingResult?.status, "SUCCEEDED")
+        programSession.pollShareable(pollingResponse: shareableResponse!) {
+            result, error in
+            pollResponse = result!
+            let shareableCode = pollResponse.code!
+            
+            XCTAssertGreaterThan(shareableCode, "1111")
+            XCTAssertEqual(pollResponse?.status, "SUCCEEDED")
+            
+            pollShareablePromise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    
         
-        let shareablesResponse = program.getShareables(accessToken: accessToken!)
+        let shareablesResponse = programSession.getShareables()
             .await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssertNotNil(shareablesResponse)
         XCTAssertEqual(1, shareablesResponse?.count)

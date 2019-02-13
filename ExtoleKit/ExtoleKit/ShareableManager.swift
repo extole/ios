@@ -21,7 +21,7 @@ public protocol ShareableStateListener : AnyObject {
 public final class ShareableManager {
     weak var listener: ShareableStateListener?
     public private(set) var selectedShareable: MyShareable? = nil
-    let session: ProgramSession
+    public let session: ProgramSession
     let label: String
     var shareableKey: String?
     var state = ShareableState.Init {
@@ -31,7 +31,7 @@ public final class ShareableManager {
         }
     }
     
-    init(session: ProgramSession, label:String, shareableKey: String?,
+    public init(session: ProgramSession, label:String, shareableKey: String?,
          listener: ShareableStateListener?) {
         self.session = session
         self.listener = listener

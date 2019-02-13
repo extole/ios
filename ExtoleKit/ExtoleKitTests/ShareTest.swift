@@ -13,7 +13,7 @@ import XCTest
 class ShareTest: XCTestCase {
 
     let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
-    var accessToken: ConsumerToken?
+    var programSession: ProgramSession!
     var advocateCode: String?
     
     override func setUp() {
@@ -21,14 +21,14 @@ class ShareTest: XCTestCase {
         program.getToken() { token, error in
             XCTAssert(token != nil)
             XCTAssert(!token!.access_token.isEmpty)
-            self.accessToken = token
+            programSession = ProgramSession.init(program: program, token: token!)
             promise.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)
         
+        
         let newShareable = MyShareable.init(label: "refer-a-friend")
-        let shareableResponse = program.createShareable(accessToken: accessToken!,
-                                                        shareable: newShareable)
+        let shareableResponse = programSession.createShareable(shareable: newShareable)
         let shareableResult = shareableResponse.await(timeout: DispatchTime.now() + .seconds(10))
         XCTAssertGreaterThan(shareableResult!.polling_id, "111111")
         
@@ -47,7 +47,7 @@ class ShareTest: XCTestCase {
         
         let shareExpectation = expectation(description: "share")
         var sharePollingId : PollingIdResponse!
-        program.customShare(accessToken : accessToken!, share: customShare) {
+        programSession.customShare(share: customShare) {
             shareResponse, error in
             if let error = error {
                 XCTFail("\(error)")
@@ -60,7 +60,7 @@ class ShareTest: XCTestCase {
         wait(for: [shareExpectation], timeout: 10)
 
         let pollingExpectation = expectation(description: "share polling")
-        program.pollCustomShare(accessToken: accessToken!, pollingResponse: sharePollingId) {
+        programSession.pollCustomShare(pollingResponse: sharePollingId) {
                         customShareResult, error in
             if let error = error {
                 XCTFail("\(error)")

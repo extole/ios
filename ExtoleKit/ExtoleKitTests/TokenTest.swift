@@ -13,7 +13,7 @@ import XCTest
 class TokenTest: XCTestCase {
 
     let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
-
+    
     func testGetToken() {
         let promise = expectation(description: "get token response")
         program.getToken() { token, error in
@@ -25,8 +25,10 @@ class TokenTest: XCTestCase {
     }
 
     func testInvalidToken() {
+        let invalidToken = ConsumerToken.init(access_token: "invalid")
+        let programSession = ProgramSession.init(program: program, token: invalidToken)
         let promise = expectation(description: "invalid token response")
-        program.getToken(token: "invalid") { token, error in
+        programSession.getToken() { token, error in
             if let verifyTokenError = error {
                 switch(verifyTokenError) {
                     case .invalidAccessToken : do {
@@ -47,10 +49,11 @@ class TokenTest: XCTestCase {
             getToken.fulfill()
             XCTAssert(token != nil)
             XCTAssert(!token!.access_token.isEmpty)
-            self.program.deleteToken(token: token!.access_token, callback: { error in
+            let programSession = ProgramSession.init(program: self.program, token: token!)
+            programSession.deleteToken() { error in
                 deleteToken.fulfill()
                 XCTAssertNil(error)
-                self.program.getToken(token: token!.access_token) { token, error in
+                programSession.getToken() { token, error in
                     verifyTokenDeleted.fulfill()
                     XCTAssertNil(token)
                     XCTAssertNotNil(error)
@@ -59,7 +62,7 @@ class TokenTest: XCTestCase {
                         default: XCTFail("Unexpected error \(error)")
                     }
                 }
-            })
+            }
         }
         waitForExpectations(timeout: 100, handler: nil)
     }

@@ -8,7 +8,7 @@
 
 import Foundation
 public struct CustomShare : Codable {
-    init(advocate_code: String, channel: String, message : String? = nil, recipient_email: String? = nil,
+    public init(advocate_code: String, channel: String, message : String? = nil, recipient_email: String? = nil,
          data: [String:String]? = nil) {
         self.advocate_code = advocate_code
         self.channel = channel

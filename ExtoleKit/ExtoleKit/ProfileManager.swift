@@ -20,7 +20,7 @@ public protocol ProfileStateListener : AnyObject {
 
 public final class ProfileManager {
     weak var listener: ProfileStateListener?
-    let session: ProgramSession
+    public let session: ProgramSession
     public private(set) var profile: MyProfile? = nil
     var state = ProfileState.Init {
         didSet {
@@ -29,7 +29,7 @@ public final class ProfileManager {
         }
     }
     
-    init(session: ProgramSession, listener: ProfileStateListener?) {
+    public init(session: ProgramSession, listener: ProfileStateListener?) {
         self.session = session
         self.listener = listener
     }

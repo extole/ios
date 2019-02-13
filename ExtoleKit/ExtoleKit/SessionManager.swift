@@ -24,7 +24,7 @@ public protocol SessionStateListener : AnyObject {
 public final class SessionManager {
     let program: Program
     weak var listener: SessionStateListener?
-    var session: ProgramSession? = nil
+    public var session: ProgramSession? = nil
     var state = SessionState.Init {
         didSet {
             extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
@@ -32,7 +32,7 @@ public final class SessionManager {
         }
     }
 
-    init(program: Program, listener: SessionStateListener?) {
+    public init(program: Program, listener: SessionStateListener?) {
         self.program = program
         self.listener = listener
     }

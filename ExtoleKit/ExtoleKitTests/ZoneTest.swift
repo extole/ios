@@ -13,14 +13,14 @@ import XCTest
 class ZoneTest: XCTestCase {
 
     let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
-    var accessToken: ConsumerToken?
+    var programSession: ProgramSession!
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
         program.getToken() { token, error in
             XCTAssert(token != nil)
             XCTAssert(!token!.access_token.isEmpty)
-            self.accessToken = token
+            self.programSession = ProgramSession.init(program: self.program, token: token!)
             promise.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)
@@ -32,8 +32,7 @@ class ZoneTest: XCTestCase {
     
     func testFetchSettings() {
         let promise = expectation(description: "fetch object")
-        program.fetchObject(accessToken: accessToken!,
-                            zone: "settings") { (settings: Settings?, error) in
+        programSession.fetchObject(zone: "settings") { (settings: Settings?, error) in
             XCTAssertEqual("Dear Santa, see my wishlist at", settings?.shareMessage)
             promise.fulfill()
         }

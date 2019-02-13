@@ -9,7 +9,7 @@
 import Foundation
 
 public struct EmailShare : Codable {
-    init(advocate_code: String, recipient_email: String? = nil,
+    public init(advocate_code: String, recipient_email: String? = nil,
          message: String? = nil,
          subject: String? = nil,
          data: [String:String]? = nil) {

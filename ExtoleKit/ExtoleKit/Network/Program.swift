@@ -10,4 +10,7 @@ import Foundation
 
 public struct Program {
     let baseUrl: URL
+    public init(baseUrl: URL) {
+        self.baseUrl = baseUrl
+    }
 }

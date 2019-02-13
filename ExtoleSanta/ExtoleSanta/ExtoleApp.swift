@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ExtoleKit
 
 public protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleApp.State)

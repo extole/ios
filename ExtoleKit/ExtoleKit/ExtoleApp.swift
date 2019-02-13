@@ -16,6 +16,7 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener, Sharea
     public func onStateChanged(state: ShareableState) {
         switch state {
         case .Selected:
+            self.savedShareableKey = shareableManager?.selectedShareable?.key
             self.state = .ReadyToShare
         default:
             break
@@ -28,6 +29,7 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener, Sharea
             self.state = .Identified
             shareableManager = ShareableManager.init(session: self.session!,
                                                      label: self.label,
+                                                     shareableKey: self.savedShareableKey,
                                                      listener: self)
             shareableManager?.load()
         default:
@@ -101,6 +103,15 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener, Sharea
         }
         set(newSavedToken) {
             settings.set(newSavedToken, forKey: "extole.access_token")
+        }
+    }
+    
+    var savedShareableKey : String? {
+        get {
+            return settings.string(forKey: "extole.shareable_key")
+        }
+        set(newShareableKey) {
+            settings.set(newShareableKey, forKey: "extole.shareable_key")
         }
     }
     

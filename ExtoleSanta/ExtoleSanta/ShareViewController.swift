@@ -103,7 +103,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func addWishToShareable(item: String) {
-        self.wishItems[item] = ""
+        self.wishItems[item] = "please-santa"
         let updateShareable = UpdateShareable.init(data: self.wishItems)
         let shareableCode = self.extoleApp.shareableManager!.selectedShareable?.code
         self.extoleApp.session?.updateShareable(code: shareableCode!, shareable: updateShareable) { error in

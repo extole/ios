@@ -51,6 +51,7 @@ func jsonRequest<T : Encodable>(method: String, accessToken: ConsumerToken? = ni
         extoleDebug(format: "using accessToken %{private}@", arg: existingToken.access_token)
         result.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
     }
+    extoleDebug(format: "body %{public}@", arg: "\(String(data: result.httpBody!, encoding: .utf8))")
     return result
 }
 

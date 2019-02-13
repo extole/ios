@@ -20,10 +20,10 @@ public protocol ShareableStateListener : AnyObject {
 
 public final class ShareableManager {
     weak var listener: ShareableStateListener?
-    var shareables: [MyShareable]? = nil
     public private(set) var selectedShareable: MyShareable? = nil
     let session: ProgramSession
     let label: String
+    var shareableKey: String?
     var state = ShareableState.Init {
         didSet {
             extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
@@ -31,10 +31,12 @@ public final class ShareableManager {
         }
     }
     
-    init(session: ProgramSession, label:String, listener: ShareableStateListener?) {
+    init(session: ProgramSession, label:String, shareableKey: String?,
+         listener: ShareableStateListener?) {
         self.session = session
         self.listener = listener
         self.label = label
+        self.shareableKey = shareableKey
     }
     
     public func load() {
@@ -44,13 +46,14 @@ public final class ShareableManager {
 
     private func onShareablesLoaded(shareables: [MyShareable]?, error: GetShareablesError?) {
         if let shareable = shareables?.filter({ (shareable : MyShareable) -> Bool in
-            return shareable.label == self.label
+            return shareable.key == self.shareableKey
         }).first {
             self.selectedShareable = shareable
             self.state = .Selected
         } else {
+            self.shareableKey = NSUUID().uuidString
             let newShareable = MyShareable.init(label: self.label,
-                                                key: self.label)
+                                                key: self.shareableKey)
             self.session.createShareable(shareable: newShareable){ pollingId, error in
                 self.session.pollShareable(pollingResponse: pollingId!, callback: { shareableResult, error in
                     self.session.getShareables(callback: self.onShareablesLoaded)

@@ -12,13 +12,24 @@ public protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleApp.State)
 }
 
-public final class ExtoleApp: SessionStateListener, ProfileStateListener {
+public final class ExtoleApp: SessionStateListener, ProfileStateListener, ShareableStateListener {
+    public func onStateChanged(state: ShareableState) {
+        switch state {
+        case .Selected:
+            self.state = .ReadyToShare
+        default:
+            break
+        }
+    }
     
     public func onStateChanged(state: ProfileState) {
         switch state {
         case .Identified:
-            self.session!.getShareables().onComplete(callback: onShareablesLoaded)
             self.state = .Identified
+            shareableManager = ShareableManager.init(session: self.session!,
+                                                     label: self.label,
+                                                     listener: self)
+            shareableManager?.load()
         default:
             self.state = .Identify
         }
@@ -62,6 +73,7 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener {
     }()
     
     public private(set) var profileManager: ProfileManager?
+    public private(set) var shareableManager: ShareableManager?
     
     public weak var stateListener: ExtoleAppStateListener?
     
@@ -92,9 +104,6 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener {
         }
     }
     
-    public var selectedShareable : MyShareable?
-    //public var lastShareResult: CustomSharePollingResult?
-    
     public func applicationDidBecomeActive() {
         // SFSafariViewController - to restore session
         extoleInfo(format: "applicationDidBecomeActive")
@@ -114,7 +123,7 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener {
     
     public func signalShare(channel: String) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
-        let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: channel)
+        let share = CustomShare.init(advocate_code: self.shareableManager!.selectedShareable!.code!, channel: channel)
         self.session!.customShare(share: share) { pollingResponse, error in
 
             self.session!.pollCustomShare(pollingResponse: pollingResponse!) { shareResponse, error in
@@ -126,7 +135,7 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener {
     
     public func share(email: String) {
         extoleInfo(format: "sharing to email %s", arg: email)
-        let share = EmailShare.init(advocate_code: self.selectedShareable!.code!,
+        let share = EmailShare.init(advocate_code: self.shareableManager!.selectedShareable!.code!,
                                      recipient_email: email)
         self.session!.emailShare(share: share) { pollingResponse, error in
             if let pollingResponse = pollingResponse {
@@ -138,22 +147,7 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener {
         }
     }
     
-    private func onShareablesLoaded(shareables: [MyShareable]?) {
-        if let shareable = shareables?.filter({ (shareable : MyShareable) -> Bool in
-            return shareable.label == self.label
-        }).first {
-            self.selectedShareable = shareable
-            self.state = State.ReadyToShare
-        } else {
-            let newShareable = MyShareable.init(label: self.label,
-                                                key: self.label)
-            self.session!.createShareable(shareable: newShareable).onComplete { (pollingId: PollingIdResponse?) in
-                self.session!.pollShareable(pollingResponse: pollingId!).onComplete(callback: { (shareableResult: ShareablePollingResult?) in
-                    self.session!.getShareables().onComplete(callback: self.onShareablesLoaded)
-                })
-            }
-        }
-    }
+    
     
     public func applicationWillResignActive() {
         extoleInfo(format: "application resign active")

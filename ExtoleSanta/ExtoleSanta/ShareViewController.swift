@@ -58,9 +58,10 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     override func viewWillAppear(_ animated: Bool) {
-        self.wishItems = extoleApp.selectedShareable?.data ?? [:]
+        self.wishItems = extoleApp.shareableManager!.selectedShareable?.data ?? [:]
         wishList.reloadData()
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -104,7 +105,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func addWishToShareable(item: String) {
         self.wishItems[item] = ""
         let updateShareable = UpdateShareable.init(data: self.wishItems)
-        let shareableCode = self.extoleApp.selectedShareable?.code
+        let shareableCode = self.extoleApp.shareableManager!.selectedShareable?.code
         self.extoleApp.session?.updateShareable(code: shareableCode!, shareable: updateShareable) { error in
             if let error = error {
                 self.showError(message: "Update Error \(error)")
@@ -134,7 +135,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     @objc func handleShare(_ sender: UIButton) {
-        guard let shareLink = extoleApp.selectedShareable?.link else {
+        guard let shareLink = extoleApp.shareableManager!.selectedShareable?.link else {
             self.showError(message: "No Shareable")
             return
         }

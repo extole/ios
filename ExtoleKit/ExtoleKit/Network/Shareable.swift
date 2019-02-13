@@ -43,12 +43,41 @@ public struct MyShareable : Codable {
     public let link: String?
     public let data: [String: String]?
 }
+public enum GetShareablesError : Error {
+    case invalidProtocol(error: ExtoleApiError)
+}
+public enum CreateShareableError : Error {
+    case invalidProtocol(error: ExtoleApiError)
+}
+public enum PollShareableError : Error {
+    case invalidProtocol(error: ExtoleApiError)
+}
+
 
 extension ProgramSession {
-    
-    public func getShareables() -> APIResponse<[MyShareable]> {
+    public func getShareables(callback: @escaping ([MyShareable]?, GetShareablesError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
-        return dataTask(url: url, accessToken: token.access_token, postData: nil)
+        let request = getRequest(accessToken: token,
+                                 url: url)
+        processRequest(with: request) { data, error in
+            if let apiError = error {
+                switch(apiError) {
+                case .genericError(let errorData) : do {
+                    callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
+                    }
+                default : callback(nil, .invalidProtocol(error: apiError))
+                }
+                return
+            }
+            if let data = data {
+                let decodedShareables : [MyShareable]? = tryDecode(data: data)
+                if let decodedShareables = decodedShareables {
+                    callback(decodedShareables, nil)
+                } else {
+                    callback(nil, .invalidProtocol(error: .decodingError(data: data)))
+                }
+            }
+        }
     }
     
     public func updateShareable(code: String, shareable: UpdateShareable,
@@ -72,16 +101,56 @@ extension ProgramSession {
         
     }
 
-    public func createShareable(shareable: MyShareable)
-        -> APIResponse<PollingIdResponse> {
-            let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
-            let shareableData = try? JSONEncoder().encode(shareable)
-            return dataTask(url: url, accessToken: token.access_token, postData: shareableData)
+    public func createShareable(shareable: MyShareable, callback: @escaping (PollingIdResponse?, CreateShareableError?) -> Void)  {
+        let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
+        let request = postRequest(accessToken: token,
+                                 url: url,
+                                 data: shareable)
+        processRequest(with: request) { data, error in
+            if let apiError = error {
+                switch(apiError) {
+                case .genericError(let errorData) : do {
+                    callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
+                    }
+                default : callback(nil, .invalidProtocol(error: apiError))
+                }
+                return
+            }
+            if let data = data {
+                let decodedPollingId : PollingIdResponse? = tryDecode(data: data)
+                if let decodedPollingId = decodedPollingId {
+                    callback(decodedPollingId, nil)
+                } else {
+                    callback(nil, .invalidProtocol(error: .decodingError(data: data)))
+                }
+            }
+        }
     }
 
-    public func pollShareable(pollingResponse: PollingIdResponse)
-        -> APIResponse<ShareablePollingResult> {
-            let url = URL(string: "\(baseUrl)/api/v5/me/shareables/status/\(pollingResponse.polling_id)")!
-            return dataTask(url: url, accessToken: token.access_token, postData: nil)
+    public func pollShareable(pollingResponse: PollingIdResponse,
+                              callback: @escaping (ShareablePollingResult?, PollShareableError?) -> Void) {
+        let url = URL(string: "\(baseUrl)/api/v5/me/shareables/status/\(pollingResponse.polling_id)")!
+
+        let request = getRequest(accessToken: token,
+                                 url: url)
+        processRequest(with: request) { data, error in
+            if let apiError = error {
+                switch(apiError) {
+                case .genericError(let errorData) : do {
+                    callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
+                    }
+                default : callback(nil, .invalidProtocol(error: apiError))
+                }
+                return
+            }
+            if let data = data {
+                let decodedPollingId : ShareablePollingResult? = tryDecode(data: data)
+                if let decodedPollingId = decodedPollingId {
+                    callback(decodedPollingId, nil)
+                } else {
+                    callback(nil, .invalidProtocol(error: .decodingError(data: data)))
+                }
+            }
+        }
     }
 }

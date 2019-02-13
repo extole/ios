@@ -38,11 +38,11 @@ public struct CustomSharePollingResult : Codable {
     let share_id : String
 }
 
-extension Program {
+extension ProgramSession {
     
-    public func customShare(accessToken: ConsumerToken, share: CustomShare, callback : @escaping (PollingIdResponse?, CustomShareError?) -> Void) {
+    public func customShare(share: CustomShare, callback : @escaping (PollingIdResponse?, CustomShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
-        let request = postRequest(accessToken: accessToken,
+        let request = postRequest(accessToken: token,
                                   url: url,
                                   data: share)
         processRequest(with: request) { data, error in
@@ -66,10 +66,10 @@ extension Program {
         }
     }
     
-    public func pollCustomShare(accessToken: ConsumerToken, pollingResponse: PollingIdResponse,
+    public func pollCustomShare(pollingResponse: PollingIdResponse,
                                 callback : @escaping (CustomSharePollingResult?, PollShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
-        let request = getRequest(accessToken: accessToken,
+        let request = getRequest(accessToken: token,
                                  url: url)
         
         func poll(retries: UInt = 10) {

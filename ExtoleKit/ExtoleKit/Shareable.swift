@@ -44,17 +44,17 @@ public struct MyShareable : Codable {
     public let data: [String: String]?
 }
 
-extension Program {
+extension ProgramSession {
     
-    public func getShareables(accessToken: ConsumerToken) -> APIResponse<[MyShareable]> {
+    public func getShareables() -> APIResponse<[MyShareable]> {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
-        return dataTask(url: url, accessToken: accessToken.access_token, postData: nil)
+        return dataTask(url: url, accessToken: token.access_token, postData: nil)
     }
     
-    public func updateShareable(accessToken: ConsumerToken, code: String, shareable: UpdateShareable,
+    public func updateShareable(code: String, shareable: UpdateShareable,
                                 callback : @escaping (UpdateShareableError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables/\(code)")!
-        let request = putRequest(accessToken: accessToken,
+        let request = putRequest(accessToken: token,
                                   url: url,
                                   data: shareable)
         processRequest(with: request) { data, error in
@@ -72,16 +72,16 @@ extension Program {
         
     }
 
-    public func createShareable(accessToken: ConsumerToken, shareable: MyShareable)
+    public func createShareable(shareable: MyShareable)
         -> APIResponse<PollingIdResponse> {
             let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
             let shareableData = try? JSONEncoder().encode(shareable)
-            return dataTask(url: url, accessToken: accessToken.access_token, postData: shareableData)
+            return dataTask(url: url, accessToken: token.access_token, postData: shareableData)
     }
 
-    public func pollShareable(accessToken: ConsumerToken, pollingResponse: PollingIdResponse)
+    public func pollShareable(pollingResponse: PollingIdResponse)
         -> APIResponse<ShareablePollingResult> {
             let url = URL(string: "\(baseUrl)/api/v5/me/shareables/status/\(pollingResponse.polling_id)")!
-            return dataTask(url: url, accessToken: accessToken.access_token, postData: nil)
+            return dataTask(url: url, accessToken: token.access_token, postData: nil)
     }
 }

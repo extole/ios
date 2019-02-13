@@ -36,12 +36,12 @@ public enum UpdateProfileError : Error {
     case invalidPersonEmail
 }
 
-extension Program {
+extension ProgramSession {
 
-    public func identify(accessToken: ConsumerToken, email: String,
+    public func identify(email: String,
                          callback : @escaping (UpdateProfileError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = postRequest(accessToken: accessToken,
+        let request = postRequest(accessToken: token,
                                   url: url,
                                   data: MyProfile.init(email: email))
         processRequest(with: request) { data, error in
@@ -61,10 +61,10 @@ extension Program {
         }
     }
     
-    public func updateProfile(accessToken: ConsumerToken, profile: MyProfile,
+    public func updateProfile(profile: MyProfile,
                               callback : @escaping (UpdateProfileError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = postRequest(accessToken: accessToken,
+        let request = postRequest(accessToken: token,
                                  url: url,
                                  data: profile)
         processRequest(with: request) { data, error in
@@ -81,10 +81,9 @@ extension Program {
         }
     }
 
-    public func getProfile(accessToken: ConsumerToken,
-                           callback : @escaping (MyProfile?, GetProfileError?) -> Void) {
+    public func getProfile(callback : @escaping (MyProfile?, GetProfileError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = getRequest(accessToken: accessToken,
+        let request = getRequest(accessToken: token,
                                   url: url)
         processRequest(with: request) { data, error in
             if let apiError = error {

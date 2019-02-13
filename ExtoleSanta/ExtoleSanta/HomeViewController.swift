@@ -28,7 +28,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     func onStateChanged(state: ExtoleApp.State) {
         switch state {
         case .Identified:
-            extoleApp.fetchObject(zone: "settings") { (settings: ShareSettings?, error) in
+            extoleApp.session?.fetchObject(zone: "settings") { (settings: ShareSettings?, error) in
                 self.extoleApp.shareMessage = settings?.shareMessage
                 self.showState(app: self.extoleApp)
             }
@@ -223,13 +223,13 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
         
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
-            self.extoleApp.logout()
+            self.extoleApp.sessionManager.logout()
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
     }
     
     @objc func newSessionClick(_ sender: UIButton) {
-        extoleApp.newSession()
+        extoleApp.sessionManager.newSession()
     }
 }

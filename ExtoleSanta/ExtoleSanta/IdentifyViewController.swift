@@ -27,7 +27,7 @@ class IdentifyViewController: UIViewController {
     
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
-            extoleApp.identify(email: email) { error in
+            extoleApp.session!.identify(email: email) { error in
                 DispatchQueue.main.async {
                     if let error = error {
                         let errorAlert = UIAlertController(title: "Identify Error", message: "\(error)", preferredStyle: .alert)

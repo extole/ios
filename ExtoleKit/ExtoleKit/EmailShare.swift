@@ -41,11 +41,11 @@ public struct EmailSharePollingResult : Codable {
     let share_id : String
 }
 
-extension Program {
+extension ProgramSession {
     
-    public func emailShare(accessToken: ConsumerToken, share: EmailShare, callback : @escaping (PollingIdResponse?, EmailShareError?) -> Void) {
+    public func emailShare(share: EmailShare, callback : @escaping (PollingIdResponse?, EmailShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share")!
-        let request = postRequest(accessToken: accessToken,
+        let request = postRequest(accessToken: token,
                                   url: url,
                                   data: share)
         processRequest(with: request) { data, error in
@@ -69,10 +69,10 @@ extension Program {
         }
     }
 
-    public func pollEmailShare(accessToken: ConsumerToken, pollingResponse: PollingIdResponse,
+    public func pollEmailShare(pollingResponse: PollingIdResponse,
                                 callback : @escaping (EmailSharePollingResult?, PollEmailShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share/status/\(pollingResponse.polling_id)")!
-        let request = getRequest(accessToken: accessToken,
+        let request = getRequest(accessToken: token,
                                  url: url)
         
         func poll(retries: UInt = 10) {

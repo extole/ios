@@ -8,16 +8,16 @@
 
 import Foundation
 
-extension Program {
+extension ProgramSession {
     
     public enum GetObjectError : Error {
         case invalidProtocol(error: ExtoleApiError)
     }
     
-    public func fetchObject<T: Codable>(accessToken: ConsumerToken, zone: String,
+    public func fetchObject<T: Codable>(zone: String,
                             callback : @escaping (T?, GetObjectError?) -> Void) {
         let url = URL(string: "\(baseUrl)/zone/\(zone)")!
-        let request = getRequest(accessToken: accessToken,
+        let request = getRequest(accessToken: token,
                                  url: url)
         processRequest(with: request) { data, error in
             if let apiError = error {

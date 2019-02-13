@@ -12,8 +12,22 @@ public protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleApp.State)
 }
 
-
-public final class ExtoleApp {
+public final class ExtoleApp: SessionStateListener {
+    
+    public func onStateChanged(state: SessionState) {
+        switch state {
+        case .Verified:
+            self.session!.getProfile() { profile, error in
+                if let identified = profile, !(identified.email?.isEmpty ?? true) {
+                    self.onProfileIdentified(identified: identified)
+                }
+            }
+            break
+        default:
+            break
+        }
+    }
+    
 
     public enum State : String {
         case Init = "Init"
@@ -30,10 +44,21 @@ public final class ExtoleApp {
     
     private let program: Program
     
+    public var session: ProgramSession? {
+        get {
+            return sessionManager.session
+        }
+    }
+    
+    lazy public private(set) var sessionManager: SessionManager = {
+        return SessionManager.init(program: self.program, listener: self)
+    }()
+    
     public weak var stateListener: ExtoleAppStateListener?
     
     public init(programUrl: URL, stateListener: ExtoleAppStateListener? = nil) {
         self.program = Program.init(baseUrl: programUrl)
+        self.sessionManager = SessionManager.init(program: self.program, listener: self)
     }
     
     private let label = "refer-a-friend"
@@ -58,7 +83,6 @@ public final class ExtoleApp {
         }
     }
     
-    var accessToken: ConsumerToken?
     public var profile: MyProfile?
     public var selectedShareable : MyShareable?
     //public var lastShareResult: CustomSharePollingResult?
@@ -67,102 +91,28 @@ public final class ExtoleApp {
         // SFSafariViewController - to restore session
         extoleInfo(format: "applicationDidBecomeActive")
         dispatchQueue.async {
-            if let existingToken = self.savedToken {
-                self.program.getToken(token: existingToken) { token, error in
-                    if let verifiedToken = token {
-                        self.onVerifiedToken(verifiedToken: verifiedToken)
-                    }
-                    if let verifyTokenError = error {
-                        switch(verifyTokenError) {
-                            case .invalidAccessToken : self.onTokenInvalid()
-                            default: self.onServerError()
-                        }
-                    }
-                }
-            } else {
-                self.program.getToken() { (token, error) in
-                    if let newToken = token {
-                        self.onVerifiedToken(verifiedToken: newToken)
-                    }
-                }
-            }
-        }
-    }
-    
-    public func updateShareable(shareable: UpdateShareable, callback:
-                                @escaping (UpdateShareableError?) -> Void) {
-        dispatchQueue.async {
-            self.program.updateShareable(accessToken: self.accessToken!,
-                                         code: (self.selectedShareable?.code)!,
-                                         shareable: shareable) { error in
-                callback(error)
-            }
-        }
-        
-    }
-    
-    private func onTokenInvalid() {
-        self.state = State.InvalidToken
-        self.savedToken = nil
-        self.program.getToken(){ token, error in
-            if let newToken = token {
-                self.onVerifiedToken(verifiedToken: newToken)
-            }
-        }
-    }
-
-    public func newSession() {
-        self.state = State.Init
-        self.program.getToken(){ token, error in
-            if let newToken = token {
-                self.onVerifiedToken(verifiedToken: newToken)
-            }
-        }
-    }
-
-    public func logout() {
-        program.deleteToken(token: self.savedToken!) { error in
-            if let _ = error {
-                self.state = .ServerError
-            } else {
-                self.savedToken = nil
-                self.state = .LoggedOut
-                self.profile = nil
-                self.selectedShareable = nil
-                //self.lastShareResult = nil
-                self.accessToken = nil
-            }
             
+            if let existingToken = self.savedToken {
+                self.sessionManager.activate(existingToken: existingToken)
+            } else {
+                self.sessionManager.newSession()
+                
+            }
         }
     }
-
+    
     private func onServerError() {
         self.state = State.ServerError
-    }
-
-    private func onVerifiedToken(verifiedToken: ConsumerToken) {
-        self.savedToken = verifiedToken.access_token
-        self.accessToken = verifiedToken
-        self.state = State.Identify
-        self.program.getProfile(accessToken: verifiedToken) { profile, error in
-            if let identified = profile, !(identified.email?.isEmpty ?? true) {
-                self.onProfileIdentified(identified: identified)
-            }
-        }
-    }
-
-    public func fetchObject<T: Codable>(zone: String, callback : @escaping (T?, Program.GetObjectError?) -> Void) {
-        self.program.fetchObject(accessToken: self.accessToken!, zone: zone, callback: callback)
     }
     
     public func identify(email: String, callback: @escaping (UpdateProfileError?) -> Void) {
         dispatchQueue.async {
-            self.program.identify(accessToken: self.accessToken!, email: email) { error in
+            self.session!.identify(email: email) { error in
                 if let _ = error {
                     callback(error)
                 } else {
                     callback(nil)
-                    self.program.getProfile(accessToken: self.accessToken!) { profile, error in
+                    self.session!.getProfile() { profile, error in
                         if let identified = profile, !(identified.email?.isEmpty ?? true) {
                             self.onProfileIdentified(identified: identified)
                         }
@@ -174,9 +124,9 @@ public final class ExtoleApp {
 
     public func updateProfile(profile: MyProfile, callback: @escaping (UpdateProfileError?) -> Void) {
         dispatchQueue.async {
-            self.program.updateProfile(accessToken: self.accessToken!, profile: profile) { error in
+            self.session!.updateProfile(profile: profile) { error in
                 callback(error)
-                self.program.getProfile(accessToken: self.accessToken!) { profile, error in
+                self.session!.getProfile() { profile, error in
                     if let identified = profile {
                         self.onProfileIdentified(identified: identified)
                     }
@@ -188,9 +138,9 @@ public final class ExtoleApp {
     public func signalShare(channel: String) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
         let share = CustomShare.init(advocate_code: self.selectedShareable!.code!, channel: channel)
-        self.program.customShare(accessToken: self.accessToken!, share: share) { pollingResponse, error in
+        self.session!.customShare(share: share) { pollingResponse, error in
 
-            self.program.pollCustomShare(accessToken: self.accessToken!, pollingResponse: pollingResponse!) { shareResponse, error in
+            self.session!.pollCustomShare(pollingResponse: pollingResponse!) { shareResponse, error in
                 self.state = State.ReadyToShare
                 //self.lastShareResult = shareResponse
             }
@@ -201,9 +151,9 @@ public final class ExtoleApp {
         extoleInfo(format: "sharing to email %s", arg: email)
         let share = EmailShare.init(advocate_code: self.selectedShareable!.code!,
                                      recipient_email: email)
-        self.program.emailShare(accessToken: self.accessToken!, share: share) { pollingResponse, error in
+        self.session!.emailShare(share: share) { pollingResponse, error in
             if let pollingResponse = pollingResponse {
-                self.program.pollEmailShare(accessToken: self.accessToken!, pollingResponse: pollingResponse) { shareResponse, error in
+                self.session!.pollEmailShare(pollingResponse: pollingResponse) { shareResponse, error in
                     self.state = State.ReadyToShare
                     //self.lastShareResult = shareResponse
                 }
@@ -214,7 +164,7 @@ public final class ExtoleApp {
     private func onProfileIdentified(identified: MyProfile) {
         self.profile = identified
         self.state = State.Identified
-        self.program.getShareables(accessToken: accessToken!).onComplete(callback: onShareablesLoaded)
+        self.session!.getShareables().onComplete(callback: onShareablesLoaded)
     }
     
     private func onShareablesLoaded(shareables: [MyShareable]?) {
@@ -226,9 +176,9 @@ public final class ExtoleApp {
         } else {
             let newShareable = MyShareable.init(label: self.label,
                                                 key: self.label)
-            self.program.createShareable(accessToken: accessToken!, shareable: newShareable).onComplete { (pollingId: PollingIdResponse?) in
-                self.program.pollShareable(accessToken: self.accessToken!, pollingResponse: pollingId!).onComplete(callback: { (shareableResult: ShareablePollingResult?) in
-                    self.program.getShareables(accessToken: self.accessToken!).onComplete(callback: self.onShareablesLoaded)
+            self.session!.createShareable(shareable: newShareable).onComplete { (pollingId: PollingIdResponse?) in
+                self.session!.pollShareable(pollingResponse: pollingId!).onComplete(callback: { (shareableResult: ShareablePollingResult?) in
+                    self.session!.getShareables().onComplete(callback: self.onShareablesLoaded)
                 })
             }
         }

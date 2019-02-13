@@ -24,6 +24,8 @@
 		4925B8D0220DB66F00D9CD4A /* ProfileTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */; };
 		4925B8D1220DB66F00D9CD4A /* TokenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CC220DB66F00D9CD4A /* TokenTest.swift */; };
 		4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CD220DB66F00D9CD4A /* ShareTest.swift */; };
+		49F221A0221427160052670D /* ProgramSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F2219F221427160052670D /* ProgramSession.swift */; };
+		49F221A222142C660052670D /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F221A122142C660052670D /* SessionManager.swift */; };
 		49FBE84222130FAC006AEFEB /* CustomShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FBE84122130FAC006AEFEB /* CustomShare.swift */; };
 		49FBE84422130FDB006AEFEB /* EmailShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FBE84322130FDB006AEFEB /* EmailShare.swift */; };
 /* End PBXBuildFile section */
@@ -59,6 +61,8 @@
 		4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTest.swift; sourceTree = "<group>"; };
 		4925B8CC220DB66F00D9CD4A /* TokenTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenTest.swift; sourceTree = "<group>"; };
 		4925B8CD220DB66F00D9CD4A /* ShareTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareTest.swift; sourceTree = "<group>"; };
+		49F2219F221427160052670D /* ProgramSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramSession.swift; sourceTree = "<group>"; };
+		49F221A122142C660052670D /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		49FBE84122130FAC006AEFEB /* CustomShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShare.swift; sourceTree = "<group>"; };
 		49FBE84322130FDB006AEFEB /* EmailShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailShare.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -117,6 +121,8 @@
 				4925B84B220DABE000D9CD4A /* Info.plist */,
 				49FBE84122130FAC006AEFEB /* CustomShare.swift */,
 				49FBE84322130FDB006AEFEB /* EmailShare.swift */,
+				49F2219F221427160052670D /* ProgramSession.swift */,
+				49F221A122142C660052670D /* SessionManager.swift */,
 			);
 			path = ExtoleKit;
 			sourceTree = "<group>";
@@ -249,9 +255,11 @@
 				4925B8B6220DAED800D9CD4A /* Log.swift in Sources */,
 				4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */,
 				4925B8B2220DAED800D9CD4A /* Token.swift in Sources */,
+				49F221A222142C660052670D /* SessionManager.swift in Sources */,
 				4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */,
 				4925B8AE220DAED800D9CD4A /* ApiResponse.swift in Sources */,
 				4925B8B4220DAED800D9CD4A /* ErrorData.swift in Sources */,
+				49F221A0221427160052670D /* ProgramSession.swift in Sources */,
 				4925B8BA220DB02100D9CD4A /* ExtoleApp.swift in Sources */,
 				49FBE84222130FAC006AEFEB /* CustomShare.swift in Sources */,
 				4925B8B0220DAED800D9CD4A /* Zone.swift in Sources */,

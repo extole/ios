@@ -21,57 +21,62 @@ public enum GetTokenError : Error {
 }
 
 public struct ConsumerToken : Codable {
+    init(access_token: String) {
+        self.access_token = access_token
+    }
     let access_token: String
-    let expires_in: Int
-    let scopes: [String]
-    let capabilities: [String]
+    let expires_in: Int? = nil
+    let scopes: [String]? = nil
+    let capabilities: [String]? = nil
+}
+
+func tokenUrl(baseUrl: URL) -> URL {
+    return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
+}
+
+private func procesTokenRequest(with request: URLRequest, responseHandler: @escaping (_: ConsumerToken?, _: GetTokenError?) ->Void) {
+    extoleDebug(format: "request %{public}@ ", arg: request.url?.absoluteString ?? "url is empty")
+    processRequest(with: request) { data, error in
+        if let apiError = error {
+            switch(apiError) {
+            case .genericError(let errorData) : do {
+                switch(errorData.code) {
+                case "invalid_access_token": responseHandler(nil, .invalidAccessToken)
+                default:  responseHandler(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
+                }
+                }
+            default : responseHandler(nil, .invalidProtocol(error: apiError))
+            }
+            return
+        }
+        if let data = data {
+            let decodedToken : ConsumerToken? = tryDecode(data: data)
+            if let token = decodedToken {
+                responseHandler(token, nil)
+            } else {
+                responseHandler(nil, .invalidProtocol(error: .decodingError(data: data)))
+            }
+        }
+    }
 }
 
 extension Program {
 
-    func tokenUrl() -> URL {
-        return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
-    }
-
-    private func procesTokenRequest(with request: URLRequest, responseHandler: @escaping (_: ConsumerToken?, _: GetTokenError?) ->Void) {
-        extoleDebug(format: "request %{public}@ ", arg: request.url?.absoluteString ?? "url is empty")
-        processRequest(with: request) { data, error in
-            if let apiError = error {
-                switch(apiError) {
-                case .genericError(let errorData) : do {
-                    switch(errorData.code) {
-                    case "invalid_access_token": responseHandler(nil, .invalidAccessToken)
-                    default:  responseHandler(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
-                    }
-                    }
-                default : responseHandler(nil, .invalidProtocol(error: apiError))
-                }
-                return
-            }
-            if let data = data {
-                let decodedToken : ConsumerToken? = tryDecode(data: data)
-                if let token = decodedToken {
-                    responseHandler(token, nil)
-                } else {
-                    responseHandler(nil, .invalidProtocol(error: .decodingError(data: data)))
-                }
-            }
-        }
-    }
-    
     public func getToken(callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
-        let request = getRequest(url: tokenUrl())
+        let request = getRequest(url: tokenUrl(baseUrl: baseUrl))
         procesTokenRequest(with: request, responseHandler: callback)
     }
+}
+extension ProgramSession {
     
-    public func getToken(token: String, callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
-        let url = URL.init(string: token, relativeTo: tokenUrl())!
+    public func getToken(callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
+        let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
         let request = getRequest(url: url)
         procesTokenRequest(with: request, responseHandler: callback)
     }
     
-    public func deleteToken(token: String, callback : @escaping (_: GetTokenError?) -> Void) {
-        let url = URL.init(string: token, relativeTo: tokenUrl())!
+    public func deleteToken(callback : @escaping (_: GetTokenError?) -> Void) {
+        let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
         let request = newRequest(url: url, method: "DELETE")
         extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
         processRequest(with: request) { data, error in

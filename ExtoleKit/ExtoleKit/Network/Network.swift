@@ -8,28 +8,23 @@
 
 import Foundation
 
+let extoleHeaders = [
+    "X-Extole-App": "Mobile SDK",
+    "X-Extole-App-flavour": "iOS-Swift",
+    "X-Extole-App-version": Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String ?? "unknown",
+    "X-Extole-Sdk-version": String(ExtoleKitVersionNumber),
+    "X-Extole-App-appId": Bundle.main.bundleIdentifier ?? "unknown",
+    "X-Extole-DeviceId": UIDevice.current.identifierForVendor?.uuidString ?? "unknown",
+]
+
 func tryDecode<T: Codable>(data: Data) -> T? {
     let decoder = JSONDecoder.init()
     return try? decoder.decode(T.self, from: data)
 }
 
-func newSession() -> URLSession {
-    return URLSession.init(configuration: URLSessionConfiguration.ephemeral)
-}
-
 func getRequest(accessToken: ConsumerToken? = nil, url: URL) -> URLRequest {
-    var result = URLRequest(url: url)
-    if let existingToken = accessToken {
-        extoleDebug(format: "using accessToken %{private}@", arg: existingToken.access_token)
-        result.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
-    }
-    return result
-}
-
-func newRequest(url: URL, method: String) -> URLRequest {
-    var result = URLRequest(url: url)
-    result.httpMethod = method
-    return result
+    let empty : String? = nil
+    return jsonRequest(method: "GET", accessToken: accessToken, url: url, data: empty)
 }
 
 func postRequest<T : Encodable>(accessToken: ConsumerToken? = nil, url: URL, data: T) -> URLRequest {
@@ -40,24 +35,36 @@ func putRequest<T : Encodable>(accessToken: ConsumerToken? = nil, url: URL, data
     return jsonRequest(method: "PUT", accessToken: accessToken, url: url, data: data)
 }
 
-func jsonRequest<T : Encodable>(method: String, accessToken: ConsumerToken? = nil, url: URL, data: T) -> URLRequest {
-    var result = URLRequest(url: url)
+func deleteRequest(accessToken: ConsumerToken? = nil, url: URL) -> URLRequest {
+    let empty : String? = nil
+    return jsonRequest(method: "DELETE", accessToken: accessToken, url: url, data: empty)
+}
+
+func jsonRequest<T : Encodable>(method: String, accessToken: ConsumerToken? = nil, url: URL, data: T? = nil) -> URLRequest {
+    var request = URLRequest(url: url)
     extoleDebug(format: "url %{public}@", arg: url.absoluteString)
     extoleDebug(format: "method %{public}@", arg: method)
-    result.httpMethod = method
-    result.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    result.httpBody =  try? JSONEncoder().encode(data)
+    request.httpMethod = method
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    extoleHeaders.forEach { (key, value) in
+        request.addValue(value, forHTTPHeaderField: key)
+    }
+    
+    if let data = data, let encoded = try? JSONEncoder().encode(data) {
+        request.httpBody = encoded
+        extoleDebug(format: "body %{public}@", arg: (String(data: encoded, encoding: .utf8)))
+    }
     if let existingToken = accessToken {
         extoleDebug(format: "using accessToken %{private}@", arg: existingToken.access_token)
-        result.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
+        request.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
     }
-    extoleDebug(format: "body %{public}@", arg: "\(String(data: result.httpBody!, encoding: .utf8))")
-    return result
+    return request
 }
 
 func processRequest(with request: URLRequest,
                     callback:  @escaping (_: Data?, _: ExtoleApiError?) -> Void) {
-    let session = newSession()
+    let session = URLSession.init(configuration: URLSessionConfiguration.ephemeral)
     let task = session.dataTask(with: request) { data, response, error in
         if let serverError = error {
             callback(nil, ExtoleApiError.serverError(error: serverError))

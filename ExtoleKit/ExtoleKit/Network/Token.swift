@@ -77,7 +77,7 @@ extension ProgramSession {
     
     public func deleteToken(callback : @escaping (_: GetTokenError?) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
-        let request = newRequest(url: url, method: "DELETE")
+        let request = deleteRequest(url: url)
         extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
         processRequest(with: request) { data, error in
             if let apiError = error {

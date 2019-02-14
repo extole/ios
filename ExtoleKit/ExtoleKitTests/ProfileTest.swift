@@ -14,17 +14,16 @@ class ProfileTest: XCTestCase {
 
     let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
     var programSession : ProgramSession!
-    var accessToken: ConsumerToken?
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
         program.getToken() { token, error in
             XCTAssert(token != nil)
             XCTAssert(!token!.access_token.isEmpty)
-            self.accessToken = token
+            self.programSession = ProgramSession.init(program: self.program, token: token!)
             promise.fulfill()
         }
-        programSession = ProgramSession.init(program: program, token: accessToken!)
+        
         waitForExpectations(timeout: 5, handler: nil)
     }
 

@@ -21,21 +21,31 @@ class ShareTest: XCTestCase {
         program.getToken() { token, error in
             XCTAssert(token != nil)
             XCTAssert(!token!.access_token.isEmpty)
-            programSession = ProgramSession.init(program: program, token: token!)
+            self.programSession = ProgramSession.init(program: self.program, token: token!)
             promise.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)
         
-        
+        let createShareablePromise = expectation(description: "create shareable response")
         let newShareable = MyShareable.init(label: "refer-a-friend")
-        let shareableResponse = programSession.createShareable(shareable: newShareable)
-        let shareableResult = shareableResponse.await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertGreaterThan(shareableResult!.polling_id, "111111")
+        var shareableResult: PollingIdResponse!
+        programSession.createShareable(shareable: newShareable) {
+            response, error in
+            XCTAssertNil(error)
+            shareableResult = response!
+            createShareablePromise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+        XCTAssertGreaterThan(shareableResult.polling_id, "111111")
         
-        let pollingResult = program.pollShareable(accessToken: accessToken!,
-                                                  pollingResponse: shareableResult!)
-            .await(timeout: DispatchTime.now() + .seconds(10))
-        advocateCode = pollingResult!.code!
+        let pollShareablePromise = expectation(description: "poll shareable response")
+        programSession.pollShareable(pollingResponse: shareableResult!) {
+            result, error in
+            XCTAssertNil(error)
+            self.advocateCode = result!.code!
+            pollShareablePromise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testCustomShare() {

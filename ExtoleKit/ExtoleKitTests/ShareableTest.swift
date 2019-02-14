@@ -32,7 +32,7 @@ class ShareableTest: XCTestCase {
         let createShareablePromise = expectation(description: "create shareable response")
         var shareableResponse : PollingIdResponse!
         
-        programSession.createShareable(shareable: newShareable) { shareableResult, error in
+        self.programSession.createShareable(shareable: newShareable) { shareableResult, error in
             XCTAssertGreaterThan(shareableResult!.polling_id, "111111")
             shareableResponse = shareableResult!
             createShareablePromise.fulfill()
@@ -42,10 +42,12 @@ class ShareableTest: XCTestCase {
         var pollResponse : ShareablePollingResult!
         let pollShareablePromise = expectation(description: "poll shareable response")
         
-        programSession.pollShareable(pollingResponse: shareableResponse!) {
+        var shareableCode: String!
+        
+        self.programSession.pollShareable(pollingResponse: shareableResponse!) {
             result, error in
             pollResponse = result!
-            let shareableCode = pollResponse.code!
+            shareableCode = pollResponse.code!
             
             XCTAssertGreaterThan(shareableCode, "1111")
             XCTAssertEqual(pollResponse?.status, "SUCCEEDED")
@@ -54,23 +56,38 @@ class ShareableTest: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
     
-        
-        let shareablesResponse = programSession.getShareables()
-            .await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertNotNil(shareablesResponse)
-        XCTAssertEqual(1, shareablesResponse?.count)
-        XCTAssertEqual("refer-a-friend", shareablesResponse?.first?.label)
+        let listShareablesPromise = expectation(description: "list shareables response")
+
+        self.programSession.getShareables() {
+            result, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(result)
+            XCTAssertEqual(1, result?.count)
+            XCTAssertEqual("refer-a-friend", result?.first?.label)
+            
+            listShareablesPromise.fulfill()
+        }
         
         let duplicateShareable = MyShareable(label:"refer-a-friend", code: shareableCode)
+        var duplicatePollResult: PollingIdResponse!
         
-        let duplicateShareableResponse = program.createShareable(accessToken: accessToken!, shareable: duplicateShareable)
-            .await(timeout: DispatchTime.now() + .seconds(10))
+        let createDuplicateShareablePromise = expectation(description: "create duplocate shareable response")
+        self.programSession.createShareable(shareable: duplicateShareable) {
+            response, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(response)
+            duplicatePollResult = response
+            createDuplicateShareablePromise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
         
-        let duplicatePollingResult = program.pollShareable(accessToken: accessToken!,
-                                                           pollingResponse: duplicateShareableResponse!)
-            .await(timeout: DispatchTime.now() + .seconds(10))
-        XCTAssertEqual(duplicatePollingResult?.status, "FAILED")
-        
+        let pollDuplocateShareablePromise = expectation(description: "poll shareable response")
+        self.programSession.pollShareable(pollingResponse: duplicatePollResult) {
+            response, error in
+            XCTAssertNil(error)
+            XCTAssertEqual(response?.status, "FAILED")
+            pollDuplocateShareablePromise.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
     }
-
 }

@@ -8,16 +8,30 @@
 
 import Foundation
 
-public enum ExtoleApiError {
+
+public protocol ExtoleError : Error {
+    static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError
+    static func fromCode(code: String) -> ExtoleError?
+}
+
+public enum GetTokenError : ExtoleError {
+    public static func fromCode(code: String) -> ExtoleError? {
+        switch(code) {
+            case "invalid_access_token": return GetTokenError.invalidAccessToken
+            default: return nil
+        }
+    }
+
+    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
+        return GetTokenError.invalidProtocol(error: error)
+    }
+    case invalidProtocol(error: ExtoleApiError)
+    case invalidAccessToken
+    
     case serverError(error: Error)
     case decodingError(data: Data)
     case noContent
     case genericError(errorData: ErrorData)
-}
-
-public enum GetTokenError : Error {
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidAccessToken
 }
 
 public struct ConsumerToken : Codable {
@@ -36,19 +50,19 @@ func tokenUrl(baseUrl: URL) -> URL {
 
 private func procesTokenRequest(with request: URLRequest, responseHandler: @escaping (_: ConsumerToken?, _: GetTokenError?) ->Void) {
     extoleDebug(format: "request %{public}@ ", arg: request.url?.absoluteString ?? "url is empty")
-    processRequest(with: request) { data, error in
-        if let apiError = error {
-            switch(apiError) {
-            case .genericError(let errorData) : do {
-                switch(errorData.code) {
-                case "invalid_access_token": responseHandler(nil, .invalidAccessToken)
-                default:  responseHandler(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
-                }
-                }
-            default : responseHandler(nil, .invalidProtocol(error: apiError))
+    
+    let errorHandler = { (apiError:ExtoleApiError) in
+        switch(apiError) {
+        case .genericError(let errorData) : do {
+            switch(errorData.code) {
+            case "invalid_access_token": responseHandler(nil, .invalidAccessToken)
+            default:  responseHandler(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
             }
-            return
+            }
+        default : responseHandler(nil, .invalidProtocol(error: apiError))
         }
+    }
+    let dataHandler = { (data: Data?) in
         if let data = data {
             let decodedToken : ConsumerToken? = tryDecode(data: data)
             if let token = decodedToken {
@@ -58,21 +72,26 @@ private func procesTokenRequest(with request: URLRequest, responseHandler: @esca
             }
         }
     }
+    processRequest(with: request, dataHandler: dataHandler, errorHandler: errorHandler)
 }
 
 extension Program {
 
-    public func getToken(callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
+
+    public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
+                         error: @escaping (_: GetTokenError?) -> Void) {
         let request = getRequest(url: tokenUrl(baseUrl: baseUrl))
-        procesTokenRequest(with: request, responseHandler: callback)
+
+        processRequest(with: request, success: success, error: error)
     }
 }
 extension ProgramSession {
     
-    public func getToken(callback : @escaping (_: ConsumerToken?, _: GetTokenError?) -> Void) {
+    public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
+                         error: @escaping (_: GetTokenError) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
         let request = getRequest(url: url)
-        procesTokenRequest(with: request, responseHandler: callback)
+        processRequest(with: request, success: success, error: error)
     }
     
     public func deleteToken(callback : @escaping (_: GetTokenError?) -> Void) {

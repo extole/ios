@@ -75,6 +75,64 @@ func jsonRequest<T : Encodable>(method: String, accessToken: ConsumerToken? = ni
     return request
 }
 
+func dataHandler<T : Codable, E: ExtoleError>(success: @escaping (_: T?) -> Void,
+                                              error: @escaping(_: E) -> Void)
+    -> ((_ : Data?) -> Void)  {
+        return { data in
+            if let data = data {
+                let decodedToken : T? = tryDecode(data: data)
+                if let token = decodedToken {
+                    success(token)
+                } else {
+                    let errorValue:E = E.toInvalidProtocol(error: .decodingError(data: data)) as! E
+                    error(errorValue)
+                }
+            }
+        }
+}
+
+func errorHandler<E: ExtoleError>(error: @escaping(_: E) -> Void)
+    -> ((_ : ExtoleApiError) -> Void)  {
+        return { apiError in
+            switch(apiError) {
+            case .genericError(let errorData) : do {
+                if let fromCode = E.fromCode(code: errorData.code) {
+                    error(fromCode as! E)
+                } else {
+                    let errorValue:E = E.toInvalidProtocol(error: apiError) as! E
+                    error(errorValue)
+                }
+                }
+            default : do {
+                let errorValue:E = E.toInvalidProtocol(error: apiError) as! E
+                error(errorValue)
+                }
+            }
+        }
+}
+
+func processRequest(with request: URLRequest,
+                    dataHandler:  @escaping (_: Data?) -> Void,
+                    errorHandler: @escaping(_: ExtoleApiError) -> Void) {
+    processRequest(with: request) {
+        data, error in
+        if let error = error {
+            errorHandler(error)
+        } else {
+            dataHandler(data)
+        }
+    }
+}
+
+func processRequest<T: Codable, E: ExtoleError>(with request: URLRequest,
+                                                success : @escaping (_: T?) -> Void,
+                                                error: @escaping (_: E) -> Void) {
+    processRequest(with: request,
+                   dataHandler :dataHandler(success: success, error: error),
+                   errorHandler:errorHandler(error: error))
+}
+    
+
 func processRequest(with request: URLRequest,
                     callback:  @escaping (_: Data?, _: ExtoleApiError?) -> Void) {
     let session = URLSession.init(configuration: URLSessionConfiguration.ephemeral)

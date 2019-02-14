@@ -17,12 +17,15 @@ class ZoneTest: XCTestCase {
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
-        program.getToken() { token, error in
+        program.getToken(success: { token in
             XCTAssert(token != nil)
             XCTAssert(!token!.access_token.isEmpty)
             self.programSession = ProgramSession.init(program: self.program, token: token!)
             promise.fulfill()
-        }
+        }, error: { error in
+            XCTFail(error.debugDescription)
+        })
+        
         waitForExpectations(timeout: 5, handler: nil)
     }
     

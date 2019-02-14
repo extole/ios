@@ -40,37 +40,34 @@ public final class SessionManager {
     public func activate(existingToken: String) {
         let consumerToken = ConsumerToken.init(access_token: existingToken)
         self.session = ProgramSession.init(program: self.program, token: consumerToken)
-        self.session!.getToken() { token, error in
-            if let verifiedToken = token {
-                self.onVerifiedToken(verifiedToken: verifiedToken)
+        self.session!.getToken(success: { verifiedToken in
+            self.onVerifiedToken(verifiedToken: verifiedToken!)
+        }, error: { verifyTokenError in
+            switch(verifyTokenError) {
+            case .invalidAccessToken : self.onTokenInvalid()
+            default: self.onServerError()
             }
-            if let verifyTokenError = error {
-                switch(verifyTokenError) {
-                case .invalidAccessToken : self.onTokenInvalid()
-                default: self.onServerError()
-                }
-            }
-        }
+        })
     }
     
     private func onTokenInvalid() {
         self.state = .InvalidToken
         self.session = nil
-        self.program.getToken(){ token, error in
-            if let newToken = token {
-                self.onVerifiedToken(verifiedToken: newToken)
-            }
-        }
+        self.program.getToken(success: { token in
+            self.onVerifiedToken(verifiedToken: token!)
+        }, error: { error in
+            self.state = .ServerError
+        })
     }
 
     public func newSession() {
         self.state = .Init
         self.session = nil
-        self.program.getToken() { (token, error) in
-            if let newToken = token {
-                self.onVerifiedToken(verifiedToken: newToken)
-            }
-        }
+        self.program.getToken(success: { token in
+            self.onVerifiedToken(verifiedToken: token!)
+        }, error: { error in
+            self.state = .ServerError
+        })
     }
     
     public func logout() {

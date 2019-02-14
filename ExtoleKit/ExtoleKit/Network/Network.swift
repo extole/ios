@@ -23,7 +23,6 @@ class ExtoleHeaders {
     ]
 }
 
-
 func tryDecode<T: Codable>(data: Data) -> T? {
     let decoder = JSONDecoder.init()
     return try? decoder.decode(T.self, from: data)
@@ -133,7 +132,6 @@ func processNoContentRequest<E: ExtoleError>(with request: URLRequest,
                    dataHandler :{ _ in success()},
                    errorHandler:errorHandler(error: error))
 }
-    
 
 func processRequest(with request: URLRequest,
                     callback:  @escaping (_: Data?, _: ExtoleApiError?) -> Void) {

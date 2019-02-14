@@ -2,13 +2,13 @@
 
 import Foundation
 
-public enum SessionState : String {
-    case Init = "Init"
-    case LoggedOut = "LoggedOut"
-    case Inactive = "Inactive"
-    case InvalidToken = "InvalidToken"
-    case ServerError = "ServerError"
-    case Verified = "Verified"
+public enum SessionState {
+    case Init
+    case LoggedOut
+    case Inactive
+    case InvalidToken
+    case ServerError
+    case Verified(token: ConsumerToken)
 }
 
 public protocol SessionStateListener : AnyObject {
@@ -21,7 +21,7 @@ public final class SessionManager {
     public var session: ProgramSession? = nil
     var state = SessionState.Init {
         didSet {
-            extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
+            extoleInfo(format: "state changed to %{public}@", arg: "\(state)")
             listener?.onStateChanged(state: state)
         }
     }
@@ -78,6 +78,6 @@ public final class SessionManager {
     
     private func onVerifiedToken(verifiedToken: ConsumerToken) {
         self.session = ProgramSession.init(program: program, token: verifiedToken)
-        self.state = .Verified
+        self.state = .Verified(token: verifiedToken)
     }
 }

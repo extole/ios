@@ -35,8 +35,8 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener, Sharea
 
     public func onStateChanged(state: SessionState) {
         switch state {
-        case .Verified:
-            self.savedToken = self.session?.token.access_token
+        case .Verified(let token):
+            self.savedToken = token.access_token
             profileManager = ProfileManager.init(session: self.session!, listener: self)
             profileManager?.load()
             break

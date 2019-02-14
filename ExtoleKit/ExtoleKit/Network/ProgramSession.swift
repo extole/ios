@@ -4,7 +4,7 @@ import Foundation
 
 public struct ProgramSession{
     let program: Program
-    public let token: ConsumerToken
+    let token: ConsumerToken
     var baseUrl: URL {
         get {
             return program.baseUrl
@@ -15,5 +15,4 @@ public struct ProgramSession{
         self.program = program
         self.token = token
     }
-    
 }

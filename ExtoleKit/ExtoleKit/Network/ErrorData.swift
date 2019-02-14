@@ -12,3 +12,8 @@ public enum ExtoleApiError {
     case noContent
     case genericError(errorData: ErrorData)
 }
+
+public protocol ExtoleError : Error {
+    static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError
+    static func fromCode(code: String) -> ExtoleError?
+}

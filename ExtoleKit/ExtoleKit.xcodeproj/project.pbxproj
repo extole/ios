@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4925B851220DABE000D9CD4A /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B847220DABE000D9CD4A /* ExtoleKit.framework */; };
 		4925B858220DABE000D9CD4A /* ExtoleKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4925B84A220DABE000D9CD4A /* ExtoleKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4925B8AE220DAED800D9CD4A /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A4220DAED800D9CD4A /* ApiResponse.swift */; };
 		4925B8AF220DAED800D9CD4A /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A5220DAED800D9CD4A /* Network.swift */; };
 		4925B8B0220DAED800D9CD4A /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A6220DAED800D9CD4A /* Zone.swift */; };
 		4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A7220DAED800D9CD4A /* Shareable.swift */; };
@@ -47,7 +46,6 @@
 		4925B84B220DABE000D9CD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4925B850220DABE000D9CD4A /* ExtoleKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExtoleKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4925B857220DABE000D9CD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4925B8A4220DAED800D9CD4A /* ApiResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
 		4925B8A5220DAED800D9CD4A /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		4925B8A6220DAED800D9CD4A /* Zone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Zone.swift; sourceTree = "<group>"; };
 		4925B8A7220DAED800D9CD4A /* Shareable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shareable.swift; sourceTree = "<group>"; };
@@ -137,7 +135,6 @@
 			isa = PBXGroup;
 			children = (
 				49F2219F221427160052670D /* ProgramSession.swift */,
-				4925B8A4220DAED800D9CD4A /* ApiResponse.swift */,
 				4925B8AA220DAED800D9CD4A /* ErrorData.swift */,
 				4925B8A5220DAED800D9CD4A /* Network.swift */,
 				4925B8A9220DAED800D9CD4A /* Profile.swift */,
@@ -270,7 +267,6 @@
 				4925B8B2220DAED800D9CD4A /* Token.swift in Sources */,
 				49F221A222142C660052670D /* SessionManager.swift in Sources */,
 				4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */,
-				4925B8AE220DAED800D9CD4A /* ApiResponse.swift in Sources */,
 				4925B8B4220DAED800D9CD4A /* ErrorData.swift in Sources */,
 				49F221A0221427160052670D /* ProgramSession.swift in Sources */,
 				49FBE84222130FAC006AEFEB /* CustomShare.swift in Sources */,

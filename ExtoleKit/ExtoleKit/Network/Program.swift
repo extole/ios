@@ -1,10 +1,4 @@
-//
-//  Program.swift
-//  firstapp
-//
-//  Created by rtibin on 1/24/19.
-//  Copyright © 2019 rtibin. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
 

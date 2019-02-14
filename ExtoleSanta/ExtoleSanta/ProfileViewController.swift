@@ -1,10 +1,4 @@
-//
-//  ViewController.swift
-//  firstapp
-//
-//  Created by rtibin on 1/11/19.
-//  Copyright © 2019 rtibin. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import UIKit
 import ExtoleKit

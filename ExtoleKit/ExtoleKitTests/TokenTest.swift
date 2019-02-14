@@ -1,10 +1,4 @@
-//
-//  TokenTest.swift
-//  firstappTests
-//
-//  Created by rtibin on 1/25/19.
-//  Copyright © 2019 rtibin. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import XCTest
 
@@ -60,11 +54,11 @@ class TokenTest: XCTestCase {
         let deleteToken = expectation(description: "delete token response")
         
         let programSession = ProgramSession.init(program: self.program, token: token)
-        programSession.deleteToken() { error in
-            deleteToken.fulfill()
-            XCTAssertNil(error)
-            
-        }
+        programSession.deleteToken(success: {
+             deleteToken.fulfill()
+        }, error: { error in
+            XCTFail(error.debugDescription)
+        })
 
         waitForExpectations(timeout: 5, handler: nil)
         

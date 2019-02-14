@@ -1,10 +1,4 @@
-//
-//  ExtoleSantaTests.swift
-//  ExtoleSantaTests
-//
-//  Created by rtibin on 2/8/19.
-//  Copyright © 2019 com.extole. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import XCTest
 @testable import ExtoleSanta

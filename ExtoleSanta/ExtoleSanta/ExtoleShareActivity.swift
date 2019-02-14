@@ -1,10 +1,4 @@
-//
-//  ExtoleShareActivity.swift
-//  ExtoleSanta
-//
-//  Created by rtibin on 2/12/19.
-//  Copyright © 2019 com.extole. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
 import UIKit

@@ -1,10 +1,4 @@
-//
-//  Network.swift
-//  firstapp
-//
-//  Created by rtibin on 1/24/19.
-//  Copyright © 2019 rtibin. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
 
@@ -129,6 +123,14 @@ func processRequest<T: Codable, E: ExtoleError>(with request: URLRequest,
                                                 error: @escaping (_: E) -> Void) {
     processRequest(with: request,
                    dataHandler :dataHandler(success: success, error: error),
+                   errorHandler:errorHandler(error: error))
+}
+
+func processNoContentRequest<E: ExtoleError>(with request: URLRequest,
+                                         success : @escaping () -> Void,
+                                         error: @escaping (_: E) -> Void) {
+    processRequest(with: request,
+                   dataHandler :{ _ in success()},
                    errorHandler:errorHandler(error: error))
 }
     

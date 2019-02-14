@@ -1,10 +1,4 @@
-//
-//  Token.swift
-//  firstapp
-//
-//  Created by rtibin on 1/24/19.
-//  Copyright © 2019 rtibin. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
 
@@ -48,33 +42,6 @@ func tokenUrl(baseUrl: URL) -> URL {
     return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
 }
 
-private func procesTokenRequest(with request: URLRequest, responseHandler: @escaping (_: ConsumerToken?, _: GetTokenError?) ->Void) {
-    extoleDebug(format: "request %{public}@ ", arg: request.url?.absoluteString ?? "url is empty")
-    
-    let errorHandler = { (apiError:ExtoleApiError) in
-        switch(apiError) {
-        case .genericError(let errorData) : do {
-            switch(errorData.code) {
-            case "invalid_access_token": responseHandler(nil, .invalidAccessToken)
-            default:  responseHandler(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
-            }
-            }
-        default : responseHandler(nil, .invalidProtocol(error: apiError))
-        }
-    }
-    let dataHandler = { (data: Data?) in
-        if let data = data {
-            let decodedToken : ConsumerToken? = tryDecode(data: data)
-            if let token = decodedToken {
-                responseHandler(token, nil)
-            } else {
-                responseHandler(nil, .invalidProtocol(error: .decodingError(data: data)))
-            }
-        }
-    }
-    processRequest(with: request, dataHandler: dataHandler, errorHandler: errorHandler)
-}
-
 extension Program {
 
 
@@ -94,25 +61,11 @@ extension ProgramSession {
         processRequest(with: request, success: success, error: error)
     }
     
-    public func deleteToken(callback : @escaping (_: GetTokenError?) -> Void) {
+    public func deleteToken(success: @escaping ()->Void, error:  @escaping (_: GetTokenError?) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
         let request = deleteRequest(url: url)
         extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
-        processRequest(with: request) { data, error in
-            if let apiError = error {
-                switch(apiError) {
-                case .genericError(let errorData) : do {
-                    switch(errorData.code) {
-                    case "invalid_access_token": callback(.invalidAccessToken)
-                    default:  callback(.invalidProtocol(error: .genericError(errorData: errorData)))
-                    }
-                    }
-                default : callback(.invalidProtocol(error: apiError))
-                }
-                return
-            }
-            callback(nil)
-        }
+        processNoContentRequest(with: request, success: success, error: error)
     }
 }
 

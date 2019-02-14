@@ -1,10 +1,4 @@
-//
-//  SessionManager.swift
-//  ExtoleKit
-//
-//  Created by rtibin on 2/13/19.
-//  Copyright © 2019 rtibin. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
 
@@ -71,13 +65,11 @@ public final class SessionManager {
     }
     
     public func logout() {
-        session!.deleteToken() { error in
-            if let _ = error {
-                self.state = .ServerError
-            } else {
-                self.state = .LoggedOut
-            }
-        }
+        session!.deleteToken(success: {
+            self.state = .LoggedOut
+        }, error: { _ in
+            self.state = .ServerError
+        })
     }
 
     private func onServerError() {

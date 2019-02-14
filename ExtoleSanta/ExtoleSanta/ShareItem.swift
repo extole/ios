@@ -1,10 +1,4 @@
-//
-//  ShareItem.swift
-//  firstapp
-//
-//  Created by rtibin on 2/5/19.
-//  Copyright © 2019 rtibin. All rights reserved.
-//
+//Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
 import UIKit

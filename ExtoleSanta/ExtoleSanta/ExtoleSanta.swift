@@ -3,35 +3,12 @@
 import Foundation
 import ExtoleKit
 
-public protocol ExtoleAppStateListener : AnyObject {
+public protocol ExtoleAppStateListener : class {
     func onStateChanged(state: ExtoleSanta.State)
 }
 
-public final class ExtoleSanta: ProfileStateListener, ShareableStateListener {
-    public func onStateChanged(state: ShareableState) {
-        switch state {
-        case .Selected:
-            self.savedShareableKey = shareableManager?.selectedShareable?.key
-            self.state = .ReadyToShare
-        default:
-            break
-        }
-    }
-    
-    public func onStateChanged(state: ProfileState) {
-        switch state {
-        case .Identified:
-            self.state = .Identified
-            shareableManager = ShareableManager.init(session: self.session!,
-                                                     label: self.label,
-                                                     shareableKey: self.savedShareableKey,
-                                                     listener: self)
-            shareableManager?.load()
-        default:
-            self.state = .Identify
-        }
-    }
-    
+public final class ExtoleSanta {
+
     public enum State : String {
         case Init = "Init"
         case LoggedOut = "LoggedOut"
@@ -157,11 +134,33 @@ extension ExtoleSanta: SessionManagerDelegate {
     public func tokenVerified(token: ConsumerToken) {
         state = .Identify
         self.savedToken = token.accessToken
-        profileManager = ProfileManager.init(session: self.session!, listener: self)
+        profileManager = ProfileManager.init(session: self.session!, delegate: self)
         profileManager?.load()
     }
     
     public func serverError(error: GetTokenError) {
         
+    }
+}
+
+extension ExtoleSanta: ProfileManagerDelegate {
+    public func loaded(profile: MyProfile) {
+        if profile.email?.isEmpty ?? true {
+            self.state = .Identify
+        } else {
+            self.state = .Identified
+        }
+        shareableManager = ShareableManager.init(session: self.session!,
+                                                 label: self.label,
+                                                 shareableKey: self.savedShareableKey,
+                                                 delegate: self)
+        shareableManager?.load()
+    }
+}
+
+extension ExtoleSanta: ShareableManagerDelegate {
+    public func shareableSelected(shareable: MyShareable) {
+        self.savedShareableKey = shareableManager?.selectedShareable?.key
+        self.state = .ReadyToShare
     }
 }

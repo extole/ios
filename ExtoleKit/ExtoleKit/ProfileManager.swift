@@ -2,37 +2,25 @@
 
 import Foundation
 
-public enum ProfileState : String {
-    case Init = "Init"
-    case Ready = "Ready"
-    case Identified = "Identified"
-}
-
-public protocol ProfileStateListener : AnyObject {
-    func onStateChanged(state: ProfileState)
+public protocol ProfileManagerDelegate : AnyObject {
+    func loaded(profile: MyProfile)
 }
 
 public final class ProfileManager {
-    weak var listener: ProfileStateListener?
+    weak var delegate: ProfileManagerDelegate?
     public let session: ProgramSession
     public private(set) var profile: MyProfile? = nil
-    var state = ProfileState.Init {
-        didSet {
-            extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
-            listener?.onStateChanged(state: state)
-        }
-    }
     
-    public init(session: ProgramSession, listener: ProfileStateListener?) {
+    public init(session: ProgramSession, delegate: ProfileManagerDelegate?) {
         self.session = session
-        self.listener = listener
+        self.delegate = delegate
     }
     
     public func load() {
         self.session.getProfile() { profile, error in
-            if let identified = profile, !(identified.email?.isEmpty ?? true) {
+            if let identified = profile {
                 self.profile = identified
-                self.state = .Identified
+                self.delegate?.loaded(profile: identified)
             }
         }
     }
@@ -43,9 +31,9 @@ public final class ProfileManager {
             } else {
                 callback(nil)
                 self.session.getProfile() { profile, error in
-                    if let identified = profile, !(identified.email?.isEmpty ?? true) {
+                    if let identified = profile {
                         self.profile = identified
-                        self.state = .Identified
+                        self.delegate?.loaded(profile: identified)
                     }
                 }
             }
@@ -58,7 +46,7 @@ public final class ProfileManager {
             self.session.getProfile() { profile, error in
                 if let identified = profile {
                     self.profile = identified
-                    self.state = .Identified
+                    self.delegate?.loaded(profile: identified)
                 }
             }
         }

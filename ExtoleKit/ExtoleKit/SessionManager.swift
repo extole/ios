@@ -2,15 +2,6 @@
 
 import Foundation
 
-public enum SessionState {
-    case Init
-    case LoggedOut
-    case Inactive
-    case InvalidToken
-    case ServerError
-    case Verified(token: ConsumerToken)
-}
-
 public protocol SessionManagerDelegate : class {
     func tokenInvalid()
     func tokenDeleted()

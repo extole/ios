@@ -2,39 +2,26 @@
 
 import Foundation
 
-public enum ShareableState : String {
-    case Init = "Init"
-    case Loaded = "Loaded"
-    case Selected = "Selected"
-}
-
-public protocol ShareableStateListener : AnyObject {
-    func onStateChanged(state: ShareableState)
+public protocol ShareableManagerDelegate : class {
+    func shareableSelected(shareable: MyShareable)
 }
 
 public final class ShareableManager {
-    weak var listener: ShareableStateListener?
+    weak var delegate: ShareableManagerDelegate?
     public private(set) var selectedShareable: MyShareable? = nil
     public let session: ProgramSession
     let label: String
     var shareableKey: String?
-    var state = ShareableState.Init {
-        didSet {
-            extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
-            listener?.onStateChanged(state: state)
-        }
-    }
-    
+
     public init(session: ProgramSession, label:String, shareableKey: String?,
-         listener: ShareableStateListener?) {
+         delegate: ShareableManagerDelegate?) {
         self.session = session
-        self.listener = listener
+        self.delegate = delegate
         self.label = label
         self.shareableKey = shareableKey
     }
     
     public func load() {
-        state = .Init
         self.session.getShareables(callback: onShareablesLoaded)
     }
 
@@ -43,7 +30,7 @@ public final class ShareableManager {
             return shareable.key == self.shareableKey
         }).first {
             self.selectedShareable = shareable
-            self.state = .Selected
+            self.delegate?.shareableSelected(shareable: shareable)
         } else {
             self.shareableKey = NSUUID().uuidString
             let newShareable = MyShareable.init(label: self.label,

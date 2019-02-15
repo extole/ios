@@ -1,6 +1,6 @@
 
 
-# ExtoleKit
+# Extole iOS SDK
 
 Lets you use Extole API in iOS applications
 
@@ -32,12 +32,12 @@ $ ./runTests.sh
 ExtoleSanta app lets you share your Santa withlist with your friends, uses ExtoleKit library.
 
 #### Startup
-On first execution ExtoleApp fetches new access_token, and creates default shareable for anonymous profile.
-ExtoleApp saves access_token and re-uses it for subsequent runs.
+On first execution ExtoleSanta fetches new access_token, and creates default shareable for anonymous profile.
+ExtoleSanta saves access_token and re-uses it for subsequent runs.
 
 ```swift
  // AppDeletegate.swift
- let iosSanta = ExtoleApp.init(programUrl: URL.init(string: "https://ios-santa.extole.com")!)
+ let iosSanta = ExtoleSanta.init(programUrl: URL.init(string: "https://ios-santa.extole.com")!)
 
  func applicationDidBecomeActive(_ application: UIApplication) {
         iosSanta.applicationDidBecomeActive()
@@ -51,19 +51,19 @@ Control is then passed to HomeViewController that displays:
 * Share Message
 * Share Link
 
-### Share Action
+#### Share Action
 
-Share action is available when ExtoleApp goes to ReadyToShare state.
+Share action is available when ExtoleSanta goes to ReadyToShare state.
 ReadyToShare means that access_token is valid, and shareable is present.
 ```swift
 // HomeViewController.swift
-class HomeViewController : ExtoleAppStateListener { // implements ExtoleAppStateListener
+class HomeViewController : ExtoleSantaStateListener { // implements ExtoleSantaStateListener
 
   override viewDidLoad() {
      extoleApp.stateListener = self 
   }
 
-  func onStateChanged(state: ExtoleApp.State) {
+  func onStateChanged(state: ExtoleSanta.State) {
     switch state {
       case .ReadyToShare : // show share action button, calls doShare when clicked
       case default : // hide share action button
@@ -94,7 +94,7 @@ class HomeViewController : ExtoleAppStateListener { // implements ExtoleAppState
 }
 ```
 
-### Identify
+#### Identify
 It is possible to share without setting identity, but in that case Santa wont give you presents.
 When user clicks on empty email details - control is passed to IdentifyViewController.
 
@@ -108,7 +108,7 @@ func editDone() {
 }
 ```
 
-### Logout and New Session
+#### Logout and New Session
 Normaly we want to keep access_token across application runs, but in case user wants to Logout:
 
 ```swift
@@ -125,9 +125,34 @@ func newSessionClick() {
 }
 ```
 
+#### Workflow customizations
+
+ExtoleSanta.swift - defines application level logic;
+for example to save/restore access_token at startup:
+
+```swift
+var savedToken : String? {
+    get {
+        return settings.string(forKey: "extole.access_token")
+    }
+    set(newSavedToken) {
+        settings.set(newSavedToken, forKey: "extole.access_token")
+    }
+}
+func applicationDidBecomeActive() {
+    if let existingToken = self.savedToken {
+        self.sessionManager.activate(existingToken: existingToken)
+    } else {
+        self.sessionManager.newSession()
+    }
+}
+```
+
 ### ExtoleKit
 
-* ExtoleApp - provides high level Extole API for applications
+[[Details|ExtoleKit/Readme.md]]
+
 * Network - functions to work with REST API
-* Token, Profile, Program, Share, Shareable, Zone - low level Extol APIs
+* Token, Profile, Program, Share, Shareable, Zone - Extole data types
 * Log - implements logging
+* SessionManager, ProfileManager, ShareableManager, ContentManager - high level ExtoleAPIs

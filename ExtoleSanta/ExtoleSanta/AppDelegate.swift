@@ -8,7 +8,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let iosSanta = ExtoleApp.init(programUrl: URL.init(string: "https://ios-santa.extole.io")!)
+    let iosSanta = ExtoleSanta.init(programUrl: URL.init(string: "https://ios-santa.extole.io")!)
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)

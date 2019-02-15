@@ -7,13 +7,13 @@ import ExtoleKit
 let ExtoleShare = UIActivity.ActivityType.init("ExtoleShare")
 
 class ExtoleShareActivity: UIActivity {
-    var extoleApp: ExtoleApp
+    var extoleApp: ExtoleSanta
     
     lazy var shareController: UIViewController = {
         return UINavigationController.init(rootViewController:  ExtoleShareViewController.init(with: self.extoleApp, activity: self))
     }()
     
-    init(extoleApp: ExtoleApp){
+    init(extoleApp: ExtoleSanta){
         self.extoleApp = extoleApp
     }
     // returns activity title
@@ -49,12 +49,12 @@ class ExtoleShareActivity: UIActivity {
 
 class ExtoleShareViewController: UIViewController {
     
-    var extoleApp: ExtoleApp!
+    var extoleApp: ExtoleSanta!
     var activity: UIActivity
     
     var emailText: UITextField!
     
-    init(with extoleApp: ExtoleApp, activity: UIActivity) {
+    init(with extoleApp: ExtoleSanta, activity: UIActivity) {
         self.extoleApp = extoleApp
         self.activity = activity
         super.init(nibName: nil, bundle: nil)

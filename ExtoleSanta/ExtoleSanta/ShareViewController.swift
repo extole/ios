@@ -35,9 +35,9 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var shareButton : UIBarButtonItem!
     var toolbar: UIToolbar!
     
-    var extoleApp: ExtoleApp!
+    var extoleApp: ExtoleSanta!
     
-    init(with extoleApp: ExtoleApp) {
+    init(with extoleApp: ExtoleSanta) {
         self.extoleApp = extoleApp
         super.init(nibName: nil, bundle: nil)
     }

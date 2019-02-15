@@ -6,11 +6,11 @@ import ExtoleKit
 
 class IdentifyViewController: UIViewController {
     
-    var extoleApp: ExtoleApp!
+    var extoleApp: ExtoleSanta!
     
     var emailText: UITextField!
     
-    init(with extoleApp: ExtoleApp) {
+    init(with extoleApp: ExtoleSanta) {
         self.extoleApp = extoleApp
         super.init(nibName: nil, bundle: nil)
     }

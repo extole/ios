@@ -6,7 +6,7 @@ import ExtoleKit
 
 let SHARE_MESSAGE_KEY = "app.shareMessage"
 
-extension ExtoleApp {
+extension ExtoleSanta {
     var shareMessage: String? {
         get {
             return settings.string(forKey: SHARE_MESSAGE_KEY)
@@ -19,7 +19,7 @@ extension ExtoleApp {
 
 class HomeViewController : UITableViewController, ExtoleAppStateListener {
 
-    func onStateChanged(state: ExtoleApp.State) {
+    func onStateChanged(state: ExtoleSanta.State) {
         switch state {
         case .Identified:
             extoleApp.session?.fetchObject(zone: "settings") { (settings: ShareSettings?, error) in
@@ -32,7 +32,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         }
     }
     
-    var extoleApp: ExtoleApp!
+    var extoleApp: ExtoleSanta!
     var refreshControlCompat: UIRefreshControl?
     
     var identifyViewController: IdentifyViewController!
@@ -54,7 +54,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         case Identity
         case Profile
 
-        func getMainSection(app: ExtoleApp) -> MainSection{
+        func getMainSection(app: ExtoleSanta) -> MainSection{
             switch self {
             case .Identity:
                 return MainSection(name: "Identity", controls: [{
@@ -81,7 +81,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     
     let sections: [Section] = [.Identity, .Profile]
     
-    init(with extoleApp: ExtoleApp) {
+    init(with extoleApp: ExtoleSanta) {
         self.extoleApp = extoleApp
         self.identifyViewController = IdentifyViewController.init(with : extoleApp)
         self.profileViewController = ProfileViewController.init(with : extoleApp)
@@ -165,7 +165,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         
     }
     
-    func showState(app: ExtoleApp) {
+    func showState(app: ExtoleSanta) {
         DispatchQueue.main.async {
             self.navigationItem.title = "Home"
             self.tableView.reloadData()

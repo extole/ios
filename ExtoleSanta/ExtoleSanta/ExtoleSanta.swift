@@ -5,10 +5,10 @@ import Foundation
 import ExtoleKit
 
 public protocol ExtoleAppStateListener : AnyObject {
-    func onStateChanged(state: ExtoleApp.State)
+    func onStateChanged(state: ExtoleSanta.State)
 }
 
-public final class ExtoleApp: SessionStateListener, ProfileStateListener, ShareableStateListener {
+public final class ExtoleSanta: SessionStateListener, ProfileStateListener, ShareableStateListener {
     public func onStateChanged(state: ShareableState) {
         switch state {
         case .Selected:
@@ -111,16 +111,14 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener, Sharea
         }
     }
     
-    public func applicationDidBecomeActive() {
+    func applicationDidBecomeActive() {
         // SFSafariViewController - to restore session
         extoleInfo(format: "applicationDidBecomeActive")
-        dispatchQueue.async {
-            if let existingToken = self.savedToken {
-                self.sessionManager.activate(existingToken: existingToken)
-            } else {
-                self.sessionManager.newSession()
-                
-            }
+        if let existingToken = self.savedToken {
+            self.sessionManager.activate(existingToken: existingToken)
+        } else {
+            self.sessionManager.newSession()
+
         }
     }
     
@@ -154,9 +152,7 @@ public final class ExtoleApp: SessionStateListener, ProfileStateListener, Sharea
         }
     }
     
-    
-    
-    public func applicationWillResignActive() {
+    func applicationWillResignActive() {
         extoleInfo(format: "application resign active")
         self.state = .Inactive
     }

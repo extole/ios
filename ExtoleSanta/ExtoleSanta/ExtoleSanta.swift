@@ -151,7 +151,6 @@ extension ExtoleSanta: ProfileManagerDelegate {
             self.state = .Identified
         }
         shareableManager = ShareableManager.init(session: self.session!,
-                                                 label: self.label,
                                                  delegate: self)
         shareableManager?.load()
     }

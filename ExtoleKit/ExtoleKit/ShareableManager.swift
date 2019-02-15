@@ -14,13 +14,10 @@ public final class ShareableManager {
     public private(set) var selectedShareable: MyShareable? = nil
     public private(set) var shareables: [MyShareable]? = nil
     public let session: ProgramSession
-    let label: String
 
-    public init(session: ProgramSession, label:String,
-         delegate: ShareableManagerDelegate?) {
+    public init(session: ProgramSession, delegate: ShareableManagerDelegate?) {
         self.session = session
         self.delegate = delegate
-        self.label = label
     }
     
     public func load() {

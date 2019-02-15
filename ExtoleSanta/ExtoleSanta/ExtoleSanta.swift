@@ -1,6 +1,5 @@
 //Copyright © 2019 Extole. All rights reserved.
 
-
 import Foundation
 import ExtoleKit
 
@@ -8,7 +7,7 @@ public protocol ExtoleAppStateListener : AnyObject {
     func onStateChanged(state: ExtoleSanta.State)
 }
 
-public final class ExtoleSanta: SessionStateListener, ProfileStateListener, ShareableStateListener {
+public final class ExtoleSanta: ProfileStateListener, ShareableStateListener {
     public func onStateChanged(state: ShareableState) {
         switch state {
         case .Selected:
@@ -32,19 +31,7 @@ public final class ExtoleSanta: SessionStateListener, ProfileStateListener, Shar
             self.state = .Identify
         }
     }
-
-    public func onStateChanged(state: SessionState) {
-        switch state {
-        case .Verified(let token):
-            self.savedToken = token.access_token
-            profileManager = ProfileManager.init(session: self.session!, listener: self)
-            profileManager?.load()
-            break
-        default:
-            break
-        }
-    }
-
+    
     public enum State : String {
         case Init = "Init"
         case LoggedOut = "LoggedOut"
@@ -60,24 +47,25 @@ public final class ExtoleSanta: SessionStateListener, ProfileStateListener, Shar
     
     private let program: Program
     
-    public var session: ProgramSession? {
-        get {
-            return sessionManager.session
-        }
-    }
-    
-    lazy public private(set) var sessionManager: SessionManager = {
-        return SessionManager.init(program: self.program, listener: self)
-    }()
-    
+    public private(set) var sessionManager: SessionManager!
     public private(set) var profileManager: ProfileManager?
     public private(set) var shareableManager: ShareableManager?
     
     public weak var stateListener: ExtoleAppStateListener?
-    
-    public init(programUrl: URL, stateListener: ExtoleAppStateListener? = nil) {
+
+    convenience init(programUrl: URL) {
+        self.init(with: programUrl)
+        sessionManager = SessionManager.init(program: self.program, delegate: self)
+    }
+
+    private init(with programUrl: URL) {
         self.program = Program.init(baseUrl: programUrl)
-        self.sessionManager = SessionManager.init(program: self.program, listener: self)
+    }
+
+    public var session: ProgramSession? {
+        get {
+            return sessionManager.session
+        }
     }
     
     private let label = "refer-a-friend"
@@ -156,4 +144,26 @@ public final class ExtoleSanta: SessionStateListener, ProfileStateListener, Shar
         extoleInfo(format: "application resign active")
         self.state = .Inactive
     }
+}
+
+extension ExtoleSanta: SessionManagerDelegate {
+    public func tokenInvalid() {
+        
+    }
+    
+    public func tokenDeleted() {
+        
+    }
+    
+    public func tokenVerified(token: ConsumerToken) {
+        self.savedToken = token.access_token
+        profileManager = ProfileManager.init(session: self.session!, listener: self)
+        profileManager?.load()
+    }
+    
+    public func serverError(error: GetTokenError) {
+        
+    }
+    
+    
 }

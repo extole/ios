@@ -11,24 +11,21 @@ public enum SessionState {
     case Verified(token: ConsumerToken)
 }
 
-public protocol SessionStateListener : AnyObject {
-    func onStateChanged(state: SessionState)
+public protocol SessionManagerDelegate : class {
+    func tokenInvalid()
+    func tokenDeleted()
+    func tokenVerified(token: ConsumerToken)
+    func serverError(error: GetTokenError)
 }
 
 public final class SessionManager {
     let program: Program
-    weak var listener: SessionStateListener?
+    weak var delegate: SessionManagerDelegate?
     public var session: ProgramSession? = nil
-    var state = SessionState.Init {
-        didSet {
-            extoleInfo(format: "state changed to %{public}@", arg: "\(state)")
-            listener?.onStateChanged(state: state)
-        }
-    }
 
-    public init(program: Program, listener: SessionStateListener?) {
+    public init(program: Program, delegate: SessionManagerDelegate?) {
         self.program = program
-        self.listener = listener
+        self.delegate = delegate
     }
     
     public func activate(existingToken: String) {
@@ -39,45 +36,40 @@ public final class SessionManager {
         }, error: { verifyTokenError in
             switch(verifyTokenError) {
             case .invalidAccessToken : self.onTokenInvalid()
-            default: self.onServerError()
+            default: self.delegate?.serverError(error: verifyTokenError)
             }
         })
     }
     
     private func onTokenInvalid() {
-        self.state = .InvalidToken
+        self.delegate?.tokenInvalid()
         self.session = nil
         self.program.getToken(success: { token in
             self.onVerifiedToken(verifiedToken: token!)
         }, error: { error in
-            self.state = .ServerError
+            self.delegate?.serverError(error: error)
         })
     }
 
     public func newSession() {
-        self.state = .Init
         self.session = nil
         self.program.getToken(success: { token in
             self.onVerifiedToken(verifiedToken: token!)
         }, error: { error in
-            self.state = .ServerError
+            self.delegate?.serverError(error: error);
         })
     }
     
     public func logout() {
         session!.deleteToken(success: {
-            self.state = .LoggedOut
-        }, error: { _ in
-            self.state = .ServerError
+            self.delegate?.tokenDeleted();
+        }, error: { error in
+            self.delegate?.serverError(error: error);
         })
-    }
-
-    private func onServerError() {
-        self.state = .ServerError
     }
     
     private func onVerifiedToken(verifiedToken: ConsumerToken) {
         self.session = ProgramSession.init(program: program, token: verifiedToken)
-        self.state = .Verified(token: verifiedToken)
+        self.delegate?.tokenVerified(token: verifiedToken)
     }
 }

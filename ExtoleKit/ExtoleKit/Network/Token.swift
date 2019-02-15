@@ -25,7 +25,12 @@ public struct ConsumerToken : Codable {
     init(access_token: String) {
         self.access_token = access_token
     }
-    public let access_token: String
+    public var accessToken : String {
+        get {
+            return access_token
+        }
+    }
+    let access_token: String
     let expires_in: Int? = nil
     let scopes: [String]? = nil
     let capabilities: [String]? = nil

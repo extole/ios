@@ -28,29 +28,19 @@ public final class SessionManager {
         self.delegate = delegate
     }
     
-    public func activate(existingToken: String) {
+    public func resumeSession(existingToken: String) {
         let consumerToken = ConsumerToken.init(access_token: existingToken)
         self.session = ProgramSession.init(program: self.program, token: consumerToken)
         self.session!.getToken(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken!)
         }, error: { verifyTokenError in
             switch(verifyTokenError) {
-            case .invalidAccessToken : self.onTokenInvalid()
+            case .invalidAccessToken :self.delegate?.tokenInvalid()
             default: self.delegate?.serverError(error: verifyTokenError)
             }
         })
     }
     
-    private func onTokenInvalid() {
-        self.delegate?.tokenInvalid()
-        self.session = nil
-        self.program.getToken(success: { token in
-            self.onVerifiedToken(verifiedToken: token!)
-        }, error: { error in
-            self.delegate?.serverError(error: error)
-        })
-    }
-
     public func newSession() {
         self.session = nil
         self.program.getToken(success: { token in

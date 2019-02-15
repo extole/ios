@@ -100,13 +100,10 @@ public final class ExtoleSanta: ProfileStateListener, ShareableStateListener {
     }
     
     func applicationDidBecomeActive() {
-        // SFSafariViewController - to restore session
-        extoleInfo(format: "applicationDidBecomeActive")
         if let existingToken = self.savedToken {
-            self.sessionManager.activate(existingToken: existingToken)
+            self.sessionManager.resumeSession(existingToken: existingToken)
         } else {
             self.sessionManager.newSession()
-
         }
     }
     
@@ -148,15 +145,18 @@ public final class ExtoleSanta: ProfileStateListener, ShareableStateListener {
 
 extension ExtoleSanta: SessionManagerDelegate {
     public func tokenInvalid() {
-        
+        state = .InvalidToken
+        self.sessionManager.newSession()
     }
     
     public func tokenDeleted() {
-        
+        state = .LoggedOut
+        self.sessionManager.newSession()
     }
     
     public func tokenVerified(token: ConsumerToken) {
-        self.savedToken = token.access_token
+        state = .Identify
+        self.savedToken = token.accessToken
         profileManager = ProfileManager.init(session: self.session!, listener: self)
         profileManager?.load()
     }
@@ -164,6 +164,4 @@ extension ExtoleSanta: SessionManagerDelegate {
     public func serverError(error: GetTokenError) {
         
     }
-    
-    
 }

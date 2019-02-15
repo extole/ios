@@ -14,7 +14,7 @@ public final class SessionManager {
     weak var delegate: SessionManagerDelegate?
     public var session: ProgramSession? = nil
 
-    public init(program: Program, delegate: SessionManagerDelegate?) {
+    public init(program: Program, delegate: SessionManagerDelegate) {
         self.program = program
         self.delegate = delegate
     }

@@ -24,7 +24,7 @@ public struct UpdateShareable : Codable {
 }
 
 public struct MyShareable : Codable {
-    init(label: String, code:String? = nil, key:String? = nil) {
+    public init(label: String, code:String? = nil, key:String? = nil) {
         self.label = label
         self.code = code
         self.key = key
@@ -49,26 +49,27 @@ public enum PollShareableError : Error {
 
 
 extension ProgramSession {
-    public func getShareables(callback: @escaping ([MyShareable]?, GetShareablesError?) -> Void) {
+    public func getShareables(success: @escaping ([MyShareable]?) -> Void,
+                              error: @escaping (GetShareablesError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
         let request = getRequest(accessToken: token,
                                  url: url)
-        processRequest(with: request) { data, error in
-            if let apiError = error {
+        processRequest(with: request) { data, apiError in
+            if let apiError = apiError {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
-                    callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
+                    error(.invalidProtocol(error: .genericError(errorData: errorData)))
                     }
-                default : callback(nil, .invalidProtocol(error: apiError))
+                default : error(.invalidProtocol(error: apiError))
                 }
                 return
             }
             if let data = data {
                 let decodedShareables : [MyShareable]? = tryDecode(data: data)
                 if let decodedShareables = decodedShareables {
-                    callback(decodedShareables, nil)
+                    success(decodedShareables)
                 } else {
-                    callback(nil, .invalidProtocol(error: .decodingError(data: data)))
+                    error(.invalidProtocol(error: .decodingError(data: data)))
                 }
             }
         }

@@ -3,43 +3,52 @@
 import Foundation
 
 public protocol ShareableManagerDelegate : class {
-    func shareableSelected(shareable: MyShareable)
+    func loaded(shareables: [MyShareable]?)
+    func selected(shareable: MyShareable?)
+    func created(code: String?)
+    func error(error: GetShareablesError?)
 }
 
 public final class ShareableManager {
     weak var delegate: ShareableManagerDelegate?
     public private(set) var selectedShareable: MyShareable? = nil
+    public private(set) var shareables: [MyShareable]? = nil
     public let session: ProgramSession
     let label: String
-    var shareableKey: String?
 
-    public init(session: ProgramSession, label:String, shareableKey: String?,
+    public init(session: ProgramSession, label:String,
          delegate: ShareableManagerDelegate?) {
         self.session = session
         self.delegate = delegate
         self.label = label
-        self.shareableKey = shareableKey
     }
     
     public func load() {
-        self.session.getShareables(callback: onShareablesLoaded)
+        self.session.getShareables(success: onShareablesLoaded, error: { error in
+            self.delegate?.error(error: error)
+        })
     }
 
-    private func onShareablesLoaded(shareables: [MyShareable]?, error: GetShareablesError?) {
-        if let shareable = shareables?.filter({ (shareable : MyShareable) -> Bool in
-            return shareable.key == self.shareableKey
-        }).first {
-            self.selectedShareable = shareable
-            self.delegate?.shareableSelected(shareable: shareable)
-        } else {
-            self.shareableKey = NSUUID().uuidString
-            let newShareable = MyShareable.init(label: self.label,
-                                                key: self.shareableKey)
-            self.session.createShareable(shareable: newShareable){ pollingId, error in
-                self.session.pollShareable(pollingResponse: pollingId!, callback: { shareableResult, error in
-                    self.session.getShareables(callback: self.onShareablesLoaded)
-                })
-            }
+    public func new(shareable: MyShareable) {
+        self.session.createShareable(shareable: shareable){ pollingId, error in
+            self.session.pollShareable(pollingResponse: pollingId!, callback: { shareableResult, error in
+                if let shareableResult = shareableResult {
+                    self.delegate?.created(code: shareableResult.code)
+                }
+            })
         }
+    }
+    
+    public func select(code: String) {
+        let selected = shareables?.filter({ (shareable : MyShareable) -> Bool in
+            return shareable.code == code
+        }).first
+        self.selectedShareable = selected
+        self.delegate?.selected(shareable: selected)
+    }
+
+    private func onShareablesLoaded(shareables: [MyShareable]?) {
+        self.shareables = shareables
+        self.delegate?.loaded(shareables: shareables)
     }
 }

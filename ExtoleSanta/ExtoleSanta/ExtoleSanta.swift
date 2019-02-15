@@ -67,12 +67,12 @@ public final class ExtoleSanta {
         }
     }
     
-    var savedShareableKey : String? {
+    var savedShareableCode : String? {
         get {
-            return settings.string(forKey: "extole.shareable_key")
+            return settings.string(forKey: "extole.shareable_code")
         }
         set(newShareableKey) {
-            settings.set(newShareableKey, forKey: "extole.shareable_key")
+            settings.set(newShareableKey, forKey: "extole.shareable_code")
         }
     }
     
@@ -152,15 +152,33 @@ extension ExtoleSanta: ProfileManagerDelegate {
         }
         shareableManager = ShareableManager.init(session: self.session!,
                                                  label: self.label,
-                                                 shareableKey: self.savedShareableKey,
                                                  delegate: self)
         shareableManager?.load()
     }
 }
 
 extension ExtoleSanta: ShareableManagerDelegate {
-    public func shareableSelected(shareable: MyShareable) {
-        self.savedShareableKey = shareableManager?.selectedShareable?.key
+
+    public func error(error: GetShareablesError?) {
+    }
+
+    public func created(code: String?) {
+        self.savedShareableCode = code
+        shareableManager?.load()
+    }
+
+    public func loaded(shareables: [MyShareable]?) {
+        if let savedCode = self.savedShareableCode {
+            shareableManager?.select(code: savedCode)
+        } else {
+            let uniqueKey = NSUUID().uuidString
+            let newShareable = MyShareable.init(label: self.label, key: uniqueKey)
+            shareableManager?.new(shareable: newShareable)
+        }
+    }
+
+    public func selected(shareable: MyShareable?) {
+        self.savedShareableCode = shareableManager?.selectedShareable?.code
         self.state = .ReadyToShare
     }
 }

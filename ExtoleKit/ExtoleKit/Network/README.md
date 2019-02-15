@@ -1,26 +1,25 @@
 # ExtoleKit REST API inegration
 
-Most REST API require you to supply ConsumerToken,
-you should use the same access_token for the duration of user session.
+Most operations are exposed by ProgramSession.
 
-## Get ConsumerToken
+## Create ProgramSession
 
 ```swift
 let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
+var programSession : ProgramSession?
+
 program.getToken(success: { token in
   // save token for later
+  programSession = ProgramSession.init(program: program, token: token!)
 }, error: { error in
-  // handle error here
+  // retry later
 })
 
 ```
-
 ## Verify ConsumerToken
 You should verify saved access_token before it's used
 
 ```swift
-let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
-let programSession = ProgramSession.init(program: program, token: existingToken)
 programSession.getToken(success: { token in
   // token is valid
 }, error: { error in
@@ -35,14 +34,27 @@ programSession.getToken(success: { token in
 
 ## Get Profile
 ```swift
-let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
-let programSession = ProgramSession.init(program: program, token: existingToken)
 programSession.getProfile(success: { profile in
   // profile?.first_name ..
 }, error: { error in
   switch(error) {
-  case GetTokenError.invalidAccessToken: // token is invalid, get a new token 
+  case GetProfileError.invalidAccessToken: // token is invalid, get a new token 
   default: // some other error happened - retry later
   }
 })
+```
+
+## Update Profile
+```swift
+let myProfile = MyProfile(email: "testprofile@extole.com",
+                                  partner_user_id: "Zorro",
+                                  first_name: "Test",
+                                  last_name: "Profile")
+programSession.updateProfile(profile: myProfile, success: {
+}, error: { error in
+  switch(error) {
+  case UpdateProfileError.invalidAccessToken: // token is invalid, get a new token 
+  default: // some other error happened - retry later
+  }
+}
 ```

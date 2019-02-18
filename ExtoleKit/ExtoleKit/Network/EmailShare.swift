@@ -20,11 +20,27 @@ public struct EmailShare : Codable {
     let data: [String:String]?
 }
 
-public enum EmailShareError : Error {
+public enum EmailShareError : ExtoleError {
+    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
+        return EmailShareError.invalidProtocol(error: error)
+    }
+    
+    public static func fromCode(code: String) -> ExtoleError? {
+        return nil
+    }
+    
     case invalidProtocol(error: ExtoleApiError)
 }
 
-public enum PollEmailShareError : Error {
+public enum PollEmailShareError : ExtoleError {
+    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
+        return PollEmailShareError.invalidProtocol(error: error)
+    }
+    
+    public static func fromCode(code: String) -> ExtoleError? {
+        return nil
+    }
+    
     case invalidProtocol(error: ExtoleApiError)
     case pollingTimeout
 }
@@ -37,30 +53,14 @@ public struct EmailSharePollingResult : Codable {
 
 extension ProgramSession {
     
-    public func emailShare(share: EmailShare, callback : @escaping (PollingIdResponse?, EmailShareError?) -> Void) {
+    public func emailShare(share: EmailShare,
+                           success : @escaping (PollingIdResponse?) -> Void,
+                           error: @escaping (EmailShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share")!
         let request = self.network.postRequest(accessToken: token,
                                   url: url,
                                   data: share)
-        self.network.processRequest(with: request) { data, error in
-            if let apiError = error {
-                switch(apiError) {
-                case .genericError(let errorData) : do {
-                    callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
-                    }
-                default : callback(nil, .invalidProtocol(error: apiError))
-                }
-                return
-            }
-            if let data = data {
-                let decodedResponse : PollingIdResponse? = self.network.tryDecode(data: data)
-                if let decodedResponse = decodedResponse {
-                    callback(decodedResponse, nil)
-                } else {
-                    callback(nil, .invalidProtocol(error: .decodingError(data: data)))
-                }
-            }
-        }
+        network.processRequest(with: request, success: success, error: error)
     }
 
     public func pollEmailShare(pollingResponse: PollingIdResponse,

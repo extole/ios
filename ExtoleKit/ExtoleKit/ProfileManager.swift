@@ -17,38 +17,28 @@ public final class ProfileManager {
     }
     
     public func load() {
-        self.session.getProfile() { profile, error in
+        self.session.getProfile(success: { profile in
             if let identified = profile {
                 self.profile = identified
                 self.delegate?.loaded(profile: identified)
             }
-        }
+        }, error: { error in
+            
+        })
     }
     public func identify(email: String, callback: @escaping (UpdateProfileError?) -> Void) {
-        self.session.identify(email: email) { error in
-            if let _ = error {
-                callback(error)
-            } else {
-                callback(nil)
-                self.session.getProfile() { profile, error in
-                    if let identified = profile {
-                        self.profile = identified
-                        self.delegate?.loaded(profile: identified)
-                    }
-                }
-            }
-        }
+        let identifyRequest = MyProfile(email: email)
+        self.session.updateProfile(profile: identifyRequest, success: {
+            self.load()
+        }, error : { error in
+            
+        })
     }
     
     public func updateProfile(profile: MyProfile, callback: @escaping (UpdateProfileError?) -> Void) {
-        self.session.updateProfile(profile: profile) { error in
-            callback(error)
-            self.session.getProfile() { profile, error in
-                if let identified = profile {
-                    self.profile = identified
-                    self.delegate?.loaded(profile: identified)
-                }
-            }
-        }
+        self.session.updateProfile(profile: profile, success: {
+            self.load()
+        }, error : { error in
+        })
     }
 }

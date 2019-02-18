@@ -2,29 +2,11 @@
 
 import Foundation
 
-public var extoleSessionFactory = URLSessionFactory.init()
 
-func version(for bundle: Bundle) -> String {
-    return bundle.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String ?? "unknown"
-}
 
-func gitRevision(for bundle: Bundle) -> String {
-    return bundle.object(forInfoDictionaryKey: "gitRevision") as? String ?? "unknown"
-}
-
-class ExtoleHeaders {
-    static let all = [
-        "X-Extole-App": "Mobile SDK",
-        "X-Extole-App-flavour": "iOS-Swift",
-        "X-Extole-Sdk-version": version(for: Bundle(for: ExtoleHeaders.self)),
-        "X-Extole-Sdk-gitRevision": gitRevision(for: Bundle(for: ExtoleHeaders.self)),
-    
-        "X-Extole-App-version": version(for: Bundle.main),
-        "X-Extole-App-appId": Bundle.main.bundleIdentifier ?? "unknown",
-        "X-Extole-DeviceId": UIDevice.current.identifierForVendor?.uuidString ?? "unknown",
-    ]
-}
 class Network {
+    
+public var sessionFactory = URLSessionFactory.init()
     
 func tryDecode<T: Codable>(data: Data) -> T? {
     let decoder = JSONDecoder.init()
@@ -138,7 +120,7 @@ func processNoContentRequest<E: ExtoleError>(with request: URLRequest,
 
 func processRequest(with request: URLRequest,
                     callback:  @escaping (_: Data?, _: ExtoleApiError?) -> Void) {
-    let session = extoleSessionFactory.createSession()
+    let session = sessionFactory.createSession()
     let task = session.dataTask(with: request) { data, response, error in
         if let serverError = error {
             callback(nil, ExtoleApiError.serverError(error: serverError))

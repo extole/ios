@@ -27,13 +27,18 @@ public final class ShareableManager {
     }
 
     public func new(shareable: MyShareable) {
-        self.session.createShareable(shareable: shareable){ pollingId, error in
-            self.session.pollShareable(pollingResponse: pollingId!, callback: { shareableResult, error in
+        self.session.createShareable(shareable: shareable, success: { pollingId in
+            self.session.pollShareable(pollingResponse: pollingId!,
+                                       success: { shareableResult in
                 if let shareableResult = shareableResult {
                     self.delegate?.created(code: shareableResult.code)
                 }
+            }, error: {_ in
+                
             })
-        }
+        }, error : { _ in
+            
+        })
     }
     
     public func select(code: String) {

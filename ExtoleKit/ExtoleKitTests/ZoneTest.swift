@@ -29,10 +29,13 @@ class ZoneTest: XCTestCase {
     
     func testFetchSettings() {
         let promise = expectation(description: "fetch object")
-        programSession.fetchObject(zone: "settings") { (settings: Settings?, error) in
+        programSession.fetchObject(zone: "settings",
+                                   success: { (settings: Settings?) in
             XCTAssertEqual("Dear Santa, see my wishlist at", settings?.shareMessage)
             promise.fulfill()
-        }
+        }, error: { error in
+            XCTFail(String(reflecting: error))
+        })
         waitForExpectations(timeout: 5, handler: nil)
     }
 

@@ -20,83 +20,58 @@ public struct SuccessResponse : Codable {
     let status: String
 }
 
-public enum GetProfileError : Error {
-    case invalidProtocol(error: ExtoleApiError)
-}
-
-
-public enum UpdateProfileError : Error {
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidPersonEmail
-}
-
-extension ProgramSession {
-
-    public func identify(email: String,
-                         callback : @escaping (UpdateProfileError?) -> Void) {
-        let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = self.network.postRequest(accessToken: token,
-                                  url: url,
-                                  data: MyProfile.init(email: email))
-        self.network.processRequest(with: request) { data, error in
-            if let apiError = error {
-                switch(apiError) {
-                case .genericError(let errorData) : do {
-                    switch(errorData.code) {
-                    case "invalid_person_email": callback(.invalidPersonEmail)
-                    default:  callback(.invalidProtocol(error: .genericError(errorData: errorData)))
-                    }
-                    }
-                default : callback(.invalidProtocol(error: apiError))
-                }
-                return
-            }
-            callback(nil)
+public enum GetProfileError : ExtoleError {
+    public static func fromCode(code: String) -> ExtoleError? {
+        switch(code) {
+        case "invalid_access_token": return GetProfileError.invalidAccessToken
+        default: return nil
         }
     }
     
+    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
+        return GetProfileError.invalidProtocol(error: error)
+    }
+    
+    case invalidProtocol(error: ExtoleApiError)
+    case invalidAccessToken
+}
+
+
+public enum UpdateProfileError : ExtoleError {
+    public static func fromCode(code: String) -> ExtoleError? {
+        switch(code) {
+        case "invalid_access_token": return UpdateProfileError.invalidAccessToken
+        case "invalid_person_email": return UpdateProfileError.invalidPersonEmail
+        default: return nil
+        }
+    }
+    
+    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
+        return UpdateProfileError.invalidProtocol(error: error)
+    }
+    case invalidProtocol(error: ExtoleApiError)
+    case invalidPersonEmail
+    case invalidAccessToken
+}
+
+extension ProgramSession {
+    
     public func updateProfile(profile: MyProfile,
-                              callback : @escaping (UpdateProfileError?) -> Void) {
+                              success: @escaping () -> Void,
+                              error : @escaping (UpdateProfileError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
         let request = self.network.postRequest(accessToken: token,
                                  url: url,
                                  data: profile)
-        self.network.processRequest(with: request) { data, error in
-            if let apiError = error {
-                switch(apiError) {
-                case .genericError(let errorData) : do {
-                    callback(.invalidProtocol(error: .genericError(errorData: errorData)))
-                    }
-                default : callback(.invalidProtocol(error: apiError))
-                }
-                return
-            }
-            callback(nil)
-        }
+        self.network.processNoContentRequest(with: request, success: success, error: error)
     }
 
-    public func getProfile(callback : @escaping (MyProfile?, GetProfileError?) -> Void) {
+    public func getProfile(success: @escaping (MyProfile?) -> Void,
+                           error: @escaping (GetProfileError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
         let request = self.network.getRequest(accessToken: token,
-                                  url: url)
-        self.network.processRequest(with: request) { data, error in
-            if let apiError = error {
-                switch(apiError) {
-                case .genericError(let errorData) : do {
-                    callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
-                    }
-                default : callback(nil, .invalidProtocol(error: apiError))
-                }
-                return
-            }
-            if let data = data {
-                let decodedProfile : MyProfile? = self.network.tryDecode(data: data)
-                if let decodedProfile = decodedProfile {
-                    callback(decodedProfile, nil)
-                } else {
-                    callback(nil, .invalidProtocol(error: .decodingError(data: data)))
-                }
-            }
-        }
+                                              url: url)
+        self.network.processRequest(with: request, success: success, error: error)
+        
     }
 }

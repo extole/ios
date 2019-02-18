@@ -100,13 +100,14 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.wishItems[item] = "please-santa"
         let updateShareable = UpdateShareable.init(data: self.wishItems)
         let shareableCode = self.extoleApp.shareableManager!.selectedShareable?.code
-        self.extoleApp.session?.updateShareable(code: shareableCode!, shareable: updateShareable) { error in
-            if let error = error {
-                self.showError(message: "Update Error \(error)")
-            }
-        }
-        self.wishList.reloadData()
-        
+        self.extoleApp.session?.updateShareable(code: shareableCode!, shareable: updateShareable,
+                                                success: {
+                                                    
+            self.wishList.reloadData()
+        }, error : { error in
+            self.showError(message: "Update Error \(String(describing: error))")
+        })
+
     }
     
     @objc func addWish(_ sender: UIButton) {

@@ -19,7 +19,7 @@ public struct CustomShare : Codable {
 
 public enum CustomShareError : ExtoleError {
     public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return CustomShareError.toInvalidProtocol(error: error)
+        return CustomShareError.invalidProtocol(error: error)
     }
     
     public static func fromCode(code: String) -> ExtoleError? {
@@ -73,7 +73,7 @@ extension ProgramSession {
     public func pollCustomShare(pollingResponse: PollingIdResponse,
                                      success : @escaping (CustomSharePollingResult?) -> Void,
                                      error: @escaping(PollShareError) -> Void) {
-        func poll(retries: UInt = 10) {
+        func poll(retries: UInt) {
             getCustomShareStatus(pollingResponse: pollingResponse,
                                  success: { pollingResult in
                                     if let pollingStatus = pollingResult?.status {

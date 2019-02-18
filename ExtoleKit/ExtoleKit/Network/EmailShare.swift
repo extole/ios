@@ -62,41 +62,34 @@ extension ProgramSession {
                                   data: share)
         network.processRequest(with: request, success: success, error: error)
     }
-
-    public func pollEmailShare(pollingResponse: PollingIdResponse,
-                                callback : @escaping (EmailSharePollingResult?, PollEmailShareError?) -> Void) {
+    
+    public func getEmailShareStatus(pollingResponse: PollingIdResponse,
+                                    success : @escaping (EmailSharePollingResult?) -> Void,
+                                    error: @escaping (PollEmailShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share/status/\(pollingResponse.polling_id)")!
         let request = self.network.getRequest(accessToken: token,
-                                 url: url)
-        
+                                              url: url)
+        self.network.processRequest(with: request, success: success, error: error)
+    }
+
+    public func pollEmailShare(pollingResponse: PollingIdResponse,
+                                success : @escaping (EmailSharePollingResult?) -> Void,
+                                error: @escaping (PollEmailShareError?) -> Void) {
         func poll(retries: UInt = 10) {
-            self.network.processRequest(with: request) { data, error in
-                if let apiError = error {
-                    switch(apiError) {
-                    case .genericError(let errorData) : do {
-                        callback(nil, .invalidProtocol(error: .genericError(errorData: errorData)))
-                        }
-                    default : callback(nil, .invalidProtocol(error: apiError))
-                    }
-                    return
-                }
-                if let data = data {
-                    let decodedResponse : EmailSharePollingResult? = self.network.tryDecode(data: data)
-                    if let decodedResponse = decodedResponse {
-                        let pollingStatus = decodedResponse.status
-                        if pollingStatus == "SUCCEEDED" {
-                            callback(decodedResponse, nil)
-                        } else if retries > 0 {
-                            sleep(1)
-                            poll(retries: retries - 1)
-                        } else {
-                            callback(nil, .pollingTimeout)
-                        }
+            getEmailShareStatus(pollingResponse: pollingResponse, success: { pollingResult in
+                if let pollingStatus = pollingResult?.status {
+                    if pollingStatus == "SUCCEEDED" {
+                        success(pollingResult)
+                    } else if retries > 0 {
+                        sleep(1)
+                        poll(retries: retries - 1)
                     } else {
-                        callback(nil, .invalidProtocol(error: .decodingError(data: data)))
+                        error(.pollingTimeout)
                     }
                 }
-            }
+            }, error : { pollingError in
+                error(pollingError)
+            })
         }
         poll(retries: 10)
     }

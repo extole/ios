@@ -21,19 +21,20 @@ class IdentifyViewController: UIViewController {
     
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
-            extoleApp.session!.identify(email: email) { error in
+            let identify = MyProfile(email: email)
+            extoleApp.session!.updateProfile(profile: identify, success: {
                 DispatchQueue.main.async {
-                    if let error = error {
-                        let errorAlert = UIAlertController(title: "Identify Error", message: "\(error)", preferredStyle: .alert)
-                        errorAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: { _ in
-                            //
-                        }))
-                        self.present(errorAlert, animated: true, completion: nil)
-                    } else {
-                        self.navigationController?.popViewController(animated: true)
-                    }
+                    self.navigationController?.popViewController(animated: true)
                 }
-            }
+            }, error: { error in
+                DispatchQueue.main.async {
+                    let errorAlert = UIAlertController(title: "Identify Error", message: "\(error)", preferredStyle: .alert)
+                    errorAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: { _ in
+                            //
+                    }))
+                    self.present(errorAlert, animated: true, completion: nil)
+                }
+            })
         }
     }
     

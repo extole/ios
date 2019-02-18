@@ -22,10 +22,12 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     func onStateChanged(state: ExtoleSanta.State) {
         switch state {
         case .Identified:
-            extoleApp.session?.fetchObject(zone: "settings") { (settings: ShareSettings?, error) in
+            extoleApp.session?.fetchObject(zone: "settings", success:  { (settings: ShareSettings?) in
                 self.extoleApp.shareMessage = settings?.shareMessage
                 self.showState(app: self.extoleApp)
-            }
+            }, error: { _ in
+                
+            })
         default:
             showState(app: extoleApp)
             break;

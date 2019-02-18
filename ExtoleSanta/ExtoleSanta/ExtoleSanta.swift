@@ -91,27 +91,30 @@ public final class ExtoleSanta {
     public func signalShare(channel: String) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
         let share = CustomShare.init(advocate_code: self.shareableManager!.selectedShareable!.code!, channel: channel)
-        self.session!.customShare(share: share) { pollingResponse, error in
-
-            self.session!.pollCustomShare(pollingResponse: pollingResponse!) { shareResponse, error in
+        self.session!.customShare(share: share, success: { pollingResponse in
+            self.session!.pollCustomShare(pollingResponse: pollingResponse!, success: { shareResponse in
                 self.state = State.ReadyToShare
-                //self.lastShareResult = shareResponse
-            }
-        }
+            }, error: { _ in
+                
+            })
+        }, error: { _ in
+            
+        })
     }
     
     public func share(email: String) {
         extoleInfo(format: "sharing to email %s", arg: email)
         let share = EmailShare.init(advocate_code: self.shareableManager!.selectedShareable!.code!,
                                      recipient_email: email)
-        self.session!.emailShare(share: share) { pollingResponse, error in
-            if let pollingResponse = pollingResponse {
-                self.session!.pollEmailShare(pollingResponse: pollingResponse) { shareResponse, error in
-                    self.state = State.ReadyToShare
-                    //self.lastShareResult = shareResponse
-                }
-            }
-        }
+        self.session!.emailShare(share: share, success: { pollingResponse in
+            self.session!.pollEmailShare(pollingResponse: pollingResponse!, success: { shareResponse in
+                self.state = State.ReadyToShare
+            }, error: { _ in
+                
+            })
+        }, error: { _ in
+            
+        })
     }
     
     func applicationWillResignActive() {

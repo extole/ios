@@ -2,12 +2,26 @@
 
 import Foundation
 
+public class NetworkExecutor {
+    public init() {
+        
+    }
+    let urlSession = URLSession(configuration: URLSessionConfiguration.ephemeral)
+    
+    func dataTask(with request: URLRequest,
+                  completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        let task = urlSession.dataTask(with: request, completionHandler: completionHandler)
+        task.resume()
+    }
+    
+}
+
 public class Network {
     
-    let sessionFactory : URLSessionFactory
+    let executor : NetworkExecutor
     
-    public init(sessionFactory: URLSessionFactory = URLSessionFactory.init()) {
-        self.sessionFactory = sessionFactory
+    public init(executor: NetworkExecutor = NetworkExecutor.init()) {
+        self.executor = executor
     }
     
     func tryDecode<T: Codable>(data: Data) -> T? {
@@ -94,8 +108,7 @@ public class Network {
     func processRequest(with request: URLRequest,
                         dataHandler:  @escaping (_: Data?) -> Void,
                         errorHandler: @escaping(_: ExtoleApiError) -> Void) {
-        let session = sessionFactory.createSession()
-        let task = session.dataTask(with: request) { data, response, error in
+        executor.dataTask(with: request) { data, response, error in
             if let serverError = error {
                 errorHandler(ExtoleApiError.serverError(error: serverError))
             }
@@ -121,8 +134,6 @@ public class Network {
                 errorHandler(.noContent)
             }
         }
-        task.resume()
-    
     }
 
     func processRequest<T: Codable, E: ExtoleError>(with request: URLRequest,
@@ -142,3 +153,5 @@ public class Network {
     }
       
 }
+
+

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		49250763221AC6D900EFBF1E /* URLSessionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49250762221AC6D900EFBF1E /* URLSessionFactory.swift */; };
 		49250765221AD2F600EFBF1E /* ExtoleHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49250764221AD2F600EFBF1E /* ExtoleHeaders.swift */; };
 		49250767221B003800EFBF1E /* CustomNetworkTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49250766221B003800EFBF1E /* CustomNetworkTest.swift */; };
 		4925B851220DABE000D9CD4A /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B847220DABE000D9CD4A /* ExtoleKit.framework */; };
@@ -44,7 +43,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		49250762221AC6D900EFBF1E /* URLSessionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionFactory.swift; sourceTree = "<group>"; };
 		49250764221AD2F600EFBF1E /* ExtoleHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleHeaders.swift; sourceTree = "<group>"; };
 		49250766221B003800EFBF1E /* CustomNetworkTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNetworkTest.swift; sourceTree = "<group>"; };
 		4925B847220DABE000D9CD4A /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,7 +149,6 @@
 				4925B8A6220DAED800D9CD4A /* Zone.swift */,
 				49FBE84122130FAC006AEFEB /* CustomShare.swift */,
 				49FBE84322130FDB006AEFEB /* EmailShare.swift */,
-				49250762221AC6D900EFBF1E /* URLSessionFactory.swift */,
 				49250764221AD2F600EFBF1E /* ExtoleHeaders.swift */,
 			);
 			path = Network;
@@ -273,7 +270,6 @@
 				49FBE84422130FDB006AEFEB /* EmailShare.swift in Sources */,
 				4925B8B6220DAED800D9CD4A /* Log.swift in Sources */,
 				4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */,
-				49250763221AC6D900EFBF1E /* URLSessionFactory.swift in Sources */,
 				4925B8B2220DAED800D9CD4A /* Token.swift in Sources */,
 				49F221A222142C660052670D /* SessionManager.swift in Sources */,
 				4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */,

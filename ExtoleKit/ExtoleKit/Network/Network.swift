@@ -2,6 +2,8 @@
 
 import Foundation
 
+public var extoleSessionFactory = URLSessionFactory.init()
+
 func version(for bundle: Bundle) -> String {
     return bundle.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String ?? "unknown"
 }
@@ -22,7 +24,8 @@ class ExtoleHeaders {
         "X-Extole-DeviceId": UIDevice.current.identifierForVendor?.uuidString ?? "unknown",
     ]
 }
-
+class Network {
+    
 func tryDecode<T: Codable>(data: Data) -> T? {
     let decoder = JSONDecoder.init()
     return try? decoder.decode(T.self, from: data)
@@ -73,7 +76,7 @@ func dataHandler<T : Codable, E: ExtoleError>(success: @escaping (_: T?) -> Void
     -> ((_ : Data?) -> Void)  {
         return { data in
             if let data = data {
-                let decodedToken : T? = tryDecode(data: data)
+                let decodedToken : T? = self.tryDecode(data: data)
                 if let token = decodedToken {
                     success(token)
                 } else {
@@ -135,7 +138,7 @@ func processNoContentRequest<E: ExtoleError>(with request: URLRequest,
 
 func processRequest(with request: URLRequest,
                     callback:  @escaping (_: Data?, _: ExtoleApiError?) -> Void) {
-    let session = URLSession.init(configuration: URLSessionConfiguration.ephemeral)
+    let session = extoleSessionFactory.createSession()
     let task = session.dataTask(with: request) { data, response, error in
         if let serverError = error {
             callback(nil, ExtoleApiError.serverError(error: serverError))
@@ -143,7 +146,7 @@ func processRequest(with request: URLRequest,
         guard let httpResponse = response as? HTTPURLResponse,
             (200...299).contains(httpResponse.statusCode) else {
                 if let responseData = data {
-                    let decodedError: ErrorData? = tryDecode(data: responseData)
+                    let decodedError: ErrorData? = self.tryDecode(data: responseData)
                     if let decodedError = decodedError {
                         callback(nil, .genericError(errorData: decodedError))
                     } else {
@@ -164,3 +167,5 @@ func processRequest(with request: URLRequest,
     }
     task.resume()
 }
+}
+

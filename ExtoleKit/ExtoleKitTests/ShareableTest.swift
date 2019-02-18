@@ -17,7 +17,7 @@ class ShareableTest: XCTestCase {
             self.programSession = ProgramSession.init(program: self.program, token: token!)
             promise.fulfill()
         }, error: { error in
-            XCTFail(error.debugDescription)
+            XCTFail(String(reflecting: error))
         })
             
         waitForExpectations(timeout: 5, handler: nil)
@@ -55,15 +55,15 @@ class ShareableTest: XCTestCase {
     
         let listShareablesPromise = expectation(description: "list shareables response")
 
-        self.programSession.getShareables() {
-            result, error in
-            XCTAssertNil(error)
+        self.programSession.getShareables(success: { result in
             XCTAssertNotNil(result)
             XCTAssertEqual(1, result?.count)
             XCTAssertEqual("refer-a-friend", result?.first?.label)
-            
             listShareablesPromise.fulfill()
-        }
+        }, error:  {
+            error in
+            XCTFail(String(reflecting: error))
+        })
         
         let duplicateShareable = MyShareable(label:"refer-a-friend", code: shareableCode)
         var duplicatePollResult: PollingIdResponse!

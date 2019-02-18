@@ -39,9 +39,9 @@ public struct ConsumerToken : Codable {
 extension Program {
     public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
                          error: @escaping (_: GetTokenError) -> Void) {
-        let request = getRequest(url: tokenUrl(baseUrl: baseUrl))
+        let request = self.network.getRequest(url: tokenUrl(baseUrl: baseUrl))
 
-        processRequest(with: request, success: success, error: error)
+        self.network.processRequest(with: request, success: success, error: error)
     }
 }
 extension ProgramSession {
@@ -49,15 +49,15 @@ extension ProgramSession {
     public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
                          error: @escaping (_: GetTokenError) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
-        let request = getRequest(url: url)
-        processRequest(with: request, success: success, error: error)
+        let request = self.network.getRequest(url: url)
+        self.network.processRequest(with: request, success: success, error: error)
     }
     
     public func deleteToken(success: @escaping ()->Void,
                             error:  @escaping (_: GetTokenError) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
-        let request = deleteRequest(url: url)
+        let request = self.network.deleteRequest(url: url)
         extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
-        processNoContentRequest(with: request, success: success, error: error)
+        self.network.processNoContentRequest(with: request, success: success, error: error)
     }
 }

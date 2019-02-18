@@ -52,9 +52,9 @@ extension ProgramSession {
     public func getShareables(success: @escaping ([MyShareable]?) -> Void,
                               error: @escaping (GetShareablesError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
-        let request = getRequest(accessToken: token,
+        let request = self.network.getRequest(accessToken: token,
                                  url: url)
-        processRequest(with: request) { data, apiError in
+        self.network.processRequest(with: request) { data, apiError in
             if let apiError = apiError {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -65,7 +65,7 @@ extension ProgramSession {
                 return
             }
             if let data = data {
-                let decodedShareables : [MyShareable]? = tryDecode(data: data)
+                let decodedShareables : [MyShareable]? = self.network.tryDecode(data: data)
                 if let decodedShareables = decodedShareables {
                     success(decodedShareables)
                 } else {
@@ -78,10 +78,10 @@ extension ProgramSession {
     public func updateShareable(code: String, shareable: UpdateShareable,
                                 callback : @escaping (UpdateShareableError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables/\(code)")!
-        let request = putRequest(accessToken: token,
+        let request = self.network.putRequest(accessToken: token,
                                   url: url,
                                   data: shareable)
-        processRequest(with: request) { data, error in
+        self.network.processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -98,10 +98,10 @@ extension ProgramSession {
 
     public func createShareable(shareable: MyShareable, callback: @escaping (PollingIdResponse?, CreateShareableError?) -> Void)  {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
-        let request = postRequest(accessToken: token,
+        let request = self.network.postRequest(accessToken: token,
                                  url: url,
                                  data: shareable)
-        processRequest(with: request) { data, error in
+        self.network.processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -112,7 +112,7 @@ extension ProgramSession {
                 return
             }
             if let data = data {
-                let decodedPollingId : PollingIdResponse? = tryDecode(data: data)
+                let decodedPollingId : PollingIdResponse? = self.network.tryDecode(data: data)
                 if let decodedPollingId = decodedPollingId {
                     callback(decodedPollingId, nil)
                 } else {
@@ -126,9 +126,9 @@ extension ProgramSession {
                               callback: @escaping (ShareablePollingResult?, PollShareableError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables/status/\(pollingResponse.polling_id)")!
 
-        let request = getRequest(accessToken: token,
+        let request = self.network.getRequest(accessToken: token,
                                  url: url)
-        processRequest(with: request) { data, error in
+        self.network.processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -139,7 +139,7 @@ extension ProgramSession {
                 return
             }
             if let data = data {
-                let decodedPollingId : ShareablePollingResult? = tryDecode(data: data)
+                let decodedPollingId : ShareablePollingResult? = self.network.tryDecode(data: data)
                 if let decodedPollingId = decodedPollingId {
                     callback(decodedPollingId, nil)
                 } else {

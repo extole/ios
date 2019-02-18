@@ -11,9 +11,9 @@ extension ProgramSession {
     public func fetchObject<T: Codable>(zone: String,
                             callback : @escaping (T?, GetObjectError?) -> Void) {
         let url = URL(string: "\(baseUrl)/zone/\(zone)")!
-        let request = getRequest(accessToken: token,
+        let request = self.network.getRequest(accessToken: token,
                                  url: url)
-        processRequest(with: request) { data, error in
+        self.network.processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -24,7 +24,7 @@ extension ProgramSession {
                 return
             }
             if let data = data {
-                let decodedData : T? = tryDecode(data: data)
+                let decodedData : T? = self.network.tryDecode(data: data)
                 if let decodedData = decodedData {
                     callback(decodedData, nil)
                 } else {

@@ -4,6 +4,7 @@ import Foundation
 
 public struct Program {
     let baseUrl: URL
+    let network = Network.init()
     public init(baseUrl: URL) {
         self.baseUrl = baseUrl
     }

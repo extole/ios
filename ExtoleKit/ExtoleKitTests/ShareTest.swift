@@ -18,7 +18,7 @@ class ShareTest: XCTestCase {
             self.programSession = ProgramSession.init(program: self.program, token: token!)
             promise.fulfill()
         }, error: { error in
-            XCTFail(error.debugDescription)
+            XCTFail(String(reflecting: error))
         })
         
         waitForExpectations(timeout: 5, handler: nil)

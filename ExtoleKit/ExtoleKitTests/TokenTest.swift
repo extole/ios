@@ -15,7 +15,7 @@ class TokenTest: XCTestCase {
             XCTAssert(!token!.access_token.isEmpty)
             promise.fulfill()
         }, error: { error in
-            XCTFail(error.debugDescription)
+            XCTFail(String(reflecting: error))
         })
         waitForExpectations(timeout: 5, handler: nil)
     }
@@ -47,7 +47,7 @@ class TokenTest: XCTestCase {
             token = tokenResponse
             getToken.fulfill()
         }, error: { error in
-            XCTFail(error.debugDescription)
+            XCTFail(String(reflecting: error))
         })
         waitForExpectations(timeout: 5, handler: nil)
         
@@ -57,7 +57,7 @@ class TokenTest: XCTestCase {
         programSession.deleteToken(success: {
              deleteToken.fulfill()
         }, error: { error in
-            XCTFail(error.debugDescription)
+            XCTFail(String(reflecting: error))
         })
 
         waitForExpectations(timeout: 5, handler: nil)

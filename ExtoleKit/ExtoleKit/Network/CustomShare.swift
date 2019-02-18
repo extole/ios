@@ -36,10 +36,10 @@ extension ProgramSession {
     
     public func customShare(share: CustomShare, callback : @escaping (PollingIdResponse?, CustomShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
-        let request = postRequest(accessToken: token,
+        let request = network.postRequest(accessToken: token,
                                   url: url,
                                   data: share)
-        processRequest(with: request) { data, error in
+        network.processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -50,7 +50,7 @@ extension ProgramSession {
                 return
             }
             if let data = data {
-                let decodedResponse : PollingIdResponse? = tryDecode(data: data)
+                let decodedResponse : PollingIdResponse? = self.network.tryDecode(data: data)
                 if let decodedResponse = decodedResponse {
                     callback(decodedResponse, nil)
                 } else {
@@ -63,11 +63,11 @@ extension ProgramSession {
     public func pollCustomShare(pollingResponse: PollingIdResponse,
                                 callback : @escaping (CustomSharePollingResult?, PollShareError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
-        let request = getRequest(accessToken: token,
+        let request = self.network.getRequest(accessToken: token,
                                  url: url)
         
         func poll(retries: UInt = 10) {
-            processRequest(with: request) { data, error in
+            self.network.processRequest(with: request) { data, error in
                 if let apiError = error {
                     switch(apiError) {
                     case .genericError(let errorData) : do {
@@ -78,7 +78,7 @@ extension ProgramSession {
                     return
                 }
                 if let data = data {
-                    let decodedResponse : CustomSharePollingResult? = tryDecode(data: data)
+                    let decodedResponse : CustomSharePollingResult? = self.network.tryDecode(data: data)
                     if let decodedResponse = decodedResponse {
                         let pollingStatus = decodedResponse.status
                         if pollingStatus == "SUCCEEDED" {

@@ -35,10 +35,10 @@ extension ProgramSession {
     public func identify(email: String,
                          callback : @escaping (UpdateProfileError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = postRequest(accessToken: token,
+        let request = self.network.postRequest(accessToken: token,
                                   url: url,
                                   data: MyProfile.init(email: email))
-        processRequest(with: request) { data, error in
+        self.network.processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -58,10 +58,10 @@ extension ProgramSession {
     public func updateProfile(profile: MyProfile,
                               callback : @escaping (UpdateProfileError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = postRequest(accessToken: token,
+        let request = self.network.postRequest(accessToken: token,
                                  url: url,
                                  data: profile)
-        processRequest(with: request) { data, error in
+        self.network.processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -77,9 +77,9 @@ extension ProgramSession {
 
     public func getProfile(callback : @escaping (MyProfile?, GetProfileError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = getRequest(accessToken: token,
+        let request = self.network.getRequest(accessToken: token,
                                   url: url)
-        processRequest(with: request) { data, error in
+        self.network.processRequest(with: request) { data, error in
             if let apiError = error {
                 switch(apiError) {
                 case .genericError(let errorData) : do {
@@ -90,7 +90,7 @@ extension ProgramSession {
                 return
             }
             if let data = data {
-                let decodedProfile : MyProfile? = tryDecode(data: data)
+                let decodedProfile : MyProfile? = self.network.tryDecode(data: data)
                 if let decodedProfile = decodedProfile {
                     callback(decodedProfile, nil)
                 } else {

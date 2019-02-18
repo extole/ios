@@ -3,6 +3,9 @@
 import Foundation
 
 public class URLSessionFactory {
+    public init() {
+        
+    }
     public func createSession() -> URLSession {
        return URLSession.init(configuration: URLSessionConfiguration.ephemeral)
     }

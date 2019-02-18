@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		49250763221AC6D900EFBF1E /* URLSessionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49250762221AC6D900EFBF1E /* URLSessionFactory.swift */; };
 		49250765221AD2F600EFBF1E /* ExtoleHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49250764221AD2F600EFBF1E /* ExtoleHeaders.swift */; };
+		49250767221B003800EFBF1E /* CustomNetworkTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49250766221B003800EFBF1E /* CustomNetworkTest.swift */; };
 		4925B851220DABE000D9CD4A /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B847220DABE000D9CD4A /* ExtoleKit.framework */; };
 		4925B858220DABE000D9CD4A /* ExtoleKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4925B84A220DABE000D9CD4A /* ExtoleKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4925B8AF220DAED800D9CD4A /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A5220DAED800D9CD4A /* Network.swift */; };
@@ -45,6 +46,7 @@
 /* Begin PBXFileReference section */
 		49250762221AC6D900EFBF1E /* URLSessionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionFactory.swift; sourceTree = "<group>"; };
 		49250764221AD2F600EFBF1E /* ExtoleHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleHeaders.swift; sourceTree = "<group>"; };
+		49250766221B003800EFBF1E /* CustomNetworkTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNetworkTest.swift; sourceTree = "<group>"; };
 		4925B847220DABE000D9CD4A /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4925B84A220DABE000D9CD4A /* ExtoleKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtoleKit.h; sourceTree = "<group>"; };
 		4925B84B220DABE000D9CD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				4925B8CC220DB66F00D9CD4A /* TokenTest.swift */,
 				4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */,
 				4925B857220DABE000D9CD4A /* Info.plist */,
+				49250766221B003800EFBF1E /* CustomNetworkTest.swift */,
 			);
 			path = ExtoleKitTests;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 				4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */,
 				4925B8CF220DB66F00D9CD4A /* ZoneTest.swift in Sources */,
 				4925B8CE220DB66F00D9CD4A /* ShareableTest.swift in Sources */,
+				49250767221B003800EFBF1E /* CustomNetworkTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

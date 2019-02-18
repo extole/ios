@@ -4,8 +4,9 @@ import Foundation
 
 public struct Program {
     let baseUrl: URL
-    let network = Network.init()
-    public init(baseUrl: URL) {
+    let network : Network
+    public init(baseUrl: URL, network: Network = Network.init()) {
         self.baseUrl = baseUrl
+        self.network = network
     }
 }

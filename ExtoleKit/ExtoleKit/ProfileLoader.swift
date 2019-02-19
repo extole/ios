@@ -3,17 +3,15 @@
 import Foundation
 
 public final class ProfileLoader : Loader{
-    public let session: ProgramSession
     public private(set) var profile: MyProfile? = nil
     let success: (MyProfile) -> Void
     
-    public init(session: ProgramSession, success: @escaping (MyProfile) -> Void) {
-        self.session = session
+    public init(success: @escaping (MyProfile) -> Void) {
         self.success = success
     }
     
-    public func load(complete: @escaping () -> Void) {
-        self.session.getProfile(success: { profile in
+    public func load(session: ProgramSession, complete: @escaping () -> Void) {
+        session.getProfile(success: { profile in
             if let identified = profile {
                 self.profile = identified
                 self.success(identified)

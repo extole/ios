@@ -4,16 +4,14 @@ import Foundation
 
 public final class ShareableLoader : Loader {
     public private(set) var shareables: [MyShareable]? = nil
-    public let session: ProgramSession
     private let success: ([MyShareable]?) -> Void
 
-    public init(session: ProgramSession, success: @escaping ([MyShareable]?) -> Void) {
-        self.session = session
+    public init(success: @escaping ([MyShareable]?) -> Void) {
         self.success = success
     }
     
-    public func load(complete: @escaping () -> Void) {
-        self.session.getShareables(success: { shareables in
+    public func load(session: ProgramSession, complete: @escaping () -> Void) {
+        session.getShareables(success: { shareables in
             self.shareables = shareables
             self.success(shareables)
             complete()

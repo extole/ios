@@ -3,7 +3,7 @@
 import Foundation
 import ExtoleKit
 
-public protocol ExtoleAppStateListener : class {
+public protocol ExtoleSantaStateListener : class {
     func onStateChanged(state: ExtoleSanta.State)
 }
 
@@ -16,6 +16,8 @@ public final class ExtoleSanta {
         case InvalidToken = "InvalidToken"
         case ServerError = "ServerError"
         
+        case Loading = "Loading"
+        
         case Identify = "Identify"
         case Identified = "Identified"
         
@@ -24,13 +26,19 @@ public final class ExtoleSanta {
     
     private let program: Program
     
-    private(set) var sessionManager: SessionManager?
+    var sessionManager : SessionManager? {
+        get {
+            return extoleApp?.sessionManager
+        }
+    }
+    
+    private (set) var extoleApp : ExtoleApp?
     
     private(set) var profileLoader: ProfileLoader?
     private(set) var shareableLoader: ShareableLoader?
     private(set) var settingsLoader: ZoneLoader<ShareSettings>?
     
-    public weak var stateListener: ExtoleAppStateListener?
+    public weak var stateListener: ExtoleSantaStateListener?
 
     convenience init(programUrl: URL) {
         self.init(with: programUrl)
@@ -39,8 +47,8 @@ public final class ExtoleSanta {
     private init(with programUrl: URL) {
         self.program = Program.init(baseUrl: programUrl)
     }
-
-    public var session: ProgramSession? {
+    
+    private var session: ProgramSession? {
         get {
             return sessionManager?.session
         }
@@ -65,15 +73,6 @@ public final class ExtoleSanta {
         }
     }
     
-    var savedToken : String? {
-        get {
-            return settings.string(forKey: "extole.access_token")
-        }
-        set(newSavedToken) {
-            settings.set(newSavedToken, forKey: "extole.access_token")
-        }
-    }
-    
     var selectedShareableCode : String? {
         get {
             return settings.string(forKey: "extole.shareable_code")
@@ -84,12 +83,23 @@ public final class ExtoleSanta {
     }
     
     func applicationDidBecomeActive() {
-        sessionManager = SessionManager.init(program: self.program, delegate: self)
-        if let existingToken = self.savedToken {
-            self.sessionManager!.resumeSession(existingToken: existingToken)
-        } else {
-            self.sessionManager!.newSession()
+        
+        profileLoader = ProfileLoader() { profile in
+            if profile.email?.isEmpty ?? true {
+                self.state = .Identify
+            } else {
+                self.state = .Identified
+            }
         }
+        
+        settingsLoader = ZoneLoader(zoneName: "settings")
+        shareableLoader = ShareableLoader(success: shareablesLoaded)
+        
+        let composite = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
+
+        extoleApp = ExtoleApp(program: self.program, preloader: composite)
+        extoleApp?.stateListener = self
+        extoleApp!.applicationDidBecomeActive()
     }
     
     public func signalShare(channel: String) {
@@ -129,55 +139,9 @@ public final class ExtoleSanta {
         extoleInfo(format: "application resign active")
         self.state = .Inactive
     }
-
-}
-
-extension ExtoleSanta: SessionManagerDelegate {
     
     public func reload(complete: @escaping () -> Void) {
-        if let session = self.session {
-            session.getToken(success: { token in
-                self.preload(session: session, complete: complete)
-            }) { error in
-                complete()
-            }
-        }
-    }
-    
-    public func serverError(error: ExtoleError) {
-        
-    }
-    
-    public func onSessionInvalid() {
-        state = .InvalidToken
-        self.sessionManager?.newSession()
-    }
-    
-    public func onSessionDeleted() {
-        state = .LoggedOut
-        self.sessionManager?.newSession()
-    }
-    
-    public func preload(session: ProgramSession, complete: @escaping () -> Void) {
-        profileLoader = ProfileLoader.init(session: session) { profile in
-            if profile.email?.isEmpty ?? true {
-                self.state = .Identify
-            } else {
-                self.state = .Identified
-            }
-        }
-        
-        settingsLoader = ZoneLoader.init(session: session, zoneName: "settings")
-        shareableLoader = ShareableLoader.init(session: session, success: shareablesLoaded)
-        
-        let composite = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
-        composite.load(complete: complete)
-    }
-    
-    public func onNewSession(session: ProgramSession) {
-        state = .Identify
-        self.savedToken = session.accessToken
-       
+        extoleApp?.reload(complete: complete)
     }
     
     func shareablesLoaded(shareables: [MyShareable]?) {
@@ -191,7 +155,7 @@ extension ExtoleSanta: SessionManagerDelegate {
                 self.session?.pollShareable(pollingResponse: pollingId!,
                                             success: { shareableResult in
                                                 self.selectedShareableCode = shareableResult?.code
-                                                self.shareableLoader?.load(){}
+                                                self.shareableLoader?.load(session: self.session!){}
                 }, error: {_ in
                     
                 })
@@ -200,5 +164,26 @@ extension ExtoleSanta: SessionManagerDelegate {
             })
         }
     }
+}
+
+
+
+extension ExtoleSanta {
+    public func updateProfile(profile: MyProfile,
+                              success: @escaping () -> Void,
+                              error : @escaping (UpdateProfileError) -> Void) {
+        session?.updateProfile(profile: profile, success: success, error: error)
+    }
+}
+extension ExtoleSanta : ExtoleAppStateListener {
+    public func onStateChanged(state: ExtoleApp.State) {
+        switch state {
+        case .ReadyToShare:
+            self.state = .ReadyToShare
+        default:
+            self.state = .Loading
+        }
+    }
+    
     
 }

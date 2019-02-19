@@ -12,7 +12,7 @@ public protocol SessionManagerDelegate : class {
 public final class SessionManager {
     let program: Program
     weak var delegate: SessionManagerDelegate?
-    public var session: ProgramSession? = nil
+    public private(set) var session: ProgramSession? = nil
 
     public init(program: Program, delegate: SessionManagerDelegate) {
         self.program = program

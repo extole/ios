@@ -3,7 +3,7 @@
 import Foundation
 
 public protocol Loader{
-    func load(complete: @escaping () -> Void)
+    func load(session: ProgramSession, complete: @escaping () -> Void)
 }
 
 public class CompositeLoader : Loader {
@@ -14,18 +14,18 @@ public class CompositeLoader : Loader {
         self.loaders = loaders
     }
 
-    public func load(complete: @escaping () -> Void) {
+    public func load(session:ProgramSession, complete: @escaping () -> Void) {
         var inProgress = loaders
         func onComplete() {
             inProgress.removeFirst()
             if let next = inProgress.first {
-                next.load(complete: onComplete)
+                next.load(session: session, complete: onComplete)
             } else {
                 complete()
             }
         }
         if let first = inProgress.first {
-            first.load(complete: onComplete)
+            first.load(session: session, complete: onComplete)
         } else {
             complete()
         }

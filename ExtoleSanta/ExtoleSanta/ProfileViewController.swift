@@ -23,7 +23,7 @@ class ProfileViewController: UIViewController {
     @objc func doneClick(_ sender: UITextField) {
         let updatedProfile = MyProfile.init(first_name: firstNameText.text,
                                             last_name: lastNameText.text)
-        extoleApp?.session?.updateProfile(profile: updatedProfile, success: {
+        extoleApp?.updateProfile(profile: updatedProfile, success: {
             DispatchQueue.main.async {
                 self.navigationController?.popViewController(animated: true)
             }

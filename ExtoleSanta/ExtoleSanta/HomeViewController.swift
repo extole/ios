@@ -17,7 +17,7 @@ extension ExtoleSanta {
     }
 }
 
-class HomeViewController : UITableViewController, ExtoleAppStateListener {
+class HomeViewController : UITableViewController, ExtoleSantaStateListener {
 
     func onStateChanged(state: ExtoleSanta.State) {
         switch state {
@@ -114,9 +114,9 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         }
         refreshControlCompat?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
-
         showState(app: extoleApp)
         tableView.separatorStyle = .singleLine
+        refreshControlCompat?.beginRefreshing()
     }
     
     @objc private func refreshData(_ sender: Any) {
@@ -180,6 +180,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
                 self.navigationItem.leftBarButtonItem = nil
                 }
             case .ReadyToShare : do {
+                self.refreshControlCompat?.endRefreshing()
                 let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
                 self.navigationItem.leftBarButtonItem = logout
                 
@@ -205,7 +206,7 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     }
     
     @objc func anonymousClick(_ sender: UIButton) {
-        extoleApp.session?.updateProfile(profile: MyProfile.init(),
+        extoleApp.updateProfile(profile: MyProfile.init(),
                                          success: {
                                             
         }, error : { error in

@@ -22,7 +22,7 @@ class IdentifyViewController: UIViewController {
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
             let identify = MyProfile(email: email)
-            extoleApp.session!.updateProfile(profile: identify, success: {
+            extoleApp.updateProfile(profile: identify, success: {
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)
                 }

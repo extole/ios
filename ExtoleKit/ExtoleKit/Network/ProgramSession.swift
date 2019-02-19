@@ -12,6 +12,12 @@ public struct ProgramSession{
         }
     }
     
+    public var accessToken : String {
+        get {
+            return token.access_token
+        }
+    }
+    
     init(program: Program, token: ConsumerToken) {
         self.program = program
         self.token = token

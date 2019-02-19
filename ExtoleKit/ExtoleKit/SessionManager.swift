@@ -3,10 +3,10 @@
 import Foundation
 
 public protocol SessionManagerDelegate : class {
-    func tokenInvalid()
-    func tokenDeleted()
-    func tokenVerified(token: ConsumerToken)
-    func serverError(error: GetTokenError)
+    func onSessionInvalid()
+    func onSessionDeleted()
+    func onNewSession(session: ProgramSession)
+    func serverError(error: ExtoleError)
 }
 
 public final class SessionManager {
@@ -26,7 +26,7 @@ public final class SessionManager {
             self.onVerifiedToken(verifiedToken: verifiedToken!)
         }, error: { verifyTokenError in
             switch(verifyTokenError) {
-            case .invalidAccessToken :self.delegate?.tokenInvalid()
+            case .invalidAccessToken :self.delegate?.onSessionInvalid()
             default: self.delegate?.serverError(error: verifyTokenError)
             }
         })
@@ -43,7 +43,7 @@ public final class SessionManager {
     
     public func logout() {
         session!.deleteToken(success: {
-            self.delegate?.tokenDeleted();
+            self.delegate?.onSessionDeleted()
         }, error: { error in
             self.delegate?.serverError(error: error);
         })
@@ -51,6 +51,6 @@ public final class SessionManager {
     
     private func onVerifiedToken(verifiedToken: ConsumerToken) {
         self.session = ProgramSession.init(program: program, token: verifiedToken)
-        self.delegate?.tokenVerified(token: verifiedToken)
+        self.delegate?.onNewSession(session: self.session!)
     }
 }

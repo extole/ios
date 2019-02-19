@@ -7,9 +7,9 @@ public struct PollingIdResponse : Codable {
 }
 
 public struct ShareablePollingResult : Codable {
-    let polling_id : String
-    let status : String
-    let code : String?
+    public let polling_id : String
+    public let status : String
+    public let code : String?
 }
 
 public enum UpdateShareableError : ExtoleError {

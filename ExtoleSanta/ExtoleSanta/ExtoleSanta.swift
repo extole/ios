@@ -24,15 +24,16 @@ public final class ExtoleSanta {
     
     private let program: Program
     
-    public private(set) var sessionManager: SessionManager!
-    public private(set) var profileManager: ProfileManager?
-    public private(set) var shareableManager: ShareableManager?
+    private(set) var sessionManager: SessionManager?
+    
+    private(set) var profileLoader: ProfileLoader?
+    private(set) var shareableLoader: ShareableLoader?
+    private(set) var settingsLoader: ZoneLoader<ShareSettings>?
     
     public weak var stateListener: ExtoleAppStateListener?
 
     convenience init(programUrl: URL) {
         self.init(with: programUrl)
-        sessionManager = SessionManager.init(program: self.program, delegate: self)
     }
 
     private init(with programUrl: URL) {
@@ -41,7 +42,15 @@ public final class ExtoleSanta {
 
     public var session: ProgramSession? {
         get {
-            return sessionManager.session
+            return sessionManager?.session
+        }
+    }
+    
+    public var selectedShareable: MyShareable? {
+        get {
+            return shareableLoader?.shareables?.filter({ shareable in
+                shareable.code == selectedShareableCode
+            }).first
         }
     }
     
@@ -56,8 +65,6 @@ public final class ExtoleSanta {
         }
     }
     
-    private let dispatchQueue = DispatchQueue(label : "Extole", qos:.background)
-    
     var savedToken : String? {
         get {
             return settings.string(forKey: "extole.access_token")
@@ -67,7 +74,7 @@ public final class ExtoleSanta {
         }
     }
     
-    var savedShareableCode : String? {
+    var selectedShareableCode : String? {
         get {
             return settings.string(forKey: "extole.shareable_code")
         }
@@ -77,44 +84,45 @@ public final class ExtoleSanta {
     }
     
     func applicationDidBecomeActive() {
+        sessionManager = SessionManager.init(program: self.program, delegate: self)
         if let existingToken = self.savedToken {
-            self.sessionManager.resumeSession(existingToken: existingToken)
+            self.sessionManager!.resumeSession(existingToken: existingToken)
         } else {
-            self.sessionManager.newSession()
+            self.sessionManager!.newSession()
         }
-    }
-    
-    private func onServerError() {
-        self.state = State.ServerError
     }
     
     public func signalShare(channel: String) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
-        let share = CustomShare.init(advocate_code: self.shareableManager!.selectedShareable!.code!, channel: channel)
-        self.session!.customShare(share: share, success: { pollingResponse in
-            self.session!.pollCustomShare(pollingResponse: pollingResponse!, success: { shareResponse in
-                self.state = State.ReadyToShare
+        if let shareableCode = selectedShareableCode {
+            let share = CustomShare.init(advocate_code: shareableCode, channel: channel)
+            self.session!.customShare(share: share, success: { pollingResponse in
+                self.session!.pollCustomShare(pollingResponse: pollingResponse!, success: { shareResponse in
+                    self.state = State.ReadyToShare
+                }, error: { _ in
+                    
+                })
             }, error: { _ in
                 
             })
-        }, error: { _ in
-            
-        })
+        }
     }
     
     public func share(email: String) {
         extoleInfo(format: "sharing to email %s", arg: email)
-        let share = EmailShare.init(advocate_code: self.shareableManager!.selectedShareable!.code!,
-                                     recipient_email: email)
-        self.session!.emailShare(share: share, success: { pollingResponse in
-            self.session!.pollEmailShare(pollingResponse: pollingResponse!, success: { shareResponse in
-                self.state = State.ReadyToShare
+        if let shareableCode = selectedShareableCode {
+            let share = EmailShare.init(advocate_code: shareableCode,
+                                         recipient_email: email)
+            self.session!.emailShare(share: share, success: { pollingResponse in
+                self.session!.pollEmailShare(pollingResponse: pollingResponse!, success: { shareResponse in
+                    self.state = State.ReadyToShare
+                }, error: { _ in
+                    
+                })
             }, error: { _ in
                 
             })
-        }, error: { _ in
-            
-        })
+        }
     }
     
     func applicationWillResignActive() {
@@ -124,63 +132,58 @@ public final class ExtoleSanta {
 }
 
 extension ExtoleSanta: SessionManagerDelegate {
-    public func tokenInvalid() {
-        state = .InvalidToken
-        self.sessionManager.newSession()
-    }
-    
-    public func tokenDeleted() {
-        state = .LoggedOut
-        self.sessionManager.newSession()
-    }
-    
-    public func tokenVerified(token: ConsumerToken) {
-        state = .Identify
-        self.savedToken = token.accessToken
-        profileManager = ProfileManager.init(session: self.session!, delegate: self)
-        profileManager?.load()
-    }
-    
-    public func serverError(error: GetTokenError) {
+    public func serverError(error: ExtoleError) {
         
     }
-}
-
-extension ExtoleSanta: ProfileManagerDelegate {
-    public func loaded(profile: MyProfile) {
-        if profile.email?.isEmpty ?? true {
-            self.state = .Identify
-        } else {
-            self.state = .Identified
+    
+    public func onSessionInvalid() {
+        state = .InvalidToken
+        self.sessionManager?.newSession()
+    }
+    
+    public func onSessionDeleted() {
+        state = .LoggedOut
+        self.sessionManager?.newSession()
+    }
+    
+    public func onNewSession(session: ProgramSession) {
+        state = .Identify
+        self.savedToken = session.accessToken
+        profileLoader = ProfileLoader.init(session: session)
+        profileLoader?.load() { profile in
+            if profile.email?.isEmpty ?? true {
+                self.state = .Identify
+            } else {
+                self.state = .Identified
+            }
         }
-        shareableManager = ShareableManager.init(session: self.session!,
-                                                 delegate: self)
-        shareableManager?.load()
+        
+        settingsLoader = ZoneLoader.init(session: session, zoneName: "settings")
+        settingsLoader?.load()
+        
+        shareableLoader = ShareableLoader.init(session: session)
+        shareableLoader?.load(success: shareablesLoaded)
     }
-}
-
-extension ExtoleSanta: ShareableManagerDelegate {
-
-    public func error(error: GetShareablesError?) {
-    }
-
-    public func created(code: String?) {
-        self.savedShareableCode = code
-        shareableManager?.load()
-    }
-
-    public func loaded(shareables: [MyShareable]?) {
-        if let savedCode = self.savedShareableCode {
-            shareableManager?.select(code: savedCode)
+    
+    func shareablesLoaded(shareables: [MyShareable]?) {
+        if let shareable = self.selectedShareable {
+            extoleInfo(format: "re-using previosly selected shareable %s", arg: shareable.code)
         } else {
+            self.selectedShareableCode = nil
             let uniqueKey = NSUUID().uuidString
             let newShareable = MyShareable.init(label: self.label, key: uniqueKey)
-            shareableManager?.new(shareable: newShareable)
+            session?.createShareable(shareable: newShareable, success: { pollingId in
+                self.session?.pollShareable(pollingResponse: pollingId!,
+                                            success: { shareableResult in
+                                                self.selectedShareableCode = shareableResult?.code
+                                                self.shareableLoader?.load(success: self.shareablesLoaded)
+                }, error: {_ in
+                    
+                })
+            }, error : { _ in
+                
+            })
         }
     }
-
-    public func selected(shareable: MyShareable?) {
-        self.savedShareableCode = shareableManager?.selectedShareable?.code
-        self.state = .ReadyToShare
-    }
+    
 }

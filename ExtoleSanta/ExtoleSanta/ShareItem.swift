@@ -3,9 +3,7 @@
 import Foundation
 import UIKit
 
-struct ShareSettings : Codable {
-    let shareMessage: String
-}
+
 
 @objc class ShareItem : NSObject, UIActivityItemSource {
     let message: String

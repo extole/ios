@@ -24,10 +24,11 @@
 		4925B8D0220DB66F00D9CD4A /* ProfileTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */; };
 		4925B8D1220DB66F00D9CD4A /* TokenTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CC220DB66F00D9CD4A /* TokenTest.swift */; };
 		4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CD220DB66F00D9CD4A /* ShareTest.swift */; };
+		4974F020221C0A8B009C9931 /* ZoneLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974F01F221C0A8B009C9931 /* ZoneLoader.swift */; };
 		4994A4652214498D00EF8666 /* ShareableManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4994A4642214498D00EF8666 /* ShareableManager.swift */; };
 		49F221A0221427160052670D /* ProgramSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F2219F221427160052670D /* ProgramSession.swift */; };
 		49F221A222142C660052670D /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F221A122142C660052670D /* SessionManager.swift */; };
-		49F221A4221440DC0052670D /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F221A3221440DC0052670D /* ProfileManager.swift */; };
+		49F221A4221440DC0052670D /* ProfileLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F221A3221440DC0052670D /* ProfileLoader.swift */; };
 		49FBE84222130FAC006AEFEB /* CustomShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FBE84122130FAC006AEFEB /* CustomShare.swift */; };
 		49FBE84422130FDB006AEFEB /* EmailShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FBE84322130FDB006AEFEB /* EmailShare.swift */; };
 /* End PBXBuildFile section */
@@ -63,10 +64,11 @@
 		4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTest.swift; sourceTree = "<group>"; };
 		4925B8CC220DB66F00D9CD4A /* TokenTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenTest.swift; sourceTree = "<group>"; };
 		4925B8CD220DB66F00D9CD4A /* ShareTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareTest.swift; sourceTree = "<group>"; };
+		4974F01F221C0A8B009C9931 /* ZoneLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneLoader.swift; sourceTree = "<group>"; };
 		4994A4642214498D00EF8666 /* ShareableManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareableManager.swift; sourceTree = "<group>"; };
 		49F2219F221427160052670D /* ProgramSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramSession.swift; sourceTree = "<group>"; };
 		49F221A122142C660052670D /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
-		49F221A3221440DC0052670D /* ProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
+		49F221A3221440DC0052670D /* ProfileLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLoader.swift; sourceTree = "<group>"; };
 		49FBE84122130FAC006AEFEB /* CustomShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShare.swift; sourceTree = "<group>"; };
 		49FBE84322130FDB006AEFEB /* EmailShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailShare.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -112,12 +114,13 @@
 			isa = PBXGroup;
 			children = (
 				49F221A5221440E40052670D /* Network */,
-				49F221A3221440DC0052670D /* ProfileManager.swift */,
+				49F221A3221440DC0052670D /* ProfileLoader.swift */,
 				4925B8AC220DAED800D9CD4A /* Log.swift */,
 				4925B84A220DABE000D9CD4A /* ExtoleKit.h */,
 				4925B84B220DABE000D9CD4A /* Info.plist */,
 				49F221A122142C660052670D /* SessionManager.swift */,
 				4994A4642214498D00EF8666 /* ShareableManager.swift */,
+				4974F01F221C0A8B009C9931 /* ZoneLoader.swift */,
 			);
 			path = ExtoleKit;
 			sourceTree = "<group>";
@@ -264,7 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4925B8B5220DAED800D9CD4A /* Program.swift in Sources */,
-				49F221A4221440DC0052670D /* ProfileManager.swift in Sources */,
+				49F221A4221440DC0052670D /* ProfileLoader.swift in Sources */,
 				4925B8AF220DAED800D9CD4A /* Network.swift in Sources */,
 				4994A4652214498D00EF8666 /* ShareableManager.swift in Sources */,
 				49FBE84422130FDB006AEFEB /* EmailShare.swift in Sources */,
@@ -277,6 +280,7 @@
 				4925B8B4220DAED800D9CD4A /* ErrorData.swift in Sources */,
 				49F221A0221427160052670D /* ProgramSession.swift in Sources */,
 				49FBE84222130FAC006AEFEB /* CustomShare.swift in Sources */,
+				4974F020221C0A8B009C9931 /* ZoneLoader.swift in Sources */,
 				4925B8B0220DAED800D9CD4A /* Zone.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

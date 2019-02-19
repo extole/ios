@@ -22,12 +22,10 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     func onStateChanged(state: ExtoleSanta.State) {
         switch state {
         case .Identified:
-            extoleApp.session?.fetchObject(zone: "settings", success:  { (settings: ShareSettings?) in
-                self.extoleApp.shareMessage = settings?.shareMessage
+            if let settings = extoleApp.settingsLoader?.zoneData {
+                self.extoleApp.shareMessage = settings.shareMessage
                 self.showState(app: self.extoleApp)
-            }, error: { _ in
-                
-            })
+            }
         default:
             showState(app: extoleApp)
             break;
@@ -60,13 +58,13 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
             switch self {
             case .Identity:
                 return MainSection(name: "Identity", controls: [{
-                    return app.profileManager?.profile?.email}
+                    return app.profileLoader?.profile?.email}
                     ])
             case .Profile:
                 return MainSection(name: "Profile", controls: [{
-                        return app.profileManager?.profile?.first_name
+                        return app.profileLoader?.profile?.first_name
                     }, {
-                        return app.profileManager?.profile?.last_name
+                        return app.profileLoader?.profile?.last_name
                     }])
             }
         }
@@ -203,11 +201,12 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     }
     
     @objc func anonymousClick(_ sender: UIButton) {
-        extoleApp.profileManager?.updateProfile(profile: MyProfile.init()) { error in
-            if let error = error {
-                self.showError(message: "\(error)")
-            }
-        }
+        extoleApp.session?.updateProfile(profile: MyProfile.init(),
+                                         success: {
+                                            
+        }, error : { error in
+            self.showError(message: "\(error)")
+        })
     }
 
 
@@ -219,13 +218,13 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
         let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
         
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
-            self.extoleApp.sessionManager.logout()
+            self.extoleApp.sessionManager?.logout()
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
     }
     
     @objc func newSessionClick(_ sender: UIButton) {
-        extoleApp.sessionManager.newSession()
+        extoleApp.sessionManager?.newSession()
     }
 }

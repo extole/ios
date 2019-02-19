@@ -7,7 +7,6 @@ class ProfileViewController: UIViewController {
 
     var extoleApp: ExtoleSanta!
     
-
     init(with extoleApp: ExtoleSanta) {
         self.extoleApp = extoleApp
         super.init(nibName: nil, bundle: nil)
@@ -24,15 +23,15 @@ class ProfileViewController: UIViewController {
     @objc func doneClick(_ sender: UITextField) {
         let updatedProfile = MyProfile.init(first_name: firstNameText.text,
                                             last_name: lastNameText.text)
-        extoleApp?.profileManager?.updateProfile(profile: updatedProfile) { error in
-            if let error = error {
-                self.showError(message: "\(error)")
-            } else {
-                DispatchQueue.main.async {
-                    self.navigationController?.popViewController(animated: true)
-                }
+        extoleApp?.session?.updateProfile(profile: updatedProfile, success: {
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
             }
-        }
+        }, error:  { error in
+            DispatchQueue.main.async {
+                self.showError(message: "\(error)")
+            }
+        })
     }
     
     override func viewDidLoad() {
@@ -75,8 +74,8 @@ class ProfileViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.firstNameText.text = extoleApp.profileManager?.profile?.first_name ?? ""
-        self.lastNameText.text = extoleApp.profileManager?.profile?.last_name ?? ""
+        self.firstNameText.text = extoleApp.profileLoader?.profile?.first_name ?? ""
+        self.lastNameText.text = extoleApp.profileLoader?.profile?.last_name ?? ""
     }
     
 }

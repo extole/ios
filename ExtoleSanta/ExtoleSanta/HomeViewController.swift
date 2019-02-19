@@ -6,16 +6,6 @@ import ExtoleKit
 
 let SHARE_MESSAGE_KEY = "app.shareMessage"
 
-extension ExtoleSanta {
-    var shareMessage: String? {
-        get {
-            return settings.string(forKey: SHARE_MESSAGE_KEY)
-        }
-        set(newValue) {
-            settings.setValue(newValue, forKey: SHARE_MESSAGE_KEY)
-        }
-    }
-}
 
 class HomeViewController : UITableViewController, ExtoleSantaStateListener {
 
@@ -23,7 +13,6 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
         switch state {
         case .Identified:
             if let settings = extoleApp.settingsLoader?.zoneData {
-                self.extoleApp.shareMessage = settings.shareMessage
                 self.showState(app: self.extoleApp)
             }
         default:

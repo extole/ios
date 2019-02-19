@@ -52,7 +52,7 @@ extension ProgramSession {
     
     public func customShare(share: CustomShare,
                             success : @escaping (PollingIdResponse?) -> Void,
-                            error: @escaping (CustomShareError?) -> Void) {
+                            error: @escaping (CustomShareError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
         let request = network.postRequest(accessToken: token,
                                   url: url,

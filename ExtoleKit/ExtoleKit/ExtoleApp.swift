@@ -66,6 +66,8 @@ public final class ExtoleApp {
             self.sessionManager.newSession()
         }
     }
+    
+    
 }
 
 extension ExtoleApp: SessionManagerDelegate {
@@ -103,5 +105,34 @@ extension ExtoleApp: SessionManagerDelegate {
         preloader.load(session: session, complete: {
             self.state = .Ready
         })
+    }
+}
+
+extension ExtoleApp {
+    public func signalShare(channel: String,
+                            success: @escaping (CustomSharePollingResult?)->Void,
+                            error: @escaping(ExtoleError) -> Void) {
+        extoleInfo(format: "shared via custom channel %s", arg: channel)
+        
+        if let session = sessionManager.session, let shareableCode = self.selectedShareableCode{
+            let share = CustomShare.init(advocate_code: shareableCode, channel: channel)
+            session.customShare(share: share, success: { pollingResponse in
+                session.pollCustomShare(pollingResponse: pollingResponse!,
+                                        success: success, error: error)
+            }, error: error)
+        }
+    }
+    
+    public func share(email: String,
+                      success: @escaping (EmailSharePollingResult?)->Void,
+                      error: @escaping(ExtoleError) -> Void) {
+        extoleInfo(format: "sharing to email %s", arg: email)
+        if let session = sessionManager.session, let shareableCode = self.selectedShareableCode {
+            let share = EmailShare.init(advocate_code: shareableCode,
+                                        recipient_email: email)
+            session.emailShare(share: share, success: { pollingResponse in
+                session.pollEmailShare(pollingResponse: pollingResponse!,success:success, error: error)
+            }, error: error)
+        }
     }
 }

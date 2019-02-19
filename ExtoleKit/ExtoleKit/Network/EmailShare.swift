@@ -55,7 +55,7 @@ extension ProgramSession {
     
     public func emailShare(share: EmailShare,
                            success : @escaping (PollingIdResponse?) -> Void,
-                           error: @escaping (EmailShareError?) -> Void) {
+                           error: @escaping (EmailShareError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share")!
         let request = self.network.postRequest(accessToken: token,
                                   url: url,
@@ -65,7 +65,7 @@ extension ProgramSession {
     
     public func getEmailShareStatus(pollingResponse: PollingIdResponse,
                                     success : @escaping (EmailSharePollingResult?) -> Void,
-                                    error: @escaping (PollEmailShareError?) -> Void) {
+                                    error: @escaping (PollEmailShareError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share/status/\(pollingResponse.polling_id)")!
         let request = self.network.getRequest(accessToken: token,
                                               url: url)
@@ -74,7 +74,7 @@ extension ProgramSession {
 
     public func pollEmailShare(pollingResponse: PollingIdResponse,
                                 success : @escaping (EmailSharePollingResult?) -> Void,
-                                error: @escaping (PollEmailShareError?) -> Void) {
+                                error: @escaping (PollEmailShareError) -> Void) {
         func poll(retries: UInt = 10) {
             getEmailShareStatus(pollingResponse: pollingResponse, success: { pollingResult in
                 if let pollingStatus = pollingResult?.status {

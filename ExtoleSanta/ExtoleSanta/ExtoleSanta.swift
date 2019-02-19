@@ -31,7 +31,7 @@ public final class ExtoleSanta {
             return extoleApp?.sessionManager
         }
     }
-    
+
     private (set) var extoleApp : ExtoleApp?
     
     private(set) var profileLoader: ProfileLoader?
@@ -53,7 +53,7 @@ public final class ExtoleSanta {
             return sessionManager?.session
         }
     }
-    
+
     public var selectedShareable: MyShareable? {
         get {
             return shareableLoader?.shareables?.filter({ shareable in
@@ -64,8 +64,6 @@ public final class ExtoleSanta {
     
     private let label = "refer-a-friend"
     
-    public let settings = UserDefaults.init()
-    
     public var state = State.Init {
         didSet {
             extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
@@ -74,7 +72,6 @@ public final class ExtoleSanta {
     }
     
     func applicationDidBecomeActive() {
-        
         profileLoader = ProfileLoader() { profile in
             if profile.email?.isEmpty ?? true {
                 self.state = .Identify
@@ -93,36 +90,13 @@ public final class ExtoleSanta {
     }
     
     public func signalShare(channel: String) {
-        extoleInfo(format: "shared via custom channel %s", arg: channel)
-        if let shareableCode = extoleApp?.selectedShareableCode {
-            let share = CustomShare.init(advocate_code: shareableCode, channel: channel)
-            self.session!.customShare(share: share, success: { pollingResponse in
-                self.session!.pollCustomShare(pollingResponse: pollingResponse!, success: { shareResponse in
-                    self.state = State.ReadyToShare
-                }, error: { _ in
-                    
-                })
-            }, error: { _ in
-                
-            })
-        }
+        extoleApp?.signalShare(channel: channel,
+                               success: { _ in },
+                               error: { _ in })
     }
     
     public func share(email: String) {
-        extoleInfo(format: "sharing to email %s", arg: email)
-        if let shareableCode = extoleApp?.selectedShareableCode {
-            let share = EmailShare.init(advocate_code: shareableCode,
-                                         recipient_email: email)
-            self.session!.emailShare(share: share, success: { pollingResponse in
-                self.session!.pollEmailShare(pollingResponse: pollingResponse!, success: { shareResponse in
-                    self.state = State.ReadyToShare
-                }, error: { _ in
-                    
-                })
-            }, error: { _ in
-                
-            })
-        }
+        extoleApp?.share(email: email, success: {_ in }, error: {_ in })
     }
     
     func applicationWillResignActive() {
@@ -163,6 +137,7 @@ extension ExtoleSanta {
         session?.updateProfile(profile: profile, success: success, error: error)
     }
 }
+
 extension ExtoleSanta : ExtoleAppObserver {
     public func changed(state: ExtoleApp.State) {
         switch state {

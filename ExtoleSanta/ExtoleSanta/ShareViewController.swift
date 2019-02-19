@@ -69,7 +69,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         navigationItem.rightBarButtonItems = [shareButton, addButton]
         
-        let message = extoleApp.shareMessage ?? "Dear Santa, check my wishlist at"
+        let message = extoleApp.settingsLoader?.zoneData?.shareMessage ?? "Dear Santa, check my wishlist at"
         messageText = view.newLabel(text: message)
         messageText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         if #available(iOS 11.0, *) {

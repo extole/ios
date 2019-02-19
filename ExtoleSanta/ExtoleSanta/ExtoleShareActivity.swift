@@ -7,13 +7,13 @@ import ExtoleKit
 let ExtoleShare = UIActivity.ActivityType.init("ExtoleShare")
 
 class ExtoleShareActivity: UIActivity {
-    var extoleApp: ExtoleSanta
+    var extoleApp: ExtoleShareApp
     
     lazy var shareController: UIViewController = {
         return UINavigationController.init(rootViewController:  ExtoleShareViewController.init(with: self.extoleApp, activity: self))
     }()
     
-    init(extoleApp: ExtoleSanta){
+    init(extoleApp: ExtoleShareApp){
         self.extoleApp = extoleApp
     }
     // returns activity title
@@ -49,12 +49,12 @@ class ExtoleShareActivity: UIActivity {
 
 class ExtoleShareViewController: UIViewController {
     
-    var extoleApp: ExtoleSanta!
+    var extoleApp: ExtoleShareApp!
     var activity: UIActivity
     
     var emailText: UITextField!
     
-    init(with extoleApp: ExtoleSanta, activity: UIActivity) {
+    init(with extoleApp: ExtoleShareApp, activity: UIActivity) {
         self.extoleApp = extoleApp
         self.activity = activity
         super.init(nibName: nil, bundle: nil)
@@ -66,7 +66,7 @@ class ExtoleShareViewController: UIViewController {
     
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
-            extoleApp.shareApp.share(email: email, success: { _ in }, error : { _ in })
+            extoleApp.share(email: email, success: { _ in }, error : { _ in })
             self.activity.activityDidFinish(true)
             //self.dismiss(animated: true)
 
@@ -101,6 +101,6 @@ class ExtoleShareViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.emailText.text = extoleApp.shareApp.profileLoader?.profile?.email ?? ""
+        self.emailText.text = extoleApp.profileLoader?.profile?.email ?? ""
     }
 }

@@ -7,21 +7,12 @@ import ExtoleKit
 let SHARE_MESSAGE_KEY = "app.shareMessage"
 
 
-class HomeViewController : UITableViewController, ExtoleSantaStateListener {
-
-    func onStateChanged(state: ExtoleSanta.State) {
-        switch state {
-        case .Identified:
-            if let settings = extoleApp.shareApp.settingsLoader?.zoneData {
-                self.showState(app: self.extoleApp)
-            }
-        default:
-            showState(app: extoleApp)
-            break;
-        }
+class HomeViewController : UITableViewController, ExtoleAppObserver {
+    func changed(state: ExtoleApp.State) {
+        showState(app: extoleApp)
     }
     
-    var extoleApp: ExtoleSanta!
+    var extoleApp: ExtoleShareApp!
     var refreshControlCompat: UIRefreshControl?
     
     var identifyViewController: IdentifyViewController!
@@ -43,17 +34,17 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
         case Identity
         case Profile
 
-        func getMainSection(app: ExtoleSanta) -> MainSection{
+        func getMainSection(app: ExtoleShareApp) -> MainSection{
             switch self {
             case .Identity:
                 return MainSection(name: "Identity", controls: [{
-                    return app.shareApp.profileLoader?.profile?.email}
+                    return app.profileLoader?.profile?.email}
                     ])
             case .Profile:
                 return MainSection(name: "Profile", controls: [{
-                        return app.shareApp.profileLoader?.profile?.first_name
+                        return app.profileLoader?.profile?.first_name
                     }, {
-                        return app.shareApp.profileLoader?.profile?.last_name
+                        return app.profileLoader?.profile?.last_name
                     }])
             }
         }
@@ -70,7 +61,7 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
     
     let sections: [Section] = [.Identity, .Profile]
     
-    init(with extoleApp: ExtoleSanta) {
+    init(with extoleApp: ExtoleShareApp) {
         self.extoleApp = extoleApp
         self.identifyViewController = IdentifyViewController.init(with : extoleApp)
         self.profileViewController = ProfileViewController.init(with : extoleApp)
@@ -91,7 +82,7 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
         self.title = "Home"
         self.view.backgroundColor = UIColor.white
         
-        extoleApp.stateListener = self
+        extoleApp.observer = self
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
@@ -109,7 +100,7 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
     }
     
     @objc private func refreshData(_ sender: Any) {
-        extoleApp.shareApp.reload() {
+        extoleApp.reload() {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.refreshControlCompat?.endRefreshing()
@@ -158,17 +149,17 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
         
     }
     
-    func showState(app: ExtoleSanta) {
+    func showState(app: ExtoleShareApp) {
         DispatchQueue.main.async {
             self.navigationItem.title = "Home"
             self.tableView.reloadData()
             switch(app.state) {
-            case .LoggedOut : do {
+            case .Init : do {
                 let nextSession = UIBarButtonItem.init(title: "New", style: .plain, target: self, action: #selector(self.newSessionClick))
                 self.navigationItem.rightBarButtonItem = nextSession
                 self.navigationItem.leftBarButtonItem = nil
                 }
-            case .ReadyToShare : do {
+            case .Ready : do {
                 self.refreshControlCompat?.endRefreshing()
                 let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
                 self.navigationItem.leftBarButtonItem = logout
@@ -177,12 +168,6 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
                     #selector(self.toWishList))
                 
                 self.navigationItem.rightBarButtonItem = wishButton
-                }
-            case .Identify: do {
-                self.navigationItem.title = "Anonymous"
-                let anonymous = UIBarButtonItem.init(title: "Generate Link", style: .plain, target: self, action: #selector(self.anonymousClick))
-                self.navigationItem.rightBarButtonItem = anonymous
-                self.navigationItem.leftBarButtonItem = nil
                 }
             default: do {
                 let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
@@ -195,7 +180,7 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
     }
     
     @objc func anonymousClick(_ sender: UIButton) {
-        extoleApp.updateProfile(profile: MyProfile.init(),
+        extoleApp.sessionManager.session?.updateProfile(profile: MyProfile.init(),
                                          success: {
                                             
         }, error : { error in
@@ -212,13 +197,13 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
         let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
         
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
-            self.extoleApp.shareApp.sessionManager?.logout()
+            self.extoleApp.sessionManager?.logout()
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
     }
     
     @objc func newSessionClick(_ sender: UIButton) {
-        extoleApp.shareApp.sessionManager?.newSession()
+        extoleApp.sessionManager?.newSession()
     }
 }

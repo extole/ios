@@ -8,8 +8,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    let iosSanta = ExtoleSanta.init(programUrl: URL.init(string: "https://ios-santa.extole.io")!)
-
+    let iosSanta = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+                                  label: "refer-a-friend")
+        
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
@@ -35,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        iosSanta.applicationDidBecomeActive()
+        iosSanta.activate()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

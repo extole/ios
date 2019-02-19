@@ -19,13 +19,13 @@ open class ExtoleApp {
     public private(set) var sessionManager: SessionManager!
     private var preloader: Loader!
     
-    private weak var observer: ExtoleAppObserver?
+    public weak var observer: ExtoleAppObserver?
     
     init(with program: Program) {
         self.program = program
     }
     
-    func initSessionManager(preloader: Loader, observer: ExtoleAppObserver) {
+    func initSessionManager(preloader: Loader, observer: ExtoleAppObserver?) {
         self.sessionManager = SessionManager.init(program: self.program, delegate: self)
         self.preloader = preloader
         self.observer = observer

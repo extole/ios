@@ -5,9 +5,9 @@ import ExtoleKit
 
 class ProfileViewController: UIViewController {
 
-    var extoleApp: ExtoleSanta!
+    var extoleApp: ExtoleShareApp!
     
-    init(with extoleApp: ExtoleSanta) {
+    init(with extoleApp: ExtoleShareApp) {
         self.extoleApp = extoleApp
         super.init(nibName: nil, bundle: nil)
     }
@@ -23,7 +23,7 @@ class ProfileViewController: UIViewController {
     @objc func doneClick(_ sender: UITextField) {
         let updatedProfile = MyProfile.init(first_name: firstNameText.text,
                                             last_name: lastNameText.text)
-        extoleApp?.updateProfile(profile: updatedProfile, success: {
+        extoleApp?.sessionManager.session?.updateProfile(profile: updatedProfile, success: {
             DispatchQueue.main.async {
                 self.navigationController?.popViewController(animated: true)
             }
@@ -74,8 +74,8 @@ class ProfileViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.firstNameText.text = extoleApp.shareApp.profileLoader?.profile?.first_name ?? ""
-        self.lastNameText.text = extoleApp.shareApp.profileLoader?.profile?.last_name ?? ""
+        self.firstNameText.text = extoleApp.profileLoader?.profile?.first_name ?? ""
+        self.lastNameText.text = extoleApp.profileLoader?.profile?.last_name ?? ""
     }
     
 }

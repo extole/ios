@@ -6,14 +6,15 @@ open class ExtoleShareApp : ExtoleApp {
     public private(set) var profileLoader: ProfileLoader!
     public private(set) var shareableLoader: ShareableLoader!
     public private(set) var settingsLoader: ZoneLoader<ShareSettings>!
-    let label = "refer-a-friend"
+    let label : String
     
-    public init(program: Program){
+    private init(program: Program, label: String){
+        self.label = label
         super.init(with: program)
     }
     
-    public convenience init(program: Program, observer: ExtoleAppObserver) {
-        self.init(program: program)
+    public convenience init(programUrl: URL, label: String) {
+        self.init(program: Program(baseUrl: programUrl), label: label)
         profileLoader = ProfileLoader() { _ in
         }
         
@@ -49,6 +50,12 @@ open class ExtoleShareApp : ExtoleApp {
                 session.pollEmailShare(pollingResponse: pollingResponse!,success:success, error: error)
             }, error: error)
         }
+    }
+    
+    public func updateProfile(profile: MyProfile,
+                              success: @escaping () -> Void,
+                              error : @escaping (UpdateProfileError) -> Void) {
+        self.sessionManager.session?.updateProfile(profile: profile, success: success, error: error)
     }
     
     public var selectedShareable: MyShareable? {

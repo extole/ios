@@ -2,57 +2,42 @@
 
 import Foundation
 
-public protocol ExtoleAppStateListener : class {
-    func onStateChanged(state: ExtoleApp.State)
+public protocol ExtoleAppObserver : class {
+    func changed(state: ExtoleApp.State)
 }
 
 public final class ExtoleApp {
     
-    public enum State : String {
-        case Init = "Init"
-        case LoggedOut = "LoggedOut"
-        case Inactive = "Inactive"
-        case InvalidToken = "InvalidToken"
-        case ServerError = "ServerError"
-        
-        case Loading = "Loading"
-        
-        case Identify = "Identify"
-        case Identified = "Identified"
-        
-        case ReadyToShare = "ReadyToShare"
+    public enum State {
+        case Init
+        case Loading
+        case Ready
     }
     
     private let program: Program
 
-    
     public private(set) var sessionManager: SessionManager!
     private var preloader: Loader!
     
-    public weak var stateListener: ExtoleAppStateListener?
+    private weak var observer: ExtoleAppObserver?
     
     private init(with program: Program) {
         self.program = program
     }
     
-    public convenience init(program: Program, preloader: Loader) {
+    public convenience init(program: Program, preloader: Loader, observer: ExtoleAppObserver) {
         self.init(with: program)
         self.sessionManager = SessionManager.init(program: self.program, delegate: self)
         self.preloader = preloader
-    }
-    
-    private var session: ProgramSession? {
-        get {
-            return sessionManager.session
-        }
+        self.observer = observer
     }
     
     public let settings = UserDefaults.init()
     
     public var state = State.Init {
         didSet {
-            extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
-            stateListener?.onStateChanged(state: state)
+            extoleInfo(format: "state changed to %{public}@", arg: String(describing: state))
+            observer?.changed(state: state)
         }
     }
     
@@ -65,6 +50,15 @@ public final class ExtoleApp {
         }
     }
     
+    public var selectedShareableCode : String? {
+        get {
+            return settings.string(forKey: "extole.shareable_code")
+        }
+        set(newShareableKey) {
+            settings.set(newShareableKey, forKey: "extole.shareable_code")
+        }
+    }
+    
     public func applicationDidBecomeActive() {
         if let existingToken = self.savedToken {
             self.sessionManager.resumeSession(existingToken: existingToken)
@@ -72,20 +66,17 @@ public final class ExtoleApp {
             self.sessionManager.newSession()
         }
     }
-
-    func applicationWillResignActive() {
-        extoleInfo(format: "application resign active")
-        self.state = .Inactive
-    }
-    
 }
 
 extension ExtoleApp: SessionManagerDelegate {
     
     public func reload(complete: @escaping () -> Void) {
-        if let session = self.session {
+        if let session = self.sessionManager.session {
+            state = .Loading
             session.getToken(success: { token in
-                
+                self.preloader.load(session: session, complete: {
+                    self.state = .Ready
+                })
             }) { error in
                 complete()
             }
@@ -97,20 +88,20 @@ extension ExtoleApp: SessionManagerDelegate {
     }
     
     public func onSessionInvalid() {
-        state = .InvalidToken
+        state = .Init
         self.sessionManager.newSession()
     }
     
     public func onSessionDeleted() {
-        state = .LoggedOut
+        state = .Init
         self.sessionManager?.newSession()
     }
     
     public func onNewSession(session: ProgramSession) {
-        state = .Identify
+        state = .Loading
         self.savedToken = session.accessToken
         preloader.load(session: session, complete: {
-            self.state = .ReadyToShare
+            self.state = .Ready
         })
     }
 }

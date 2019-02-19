@@ -57,7 +57,7 @@ public final class ExtoleSanta {
     public var selectedShareable: MyShareable? {
         get {
             return shareableLoader?.shareables?.filter({ shareable in
-                shareable.code == selectedShareableCode
+                shareable.code == extoleApp?.selectedShareableCode
             }).first
         }
     }
@@ -70,15 +70,6 @@ public final class ExtoleSanta {
         didSet {
             extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
             stateListener?.onStateChanged(state: state)
-        }
-    }
-    
-    var selectedShareableCode : String? {
-        get {
-            return settings.string(forKey: "extole.shareable_code")
-        }
-        set(newShareableKey) {
-            settings.set(newShareableKey, forKey: "extole.shareable_code")
         }
     }
     
@@ -97,14 +88,13 @@ public final class ExtoleSanta {
         
         let composite = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
 
-        extoleApp = ExtoleApp(program: self.program, preloader: composite)
-        extoleApp?.stateListener = self
+        extoleApp = ExtoleApp(program: self.program, preloader: composite, observer: self)
         extoleApp!.applicationDidBecomeActive()
     }
     
     public func signalShare(channel: String) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
-        if let shareableCode = selectedShareableCode {
+        if let shareableCode = extoleApp?.selectedShareableCode {
             let share = CustomShare.init(advocate_code: shareableCode, channel: channel)
             self.session!.customShare(share: share, success: { pollingResponse in
                 self.session!.pollCustomShare(pollingResponse: pollingResponse!, success: { shareResponse in
@@ -120,7 +110,7 @@ public final class ExtoleSanta {
     
     public func share(email: String) {
         extoleInfo(format: "sharing to email %s", arg: email)
-        if let shareableCode = selectedShareableCode {
+        if let shareableCode = extoleApp?.selectedShareableCode {
             let share = EmailShare.init(advocate_code: shareableCode,
                                          recipient_email: email)
             self.session!.emailShare(share: share, success: { pollingResponse in
@@ -148,13 +138,13 @@ public final class ExtoleSanta {
         if let shareable = self.selectedShareable {
             extoleInfo(format: "re-using previosly selected shareable %s", arg: shareable.code)
         } else {
-            self.selectedShareableCode = nil
+            self.extoleApp?.selectedShareableCode = nil
             let uniqueKey = NSUUID().uuidString
             let newShareable = MyShareable.init(label: self.label, key: uniqueKey)
             session?.createShareable(shareable: newShareable, success: { pollingId in
                 self.session?.pollShareable(pollingResponse: pollingId!,
                                             success: { shareableResult in
-                                                self.selectedShareableCode = shareableResult?.code
+                                                self.extoleApp?.selectedShareableCode = shareableResult?.code
                                                 self.shareableLoader?.load(session: self.session!){}
                 }, error: {_ in
                     
@@ -166,8 +156,6 @@ public final class ExtoleSanta {
     }
 }
 
-
-
 extension ExtoleSanta {
     public func updateProfile(profile: MyProfile,
                               success: @escaping () -> Void,
@@ -175,15 +163,13 @@ extension ExtoleSanta {
         session?.updateProfile(profile: profile, success: success, error: error)
     }
 }
-extension ExtoleSanta : ExtoleAppStateListener {
-    public func onStateChanged(state: ExtoleApp.State) {
+extension ExtoleSanta : ExtoleAppObserver {
+    public func changed(state: ExtoleApp.State) {
         switch state {
-        case .ReadyToShare:
+        case .Ready:
             self.state = .ReadyToShare
         default:
             self.state = .Loading
         }
     }
-    
-    
 }

@@ -129,9 +129,21 @@ public final class ExtoleSanta {
         extoleInfo(format: "application resign active")
         self.state = .Inactive
     }
+
 }
 
 extension ExtoleSanta: SessionManagerDelegate {
+    
+    public func reload(complete: @escaping () -> Void) {
+        if let session = self.session {
+            session.getToken(success: { token in
+                self.preload(session: session, complete: complete)
+            }) { error in
+                complete()
+            }
+        }
+    }
+    
     public func serverError(error: ExtoleError) {
         
     }
@@ -146,11 +158,8 @@ extension ExtoleSanta: SessionManagerDelegate {
         self.sessionManager?.newSession()
     }
     
-    public func onNewSession(session: ProgramSession) {
-        state = .Identify
-        self.savedToken = session.accessToken
-        profileLoader = ProfileLoader.init(session: session)
-        profileLoader?.load() { profile in
+    public func preload(session: ProgramSession, complete: @escaping () -> Void) {
+        profileLoader = ProfileLoader.init(session: session) { profile in
             if profile.email?.isEmpty ?? true {
                 self.state = .Identify
             } else {
@@ -159,10 +168,16 @@ extension ExtoleSanta: SessionManagerDelegate {
         }
         
         settingsLoader = ZoneLoader.init(session: session, zoneName: "settings")
-        settingsLoader?.load()
+        shareableLoader = ShareableLoader.init(session: session, success: shareablesLoaded)
         
-        shareableLoader = ShareableLoader.init(session: session)
-        shareableLoader?.load(success: shareablesLoaded)
+        let composite = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
+        composite.load(complete: complete)
+    }
+    
+    public func onNewSession(session: ProgramSession) {
+        state = .Identify
+        self.savedToken = session.accessToken
+       
     }
     
     func shareablesLoaded(shareables: [MyShareable]?) {
@@ -176,7 +191,7 @@ extension ExtoleSanta: SessionManagerDelegate {
                 self.session?.pollShareable(pollingResponse: pollingId!,
                                             success: { shareableResult in
                                                 self.selectedShareableCode = shareableResult?.code
-                                                self.shareableLoader?.load(success: self.shareablesLoaded)
+                                                self.shareableLoader?.load(){}
                 }, error: {_ in
                     
                 })

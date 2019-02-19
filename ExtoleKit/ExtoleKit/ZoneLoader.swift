@@ -2,7 +2,7 @@
 
 import Foundation
 
-public final class ZoneLoader<T: Codable> {
+public final class ZoneLoader<T: Codable> : Loader {
     let session: ProgramSession
     let zoneName: String
     public private(set) var zoneData: T? = nil
@@ -12,10 +12,12 @@ public final class ZoneLoader<T: Codable> {
         self.zoneName = zoneName
     }
     
-    public func load() {
+    public func load(complete: @escaping () -> Void) {
         self.session.fetchObject(zone: zoneName, success: { (zoneData:T?) in
             self.zoneData = zoneData
+            complete()
         }) { error in
+            complete()
         }
     }
 }

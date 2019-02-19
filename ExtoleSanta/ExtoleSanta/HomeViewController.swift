@@ -120,8 +120,12 @@ class HomeViewController : UITableViewController, ExtoleAppStateListener {
     }
     
     @objc private func refreshData(_ sender: Any) {
-        tableView.reloadData()
-        self.refreshControlCompat?.endRefreshing()
+        extoleApp.reload() {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.refreshControlCompat?.endRefreshing()
+            }
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

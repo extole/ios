@@ -19,6 +19,17 @@ public final class SessionManager {
         self.delegate = delegate
     }
     
+    public func reload() {
+        self.session!.getToken(success: { verifiedToken in
+            self.onVerifiedToken(verifiedToken: verifiedToken!)
+        }, error: { verifyTokenError in
+            switch(verifyTokenError) {
+            case .invalidAccessToken :self.delegate?.onSessionInvalid()
+            default: self.delegate?.serverError(error: verifyTokenError)
+            }
+        })
+    }
+
     public func resumeSession(existingToken: String) {
         let consumerToken = ConsumerToken.init(access_token: existingToken)
         self.session = ProgramSession.init(program: self.program, token: consumerToken)

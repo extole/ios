@@ -66,7 +66,7 @@ class ExtoleShareViewController: UIViewController {
     
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
-            extoleApp.share(email: email)
+            extoleApp.shareApp.share(email: email, success: { _ in }, error : { _ in })
             self.activity.activityDidFinish(true)
             //self.dismiss(animated: true)
 
@@ -101,6 +101,6 @@ class ExtoleShareViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.emailText.text = extoleApp.profileLoader?.profile?.email ?? ""
+        self.emailText.text = extoleApp.shareApp.profileLoader?.profile?.email ?? ""
     }
 }

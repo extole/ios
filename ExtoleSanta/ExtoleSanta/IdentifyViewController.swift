@@ -66,6 +66,6 @@ class IdentifyViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.emailText.text = extoleApp.profileLoader?.profile?.email ?? ""
+        self.emailText.text = extoleApp.shareApp.profileLoader?.profile?.email ?? ""
     }
 }

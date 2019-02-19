@@ -8,125 +8,36 @@ public protocol ExtoleSantaStateListener : class {
 }
 
 public final class ExtoleSanta {
-
-    public enum State : String {
-        case Init = "Init"
-        case LoggedOut = "LoggedOut"
-        case Inactive = "Inactive"
-        case InvalidToken = "InvalidToken"
-        case ServerError = "ServerError"
+    
+    public enum State {
+        case Init
+        case Identified
+        case Ready
+        case Loading
         
-        case Loading = "Loading"
-        
-        case Identify = "Identify"
-        case Identified = "Identified"
-        
-        case ReadyToShare = "ReadyToShare"
+        case LoggedOut
+        case ReadyToShare
+        case Identify
     }
     
-    private let program: Program
-    
-    var sessionManager : SessionManager? {
-        get {
-            return extoleApp?.sessionManager
-        }
-    }
+    var state = State.Init
 
-    private (set) var extoleApp : ExtoleApp?
-    
-    private(set) var profileLoader: ProfileLoader?
-    private(set) var shareableLoader: ShareableLoader?
-    private(set) var settingsLoader: ZoneLoader<ShareSettings>?
+    public private(set) var shareApp: ExtoleShareApp!
     
     public weak var stateListener: ExtoleSantaStateListener?
-
+    
     convenience init(programUrl: URL) {
-        self.init(with: programUrl)
+        self.init()
+        shareApp = ExtoleShareApp(program: Program.init(baseUrl: programUrl),
+                                        observer: self)
     }
 
-    private init(with programUrl: URL) {
-        self.program = Program.init(baseUrl: programUrl)
-    }
-    
-    private var session: ProgramSession? {
-        get {
-            return sessionManager?.session
-        }
-    }
-
-    public var selectedShareable: MyShareable? {
-        get {
-            return shareableLoader?.shareables?.filter({ shareable in
-                shareable.code == extoleApp?.selectedShareableCode
-            }).first
-        }
-    }
-    
-    private let label = "refer-a-friend"
-    
-    public var state = State.Init {
-        didSet {
-            extoleInfo(format: "state changed to %{public}@", arg: state.rawValue)
-            stateListener?.onStateChanged(state: state)
-        }
+    private init() {
+        
     }
     
     func applicationDidBecomeActive() {
-        profileLoader = ProfileLoader() { profile in
-            if profile.email?.isEmpty ?? true {
-                self.state = .Identify
-            } else {
-                self.state = .Identified
-            }
-        }
-        
-        settingsLoader = ZoneLoader(zoneName: "settings")
-        shareableLoader = ShareableLoader(success: shareablesLoaded)
-        
-        let composite = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
-
-        extoleApp = ExtoleApp(program: self.program, preloader: composite, observer: self)
-        extoleApp!.applicationDidBecomeActive()
-    }
-    
-    public func signalShare(channel: String) {
-        extoleApp?.signalShare(channel: channel,
-                               success: { _ in },
-                               error: { _ in })
-    }
-    
-    public func share(email: String) {
-        extoleApp?.share(email: email, success: {_ in }, error: {_ in })
-    }
-    
-    func applicationWillResignActive() {
-        extoleInfo(format: "application resign active")
-        self.state = .Inactive
-    }
-    
-    public func reload(complete: @escaping () -> Void) {
-        extoleApp?.reload(complete: complete)
-    }
-    
-    func shareablesLoaded(shareables: [MyShareable]?) {
-        if let shareable = self.selectedShareable {
-            extoleInfo(format: "re-using previosly selected shareable %s", arg: shareable.code)
-        } else {
-            self.extoleApp?.selectedShareableCode = nil
-            let uniqueKey = NSUUID().uuidString
-            let newShareable = MyShareable.init(label: self.label, key: uniqueKey)
-            session?.createShareable(shareable: newShareable, success: { pollingId in
-                self.session?.pollShareable(pollingResponse: pollingId!,
-                                            success: { shareableResult in
-                                                self.extoleApp?.selectedShareableCode = shareableResult?.code
-                                                self.shareableLoader?.load(session: self.session!){}
-                }, error: {_ in
-                    
-                })
-            }, error : { _ in
-                
-            })
-        }
+        shareApp.activate()
     }
 }
 
@@ -134,7 +45,7 @@ extension ExtoleSanta {
     public func updateProfile(profile: MyProfile,
                               success: @escaping () -> Void,
                               error : @escaping (UpdateProfileError) -> Void) {
-        session?.updateProfile(profile: profile, success: success, error: error)
+        shareApp.sessionManager.session?.updateProfile(profile: profile, success: success, error: error)
     }
 }
 
@@ -142,7 +53,7 @@ extension ExtoleSanta : ExtoleAppObserver {
     public func changed(state: ExtoleApp.State) {
         switch state {
         case .Ready:
-            self.state = .ReadyToShare
+            self.state = .Ready
         default:
             self.state = .Loading
         }

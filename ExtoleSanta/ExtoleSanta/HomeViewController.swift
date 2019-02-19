@@ -12,7 +12,7 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
     func onStateChanged(state: ExtoleSanta.State) {
         switch state {
         case .Identified:
-            if let settings = extoleApp.settingsLoader?.zoneData {
+            if let settings = extoleApp.shareApp.settingsLoader?.zoneData {
                 self.showState(app: self.extoleApp)
             }
         default:
@@ -47,13 +47,13 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
             switch self {
             case .Identity:
                 return MainSection(name: "Identity", controls: [{
-                    return app.profileLoader?.profile?.email}
+                    return app.shareApp.profileLoader?.profile?.email}
                     ])
             case .Profile:
                 return MainSection(name: "Profile", controls: [{
-                        return app.profileLoader?.profile?.first_name
+                        return app.shareApp.profileLoader?.profile?.first_name
                     }, {
-                        return app.profileLoader?.profile?.last_name
+                        return app.shareApp.profileLoader?.profile?.last_name
                     }])
             }
         }
@@ -109,7 +109,7 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
     }
     
     @objc private func refreshData(_ sender: Any) {
-        extoleApp.reload() {
+        extoleApp.shareApp.reload() {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.refreshControlCompat?.endRefreshing()
@@ -212,13 +212,13 @@ class HomeViewController : UITableViewController, ExtoleSantaStateListener {
         let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
         
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
-            self.extoleApp.sessionManager?.logout()
+            self.extoleApp.shareApp.sessionManager?.logout()
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
     }
     
     @objc func newSessionClick(_ sender: UIButton) {
-        extoleApp.sessionManager?.newSession()
+        extoleApp.shareApp.sessionManager?.newSession()
     }
 }

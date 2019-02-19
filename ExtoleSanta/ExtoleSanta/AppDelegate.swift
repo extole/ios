@@ -20,10 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func applicationWillResignActive(_ application: UIApplication) {
-        iosSanta.applicationWillResignActive()
-    }
-    
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         extoleInfo(format: "open app @", arg: url.absoluteString)
         return true

@@ -27,6 +27,7 @@
 		4974F020221C0A8B009C9931 /* ZoneLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974F01F221C0A8B009C9931 /* ZoneLoader.swift */; };
 		4974F024221C29A5009C9931 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974F023221C29A5009C9931 /* Loader.swift */; };
 		4974F026221C4480009C9931 /* ExtoleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974F025221C4480009C9931 /* ExtoleApp.swift */; };
+		4974F028221C5C2F009C9931 /* ExtoleShareApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974F027221C5C2F009C9931 /* ExtoleShareApp.swift */; };
 		4994A4652214498D00EF8666 /* ShareableManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4994A4642214498D00EF8666 /* ShareableManager.swift */; };
 		49F221A0221427160052670D /* ProgramSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F2219F221427160052670D /* ProgramSession.swift */; };
 		49F221A222142C660052670D /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F221A122142C660052670D /* SessionManager.swift */; };
@@ -69,6 +70,7 @@
 		4974F01F221C0A8B009C9931 /* ZoneLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneLoader.swift; sourceTree = "<group>"; };
 		4974F023221C29A5009C9931 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
 		4974F025221C4480009C9931 /* ExtoleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleApp.swift; sourceTree = "<group>"; };
+		4974F027221C5C2F009C9931 /* ExtoleShareApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleShareApp.swift; sourceTree = "<group>"; };
 		4994A4642214498D00EF8666 /* ShareableManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareableManager.swift; sourceTree = "<group>"; };
 		49F2219F221427160052670D /* ProgramSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramSession.swift; sourceTree = "<group>"; };
 		49F221A122142C660052670D /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				4974F01F221C0A8B009C9931 /* ZoneLoader.swift */,
 				4974F023221C29A5009C9931 /* Loader.swift */,
 				4974F025221C4480009C9931 /* ExtoleApp.swift */,
+				4974F027221C5C2F009C9931 /* ExtoleShareApp.swift */,
 			);
 			path = ExtoleKit;
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 				49FBE84422130FDB006AEFEB /* EmailShare.swift in Sources */,
 				4925B8B6220DAED800D9CD4A /* Log.swift in Sources */,
 				4974F026221C4480009C9931 /* ExtoleApp.swift in Sources */,
+				4974F028221C5C2F009C9931 /* ExtoleShareApp.swift in Sources */,
 				4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */,
 				4925B8B2220DAED800D9CD4A /* Token.swift in Sources */,
 				49F221A222142C660052670D /* SessionManager.swift in Sources */,

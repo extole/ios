@@ -74,8 +74,8 @@ class ProfileViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.firstNameText.text = extoleApp.profileLoader?.profile?.first_name ?? ""
-        self.lastNameText.text = extoleApp.profileLoader?.profile?.last_name ?? ""
+        self.firstNameText.text = extoleApp.shareApp.profileLoader?.profile?.first_name ?? ""
+        self.lastNameText.text = extoleApp.shareApp.profileLoader?.profile?.last_name ?? ""
     }
     
 }

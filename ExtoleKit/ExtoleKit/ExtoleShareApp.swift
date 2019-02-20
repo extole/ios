@@ -8,21 +8,17 @@ open class ExtoleShareApp : ExtoleApp {
     public private(set) var settingsLoader: ZoneLoader<ShareSettings>!
     let label : String
     
-    private init(program: Program, label: String){
+    public init(programUrl: URL, label: String) {
         self.label = label
-        super.init(with: program)
-    }
-    
-    public convenience init(programUrl: URL, label: String) {
-        self.init(program: Program(baseUrl: programUrl), label: label)
+        super.init(program: Program(baseUrl: programUrl))
+        
         profileLoader = ProfileLoader() { _ in
         }
         
         settingsLoader = ZoneLoader(zoneName: "settings")
         shareableLoader = ShareableLoader(success: shareablesLoaded)
         
-        let composite = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
-        self.initSessionManager(preloader: composite, observer: observer)
+        self.preloader = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
     }
     
     public func signalShare(channel: String,

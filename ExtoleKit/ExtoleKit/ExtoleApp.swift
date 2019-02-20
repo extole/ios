@@ -2,48 +2,25 @@
 
 import Foundation
 
-public protocol ExtoleAppObserver : class {
-    func changed(state: ExtoleApp.State)
+public protocol ExtoleAppDelegate : class {
+    func initialize()
+    func load()
+    func ready()
 }
 
 open class ExtoleApp {
-    
-    public enum State {
-        case Init
-        case Loading
-        case Ready
-    }
-    
     private let program: Program
 
-    public private(set) var sessionManager: SessionManager!
-    private var preloader: Loader!
+    lazy public private(set) var sessionManager = SessionManager.init(program: program, delegate: self)
+    var preloader: Loader?
     
-    public weak var observer: ExtoleAppObserver?
+    public weak var delegate: ExtoleAppDelegate?
     
-    init(with program: Program) {
+    public init(program: Program) {
         self.program = program
     }
     
-    func initSessionManager(preloader: Loader, observer: ExtoleAppObserver?) {
-        self.sessionManager = SessionManager.init(program: self.program, delegate: self)
-        self.preloader = preloader
-        self.observer = observer
-    }
-    
-    public convenience init(program: Program, preloader: Loader, observer: ExtoleAppObserver) {
-        self.init(with: program)
-        self.initSessionManager(preloader: preloader, observer: observer)
-    }
-    
     public let settings = UserDefaults.init()
-    
-    public var state = State.Init {
-        didSet {
-            extoleInfo(format: "state changed to %{public}@", arg: String(describing: state))
-            observer?.changed(state: state)
-        }
-    }
     
     var savedToken : String? {
         get {
@@ -78,10 +55,11 @@ extension ExtoleApp: SessionManagerDelegate {
     
     public func reload(complete: @escaping () -> Void) {
         if let session = self.sessionManager.session {
-            state = .Loading
+            
             session.getToken(success: { token in
-                self.preloader.load(session: session, complete: {
-                    self.state = .Ready
+                self.delegate?.load()
+                self.preloader?.load(session: session, complete: {
+                    self.delegate?.ready()
                 })
             }) { error in
                 complete()
@@ -94,23 +72,20 @@ extension ExtoleApp: SessionManagerDelegate {
     }
     
     public func onSessionInvalid() {
-        state = .Init
+        delegate?.initialize()
         self.sessionManager.newSession()
     }
     
     public func onSessionDeleted() {
-        state = .Init
-        self.sessionManager?.newSession()
+        delegate?.initialize()
+        self.sessionManager.newSession()
     }
     
     public func onNewSession(session: ProgramSession) {
-        state = .Loading
         self.savedToken = session.accessToken
-        preloader.load(session: session, complete: {
-            self.state = .Ready
+        delegate?.load()
+        preloader?.load(session: session, complete: {
+            self.delegate?.ready()
         })
     }
-}
-
-extension ExtoleApp {
 }

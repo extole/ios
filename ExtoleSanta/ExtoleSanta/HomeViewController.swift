@@ -7,11 +7,27 @@ import ExtoleKit
 let SHARE_MESSAGE_KEY = "app.shareMessage"
 
 
-class HomeViewController : UITableViewController, ExtoleAppObserver {
-    func changed(state: ExtoleApp.State) {
-        showState(app: extoleApp)
+class HomeViewController : UITableViewController, ExtoleAppDelegate {
+    func initialize() {
+        DispatchQueue.main.async {
+            self.showState()
+        }
     }
     
+    func load() {
+        DispatchQueue.main.async {
+            self.refreshControlCompat?.beginRefreshing()
+            self.showState()
+        }
+    }
+    
+    func ready() {
+        DispatchQueue.main.async {
+            self.refreshControlCompat?.endRefreshing()
+            self.showState()
+        }
+    }
+
     var extoleApp: ExtoleShareApp!
     var refreshControlCompat: UIRefreshControl?
     
@@ -82,7 +98,7 @@ class HomeViewController : UITableViewController, ExtoleAppObserver {
         self.title = "Home"
         self.view.backgroundColor = UIColor.white
         
-        extoleApp.observer = self
+        extoleApp.delegate = self
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
@@ -94,9 +110,8 @@ class HomeViewController : UITableViewController, ExtoleAppObserver {
         }
         refreshControlCompat?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         
-        showState(app: extoleApp)
+        showState()
         tableView.separatorStyle = .singleLine
-        refreshControlCompat?.beginRefreshing()
     }
     
     @objc private func refreshData(_ sender: Any) {
@@ -149,18 +164,12 @@ class HomeViewController : UITableViewController, ExtoleAppObserver {
         
     }
     
-    func showState(app: ExtoleShareApp) {
+    func showState() {
         DispatchQueue.main.async {
             self.navigationItem.title = "Home"
             self.tableView.reloadData()
-            switch(app.state) {
-            case .Init : do {
-                let nextSession = UIBarButtonItem.init(title: "New", style: .plain, target: self, action: #selector(self.newSessionClick))
-                self.navigationItem.rightBarButtonItem = nextSession
-                self.navigationItem.leftBarButtonItem = nil
-                }
-            case .Ready : do {
-                self.refreshControlCompat?.endRefreshing()
+            if let _ = self.extoleApp.profileLoader.profile {
+                
                 let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
                 self.navigationItem.leftBarButtonItem = logout
                 
@@ -168,14 +177,10 @@ class HomeViewController : UITableViewController, ExtoleAppObserver {
                     #selector(self.toWishList))
                 
                 self.navigationItem.rightBarButtonItem = wishButton
-                }
-            default: do {
-                let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
-                self.navigationItem.leftBarButtonItem = logout
-                self.navigationItem.title = "\(app.state)"
-                }
+            } else {
+                self.navigationItem.rightBarButtonItem = nil
+                self.navigationItem.leftBarButtonItem = nil
             }
-            
         }
     }
     
@@ -197,13 +202,13 @@ class HomeViewController : UITableViewController, ExtoleAppObserver {
         let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
         
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
-            self.extoleApp.sessionManager?.logout()
+            self.extoleApp.sessionManager.logout()
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
     }
     
     @objc func newSessionClick(_ sender: UIButton) {
-        extoleApp.sessionManager?.newSession()
+        extoleApp.sessionManager.newSession()
     }
 }

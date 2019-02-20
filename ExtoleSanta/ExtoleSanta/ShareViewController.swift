@@ -100,7 +100,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.wishItems[item] = "please-santa"
         let updateShareable = UpdateShareable.init(data: self.wishItems)
         let shareableCode = self.extoleApp.selectedShareable?.code
-        self.extoleApp.sessionManager?.session?.updateShareable(code: shareableCode!,
+        self.extoleApp.sessionManager.session?.updateShareable(code: shareableCode!,
                                                 shareable: updateShareable,
                                                 success: {
                                                     DispatchQueue.main.async {

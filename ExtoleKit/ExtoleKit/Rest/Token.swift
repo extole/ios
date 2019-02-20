@@ -36,7 +36,7 @@ public struct ConsumerToken : Codable {
     let capabilities: [String]? = nil
 }
 
-extension Program {
+extension ProgramURL {
     public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
                          error: @escaping (_: GetTokenError) -> Void) {
         let request = self.network.getRequest(url: tokenUrl(baseUrl: baseUrl))

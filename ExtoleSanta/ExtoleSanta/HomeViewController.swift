@@ -4,9 +4,6 @@ import Foundation
 import UIKit
 import ExtoleKit
 
-let SHARE_MESSAGE_KEY = "app.shareMessage"
-
-
 class HomeViewController : UITableViewController, ExtoleShareAppDelegate {
     func load() {
         DispatchQueue.main.async {

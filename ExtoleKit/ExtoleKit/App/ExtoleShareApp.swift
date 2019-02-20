@@ -50,7 +50,7 @@ public final class ExtoleShareApp : ExtoleAppDelegate {
     
     public init(programUrl: URL, label: String, delegate: ExtoleShareAppDelegate?) {
         self.label = label
-        self.extoleApp = ExtoleApp(program: Program(baseUrl: programUrl), delegate: self)
+        self.extoleApp = ExtoleApp(program: ProgramURL(baseUrl: programUrl), delegate: self)
         self.delegate = delegate
         
         profileLoader = ProfileLoader() { _ in

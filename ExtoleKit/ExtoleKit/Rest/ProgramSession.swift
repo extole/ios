@@ -3,7 +3,7 @@
 import Foundation
 
 public struct ProgramSession{
-    let program: Program
+    let program: ProgramURL
     let token: ConsumerToken
     let network = Network.init()
     var baseUrl: URL {
@@ -18,7 +18,7 @@ public struct ProgramSession{
         }
     }
     
-    init(program: Program, token: ConsumerToken) {
+    init(program: ProgramURL, token: ConsumerToken) {
         self.program = program
         self.token = token
     }

@@ -2,7 +2,7 @@
 
 import Foundation
 
-public struct Program {
+public struct ProgramURL {
     let baseUrl: URL
     let network : Network
     public init(baseUrl: URL, network: Network = Network.init()) {

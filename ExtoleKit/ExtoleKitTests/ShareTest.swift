@@ -6,7 +6,7 @@ import XCTest
 
 class ShareTest: XCTestCase {
 
-    let program = Program(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
+    let program = ProgramURL(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
     var programSession: ProgramSession!
     var advocateCode: String?
     

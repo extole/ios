@@ -31,7 +31,7 @@ class CustomNetworkTest : XCTestCase {
     func testCustomToken() {
         let network = CustomNetwork()
         
-        let program = Program(baseUrl: URL.init(string: "https://virtual.extole.io")!,
+        let program = ProgramURL(baseUrl: URL.init(string: "https://virtual.extole.io")!,
                               network: network)
         let promise = expectation(description: "get token response")
         program.getToken(success: { token in
@@ -46,7 +46,7 @@ class CustomNetworkTest : XCTestCase {
     func testDataToken() {
         let network = Network(executor: CustomExecutor())
         
-        let program = Program(baseUrl: URL.init(string: "https://virtual.extole.io")!,
+        let program = ProgramURL(baseUrl: URL.init(string: "https://virtual.extole.io")!,
                               network: network)
         let promise = expectation(description: "get token response")
         program.getToken(success: { token in

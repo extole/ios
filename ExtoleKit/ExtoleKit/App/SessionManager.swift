@@ -10,11 +10,11 @@ public protocol SessionManagerDelegate : class {
 }
 
 public final class SessionManager {
-    let program: Program
+    let program: ProgramURL
     weak var delegate: SessionManagerDelegate?
     public private(set) var session: ProgramSession? = nil
 
-    public init(program: Program, delegate: SessionManagerDelegate) {
+    public init(program: ProgramURL, delegate: SessionManagerDelegate) {
         self.program = program
         self.delegate = delegate
     }

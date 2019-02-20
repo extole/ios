@@ -12,13 +12,13 @@ public final class ExtoleApp {
     /// stores key-value pairs for Extole
     public let settings = UserDefaults(suiteName: "extoleKit")!
     
-    private let program: Program
+    private let program: ProgramURL
 
     lazy private var sessionManager = SessionManager.init(program: program, delegate: self)
 
     private weak var delegate: ExtoleAppDelegate?
     
-    public init(program: Program, delegate: ExtoleAppDelegate?) {
+    public init(program: ProgramURL, delegate: ExtoleAppDelegate?) {
         self.program = program
         self.delegate = delegate
     }

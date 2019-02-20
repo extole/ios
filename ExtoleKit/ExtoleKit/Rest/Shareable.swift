@@ -92,7 +92,7 @@ public enum PollShareableError : ExtoleError {
 }
 
 
-extension ProgramSession {
+extension ConsumerSession {
     public func getShareables(success: @escaping ([MyShareable]?) -> Void,
                               error: @escaping (GetShareablesError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!

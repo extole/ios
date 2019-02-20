@@ -51,7 +51,7 @@ public struct EmailSharePollingResult : Codable {
     let share_id : String
 }
 
-extension ProgramSession {
+extension ConsumerSession {
     
     public func emailShare(share: EmailShare,
                            success : @escaping (PollingIdResponse?) -> Void,

@@ -54,7 +54,7 @@ public enum UpdateProfileError : ExtoleError {
     case invalidAccessToken
 }
 
-extension ProgramSession {
+extension ConsumerSession {
     
     public func updateProfile(profile: MyProfile,
                               success: @escaping () -> Void,

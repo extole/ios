@@ -2,11 +2,13 @@
 
 import Foundation
 
+/// Loads content for consumer session
 public protocol Loader{
-    func load(session: ProgramSession, complete: @escaping () -> Void)
+    func load(session: ConsumerSession, complete: @escaping () -> Void)
 }
 
-public class CompositeLoader : Loader {
+/// Loads all child loaders, calling complete after all is loaded
+public final class CompositeLoader : Loader {
     
     let loaders: [Loader]
     
@@ -14,7 +16,7 @@ public class CompositeLoader : Loader {
         self.loaders = loaders
     }
 
-    public func load(session:ProgramSession, complete: @escaping () -> Void) {
+    public func load(session:ConsumerSession, complete: @escaping () -> Void) {
         var inProgress = loaders
         func onComplete() {
             inProgress.removeFirst()

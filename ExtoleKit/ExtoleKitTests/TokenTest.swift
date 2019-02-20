@@ -22,7 +22,7 @@ class TokenTest: XCTestCase {
 
     func testInvalidToken() {
         let invalidToken = ConsumerToken.init(access_token: "invalid")
-        let programSession = ProgramSession.init(program: program, token: invalidToken)
+        let programSession = ConsumerSession.init(program: program, token: invalidToken)
         let promise = expectation(description: "invalid token response")
         programSession.getToken(success: { token in
             XCTFail("unexpected success")
@@ -53,7 +53,7 @@ class TokenTest: XCTestCase {
         
         let deleteToken = expectation(description: "delete token response")
         
-        let programSession = ProgramSession.init(program: self.program, token: token)
+        let programSession = ConsumerSession.init(program: self.program, token: token)
         programSession.deleteToken(success: {
              deleteToken.fulfill()
         }, error: { error in

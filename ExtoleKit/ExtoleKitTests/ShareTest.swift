@@ -7,7 +7,7 @@ import XCTest
 class ShareTest: XCTestCase {
 
     let program = ProgramURL(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
-    var programSession: ProgramSession!
+    var programSession: ConsumerSession!
     var advocateCode: String?
     
     override func setUp() {
@@ -15,7 +15,7 @@ class ShareTest: XCTestCase {
         program.getToken(success: { token in
             XCTAssert(token != nil)
             XCTAssert(!token!.access_token.isEmpty)
-            self.programSession = ProgramSession.init(program: self.program, token: token!)
+            self.programSession = ConsumerSession.init(program: self.program, token: token!)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

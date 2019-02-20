@@ -2,32 +2,58 @@
 
 import Foundation
 
+/// Handles events for ExtoleShareApp
 public protocol ExtoleShareAppDelegate : class {
-    func load()
-    func ready()
+    /// signals ExtoleShareApp is busy
+    func extoleShareAppBusy()
+    /// signals ExtoleShareApp is ready
+    func extoleShareAppReady()
 }
 
-public final class ExtoleShareApp : ExtoleAppDelegate {
+/// High level API for Extole Share Experience
+public final class ExtoleShareApp {
+    /// Underlying Extole app
+    private var extoleApp: ExtoleApp!
+    /// Share Experience event handler
+    private weak var delegate: ExtoleShareAppDelegate?
+    /// Extole program label
+    private let label : String
+    /// Composite preloader to load profile, shareables, and settings at once
+    private var preloader: CompositeLoader!
+    
+    /// Active consumer session
+    public private(set) var session: ConsumerSession?
+    /// Loads consumer profile
+    public private(set) var profileLoader: ProfileLoader!
+    /// Loads consumer shareables
+    public private(set) var shareableLoader: ShareableLoader!
+    /// Loads share settings
+    public private(set) var settingsLoader: ZoneLoader<ShareSettings>!
+
+    /// Creates new Extole share experince
+    public init(programUrl: URL, programLabel label: String, delegate: ExtoleShareAppDelegate?) {
+        self.label = label
+        self.extoleApp = ExtoleApp(with: ProgramURL(baseUrl: programUrl), delegate: self)
+        self.delegate = delegate
+        
+        profileLoader = ProfileLoader()
+        settingsLoader = ZoneLoader(zoneName: "settings")
+        shareableLoader = ShareableLoader(delegate: self)
+        
+        self.preloader = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
+    }
+    /// Activate will resume Extole session, and prepare for sharing
     public func activate() {
         extoleApp.activate()
     }
-    
+
+    /// Cleans current Extole session, and share resources
     public func reset() {
         selectedShareableCode = nil
         extoleApp.reset()
     }
 
-    public func invalidate() {
-        session = nil
-    }
-
-    public func load(session: ProgramSession) {
-        self.session = session
-        preloader.load(session: session){
-            self.delegate?.ready()
-        }
-    }
-    
+    /// Shareable code used in this share session
     public var selectedShareableCode : String? {
         get {
             return extoleApp.settings.string(forKey: "shareable_code")
@@ -37,44 +63,21 @@ public final class ExtoleShareApp : ExtoleAppDelegate {
         }
     }
 
-    private var extoleApp: ExtoleApp!
-    public private(set) var session: ProgramSession?
-    private weak var delegate: ExtoleShareAppDelegate?
-    
-    public private(set) var profileLoader: ProfileLoader!
-    public private(set) var shareableLoader: ShareableLoader!
-    public private(set) var settingsLoader: ZoneLoader<ShareSettings>!
-    let label : String
-    
-    private var preloader: Loader!
-    
-    public init(programUrl: URL, label: String, delegate: ExtoleShareAppDelegate?) {
-        self.label = label
-        self.extoleApp = ExtoleApp(program: ProgramURL(baseUrl: programUrl), delegate: self)
-        self.delegate = delegate
-        
-        profileLoader = ProfileLoader() { _ in
-        }
-        
-        settingsLoader = ZoneLoader(zoneName: "settings")
-        shareableLoader = ShareableLoader(success: shareablesLoaded)
-        
-        self.preloader = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
-    }
-    
+    /// reloads share experince, within the same consumer session
     public func reload(complete: @escaping () -> Void) {
         if let session = session {
             session.getToken(success: { token in
-                self.delegate?.load()
+                self.delegate?.extoleShareAppBusy()
                 self.preloader?.load(session: session, complete: {
-                    self.delegate?.ready()
+                    self.delegate?.extoleShareAppReady()
                 })
             }) { error in
                 complete()
             }
         }
     }
-    
+
+    /// Sends custom share event to Extole
     public func signalShare(channel: String,
                             success: @escaping (CustomSharePollingResult?)->Void,
                             error: @escaping(ExtoleError) -> Void) {
@@ -88,7 +91,8 @@ public final class ExtoleShareApp : ExtoleAppDelegate {
             }, error: error)
         }
     }
-    
+
+    /// Sends a share to given email, using Extole email service
     public func share(email: String,
                       success: @escaping (EmailSharePollingResult?)->Void,
                       error: @escaping(ExtoleError) -> Void) {
@@ -102,12 +106,14 @@ public final class ExtoleShareApp : ExtoleAppDelegate {
         }
     }
     
+    /// Updates consumer profile
     public func updateProfile(profile: MyProfile,
                               success: @escaping () -> Void,
                               error : @escaping (UpdateProfileError) -> Void) {
         session?.updateProfile(profile: profile, success: success, error: error)
     }
     
+    /// Shareable used for current consumer session
     public var selectedShareable: MyShareable? {
         get {
             return shareableLoader?.shareables?.filter({ shareable in
@@ -115,8 +121,10 @@ public final class ExtoleShareApp : ExtoleAppDelegate {
             }).first
         }
     }
-    
-    func shareablesLoaded(shareables: [MyShareable]?) {
+}
+
+extension ExtoleShareApp : ShareableLoaderDelegate {
+    public func success(shareables: [MyShareable]?) {
         if let shareable = self.selectedShareable {
             extoleInfo(format: "re-using previosly selected shareable %s", arg: shareable.code)
         } else {
@@ -136,6 +144,24 @@ public final class ExtoleShareApp : ExtoleAppDelegate {
             })
         }
     }
+}
+extension ExtoleShareApp : ExtoleAppDelegate {
+    public func extoleAppInvalid() {
+        session = nil
+    }
+    
+    public func extoleAppReady(session: ConsumerSession) {
+        self.session = session
+        preloader.load(session: session){
+            self.delegate?.extoleShareAppReady()
+        }
+    }
+    
+    public func extoleAppError(error: ExtoleError) {
+        
+    }
+    
+    
 }
 
 public struct ShareSettings : Codable {

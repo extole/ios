@@ -2,19 +2,14 @@
 
 import Foundation
 
+/// Loads consumer profile
 public final class ProfileLoader : Loader{
     public private(set) var profile: MyProfile? = nil
-    let success: (MyProfile) -> Void
-    
-    public init(success: @escaping (MyProfile) -> Void) {
-        self.success = success
-    }
-    
-    public func load(session: ProgramSession, complete: @escaping () -> Void) {
+
+    public func load(session: ConsumerSession, complete: @escaping () -> Void) {
         session.getProfile(success: { profile in
             if let identified = profile {
                 self.profile = identified
-                self.success(identified)
             }
             complete()
         }, error: { error in

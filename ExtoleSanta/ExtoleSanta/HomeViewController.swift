@@ -4,21 +4,8 @@ import Foundation
 import UIKit
 import ExtoleKit
 
-class HomeViewController : UITableViewController, ExtoleShareAppDelegate {
-    func load() {
-        DispatchQueue.main.async {
-            self.refreshControlCompat?.beginRefreshing()
-            self.showState()
-        }
-    }
-
-    func ready() {
-        DispatchQueue.main.async {
-            self.refreshControlCompat?.endRefreshing()
-            self.showState()
-        }
-    }
-
+class HomeViewController : UITableViewController {
+   
     var shareApp: ExtoleShareApp!
     var refreshControlCompat: UIRefreshControl?
     
@@ -71,7 +58,7 @@ class HomeViewController : UITableViewController, ExtoleShareAppDelegate {
     init() {
         super.init(nibName: nil, bundle: nil)
         self.shareApp = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
-                                       label: "refer-a-friend", delegate: self)
+                                       programLabel: "refer-a-friend", delegate: self)
         self.identifyViewController = IdentifyViewController.init(with : shareApp)
         self.profileViewController = ProfileViewController.init(with : shareApp)
         self.shareController = ShareViewController(with: shareApp)
@@ -197,5 +184,21 @@ class HomeViewController : UITableViewController, ExtoleShareAppDelegate {
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
+    }
+}
+
+extension HomeViewController : ExtoleShareAppDelegate {
+    func extoleShareAppBusy() {
+        DispatchQueue.main.async {
+            self.refreshControlCompat?.beginRefreshing()
+            self.showState()
+        }
+    }
+    
+    func extoleShareAppReady() {
+        DispatchQueue.main.async {
+            self.refreshControlCompat?.endRefreshing()
+            self.showState()
+        }
     }
 }

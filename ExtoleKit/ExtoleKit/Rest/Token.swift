@@ -44,7 +44,7 @@ extension ProgramURL {
         self.network.processRequest(with: request, success: success, error: error)
     }
 }
-extension ProgramSession {
+extension ConsumerSession {
     
     public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
                          error: @escaping (_: GetTokenError) -> Void) {

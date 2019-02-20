@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// Loads Extole zone as JSON
 public final class ZoneLoader<T: Codable> : Loader {
     let zoneName: String
     public private(set) var zoneData: T? = nil
@@ -10,7 +11,7 @@ public final class ZoneLoader<T: Codable> : Loader {
         self.zoneName = zoneName
     }
     
-    public func load(session: ProgramSession, complete: @escaping () -> Void) {
+    public func load(session: ConsumerSession, complete: @escaping () -> Void) {
         session.fetchObject(zone: zoneName, success: { (zoneData:T?) in
             self.zoneData = zoneData
             complete()

@@ -2,7 +2,7 @@
 
 import Foundation
 
-extension ProgramSession {
+extension ConsumerSession {
     
     public enum GetObjectError : ExtoleError {
         public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {

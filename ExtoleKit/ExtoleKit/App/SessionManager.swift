@@ -2,17 +2,19 @@
 
 import Foundation
 
+/// Handles consumer session events
 public protocol SessionManagerDelegate : class {
     func onSessionInvalid()
     func onSessionDeleted()
-    func onNewSession(session: ProgramSession)
+    func onNewSession(session: ConsumerSession)
     func serverError(error: ExtoleError)
 }
 
+/// Manages Extole consumer session
 public final class SessionManager {
     let program: ProgramURL
     weak var delegate: SessionManagerDelegate?
-    public private(set) var session: ProgramSession? = nil
+    private var session: ConsumerSession? = nil
 
     public init(program: ProgramURL, delegate: SessionManagerDelegate) {
         self.program = program
@@ -32,7 +34,7 @@ public final class SessionManager {
 
     public func resumeSession(existingToken: String) {
         let consumerToken = ConsumerToken.init(access_token: existingToken)
-        self.session = ProgramSession.init(program: self.program, token: consumerToken)
+        self.session = ConsumerSession.init(program: self.program, token: consumerToken)
         self.session!.getToken(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken!)
         }, error: { verifyTokenError in
@@ -61,7 +63,7 @@ public final class SessionManager {
     }
     
     private func onVerifiedToken(verifiedToken: ConsumerToken) {
-        self.session = ProgramSession.init(program: program, token: verifiedToken)
+        self.session = ConsumerSession.init(program: program, token: verifiedToken)
         self.delegate?.onNewSession(session: self.session!)
     }
 }

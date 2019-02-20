@@ -2,7 +2,7 @@
 
 import Foundation
 
-public struct ProgramSession{
+public struct ConsumerSession{
     let program: ProgramURL
     let token: ConsumerToken
     let network = Network.init()

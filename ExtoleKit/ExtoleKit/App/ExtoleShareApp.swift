@@ -12,7 +12,7 @@ public protocol ExtoleShareAppDelegate : class {
 
 
 /// High level API for Extole Share Experience
-public final class ExtoleShareApp {
+public final class ExtoleShareApp : ShareExperince {
     /// Underlying Extole app
     private var extoleApp: ExtoleApp!
     /// Share Experience event handler
@@ -104,13 +104,6 @@ public final class ExtoleShareApp {
                 session.pollEmailShare(pollingResponse: pollingResponse!,success:success, error: error)
             }, error: error)
         }
-    }
-    
-    /// Updates consumer profile
-    public func updateProfile(profile: MyProfile,
-                              success: @escaping () -> Void,
-                              error : @escaping (UpdateProfileError) -> Void) {
-        session?.updateProfile(profile: profile, success: success, error: error)
     }
     
     /// Shareable used for current consumer session

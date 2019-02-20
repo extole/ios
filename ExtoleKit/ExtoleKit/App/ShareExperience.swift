@@ -31,12 +31,15 @@ public protocol ShareExperince {
         get
     }
     
+    
+}
+public protocol HasShareApp {
     var shareApp : ExtoleShareApp {
         get
     }
 }
 
-public extension ShareExperince {
+public extension ShareExperince where Self: HasShareApp {
     func activate() {
         shareApp.activate()
     }

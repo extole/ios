@@ -30,10 +30,10 @@ public final class ExtoleShareApp : ExtoleAppDelegate {
     
     public var selectedShareableCode : String? {
         get {
-            return extoleApp.settings.string(forKey: "extole.shareable_code")
+            return extoleApp.settings.string(forKey: "shareable_code")
         }
         set(newShareableKey) {
-            extoleApp.settings.set(newShareableKey, forKey: "extole.shareable_code")
+            extoleApp.settings.set(newShareableKey, forKey: "shareable_code")
         }
     }
 

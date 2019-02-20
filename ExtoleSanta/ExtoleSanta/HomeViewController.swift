@@ -71,12 +71,13 @@ class HomeViewController : UITableViewController, ExtoleShareAppDelegate {
     
     let sections: [Section] = [.Identity, .Profile]
     
-    init(with shareApp: ExtoleShareApp) {
-        self.shareApp = shareApp
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.shareApp = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+                                       label: "refer-a-friend", delegate: self)
         self.identifyViewController = IdentifyViewController.init(with : shareApp)
         self.profileViewController = ProfileViewController.init(with : shareApp)
         self.shareController = ShareViewController(with: shareApp)
-        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -89,6 +90,7 @@ class HomeViewController : UITableViewController, ExtoleShareAppDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        shareApp.activate()
         self.title = "Home"
         self.view.backgroundColor = UIColor.white
         

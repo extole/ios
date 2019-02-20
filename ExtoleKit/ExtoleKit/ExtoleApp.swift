@@ -7,9 +7,12 @@ public protocol ExtoleAppDelegate : class {
     func load(session: ProgramSession)
 }
 
-public final class ExtoleApp: SessionManagerDelegate {
+/// High level API for Extole
+public final class ExtoleApp {
+    /// stores key-value pairs for Extole
+    public let settings = UserDefaults(suiteName: "extoleKit")!
+    
     private let program: Program
-    public let settings = UserDefaults.init()
 
     lazy private var sessionManager = SessionManager.init(program: program, delegate: self)
 
@@ -20,19 +23,10 @@ public final class ExtoleApp: SessionManagerDelegate {
         self.delegate = delegate
     }
     
-    private var savedToken : String? {
-        get {
-            return settings.string(forKey: "extole.access_token")
-        }
-        set(newSavedToken) {
-            settings.set(newSavedToken, forKey: "extole.access_token")
-        }
-    }
-   
     public func reset() {
         self.savedToken = nil
     }
-
+    
     public func activate() {
         if let existingToken = self.savedToken {
             self.sessionManager.resumeSession(existingToken: existingToken)
@@ -40,7 +34,21 @@ public final class ExtoleApp: SessionManagerDelegate {
             self.sessionManager.newSession()
         }
     }
+    
+    private var savedToken : String? {
+        get {
+            return settings.string(forKey: "access_token")
+        }
+        set(newSavedToken) {
+            settings.set(newSavedToken, forKey: "access_token")
+        }
+    }
+   
 
+}
+
+extension ExtoleApp : SessionManagerDelegate{
+    
     public func serverError(error: ExtoleError) {
         
     }

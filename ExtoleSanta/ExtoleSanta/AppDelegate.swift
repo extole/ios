@@ -4,22 +4,11 @@ import UIKit
 import ExtoleKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, ExtoleShareAppDelegate {
-
-    func load() {
-        homeViewController.load()
-    }
-    
-    func ready() {
-        homeViewController.ready()
-    }
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    lazy var shareApp = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
-                                  label: "refer-a-friend", delegate: self)
-    
-    lazy var homeViewController = HomeViewController(with: shareApp)
+    lazy var homeViewController = HomeViewController()
         
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -44,7 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ExtoleShareAppDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        shareApp.activate()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

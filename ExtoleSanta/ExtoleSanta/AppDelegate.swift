@@ -4,19 +4,27 @@ import UIKit
 import ExtoleKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, ExtoleShareAppDelegate {
+
+    func load() {
+        homeViewController.load()
+    }
+    
+    func ready() {
+        homeViewController.ready()
+    }
 
     var window: UIWindow?
     
-    let iosSanta = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
-                                  label: "refer-a-friend")
+    lazy var shareApp = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+                                  label: "refer-a-friend", delegate: self)
+    
+    lazy var homeViewController = HomeViewController(with: shareApp)
         
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let rootController = HomeViewController(with: iosSanta)
-
-        window!.rootViewController = UINavigationController(rootViewController: rootController)
+        window!.rootViewController = UINavigationController(rootViewController: homeViewController)
         window!.makeKeyAndVisible()
         return true
     }
@@ -36,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        iosSanta.activate()
+        shareApp.activate()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

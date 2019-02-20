@@ -7,20 +7,14 @@ import ExtoleKit
 let SHARE_MESSAGE_KEY = "app.shareMessage"
 
 
-class HomeViewController : UITableViewController, ExtoleAppDelegate {
-    func initialize() {
-        DispatchQueue.main.async {
-            self.showState()
-        }
-    }
-    
+class HomeViewController : UITableViewController, ExtoleShareAppDelegate {
     func load() {
         DispatchQueue.main.async {
             self.refreshControlCompat?.beginRefreshing()
             self.showState()
         }
     }
-    
+
     func ready() {
         DispatchQueue.main.async {
             self.refreshControlCompat?.endRefreshing()
@@ -28,7 +22,7 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
         }
     }
 
-    var extoleApp: ExtoleShareApp!
+    var shareApp: ExtoleShareApp!
     var refreshControlCompat: UIRefreshControl?
     
     var identifyViewController: IdentifyViewController!
@@ -50,17 +44,17 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
         case Identity
         case Profile
 
-        func getMainSection(app: ExtoleShareApp) -> MainSection{
+        func getMainSection(profile: MyProfile?) -> MainSection{
             switch self {
             case .Identity:
                 return MainSection(name: "Identity", controls: [{
-                    return app.profileLoader?.profile?.email}
+                    return profile?.email}
                     ])
             case .Profile:
                 return MainSection(name: "Profile", controls: [{
-                        return app.profileLoader?.profile?.first_name
+                        return profile?.first_name
                     }, {
-                        return app.profileLoader?.profile?.last_name
+                        return profile?.last_name
                     }])
             }
         }
@@ -77,11 +71,11 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
     
     let sections: [Section] = [.Identity, .Profile]
     
-    init(with extoleApp: ExtoleShareApp) {
-        self.extoleApp = extoleApp
-        self.identifyViewController = IdentifyViewController.init(with : extoleApp)
-        self.profileViewController = ProfileViewController.init(with : extoleApp)
-        self.shareController = ShareViewController(with: extoleApp)
+    init(with shareApp: ExtoleShareApp) {
+        self.shareApp = shareApp
+        self.identifyViewController = IdentifyViewController.init(with : shareApp)
+        self.profileViewController = ProfileViewController.init(with : shareApp)
+        self.shareController = ShareViewController(with: shareApp)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -98,8 +92,6 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
         self.title = "Home"
         self.view.backgroundColor = UIColor.white
         
-        extoleApp.delegate = self
-
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
         self.refreshControlCompat = UIRefreshControl()
@@ -115,7 +107,7 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
     }
     
     @objc private func refreshData(_ sender: Any) {
-        extoleApp.reload() {
+        shareApp.reload() {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.refreshControlCompat?.endRefreshing()
@@ -125,13 +117,13 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let selectedSection = sections[section]
-        return selectedSection.getMainSection(app: extoleApp).controls.count
+        return selectedSection.getMainSection(profile: shareApp.profileLoader.profile).controls.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         let section = sections[indexPath.section]
-        let value = section.getMainSection(app: extoleApp).controls[indexPath.row]()
+        let value = section.getMainSection(profile: shareApp.profileLoader.profile).controls[indexPath.row]()
         
         if let presentValue = value {
             cell.textLabel?.text = presentValue
@@ -148,7 +140,7 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let selectedSection = sections[section]
-        return selectedSection.getMainSection(app: extoleApp).name;
+        return selectedSection.getMainSection(profile: shareApp.profileLoader.profile).name;
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -168,7 +160,7 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
         DispatchQueue.main.async {
             self.navigationItem.title = "Home"
             self.tableView.reloadData()
-            if let _ = self.extoleApp.profileLoader.profile {
+            if let _ = self.shareApp.profileLoader.profile {
                 
                 let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
                 self.navigationItem.leftBarButtonItem = logout
@@ -185,7 +177,7 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
     }
     
     @objc func anonymousClick(_ sender: UIButton) {
-        extoleApp.sessionManager.session?.updateProfile(profile: MyProfile.init(),
+        shareApp.session?.updateProfile(profile: MyProfile.init(),
                                          success: {
                                             
         }, error : { error in
@@ -202,13 +194,9 @@ class HomeViewController : UITableViewController, ExtoleAppDelegate {
         let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
         
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
-            self.extoleApp.sessionManager.logout()
+            self.shareApp.reset()
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
-    }
-    
-    @objc func newSessionClick(_ sender: UIButton) {
-        extoleApp.sessionManager.newSession()
     }
 }

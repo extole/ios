@@ -3,26 +3,24 @@
 import Foundation
 
 public protocol ExtoleAppDelegate : class {
-    func initialize()
-    func load()
-    func ready()
+    func invalidate()
+    func load(session: ProgramSession)
 }
 
-open class ExtoleApp {
+public final class ExtoleApp: SessionManagerDelegate {
     private let program: Program
+    public let settings = UserDefaults.init()
 
-    lazy public private(set) var sessionManager = SessionManager.init(program: program, delegate: self)
-    var preloader: Loader?
+    lazy private var sessionManager = SessionManager.init(program: program, delegate: self)
+
+    private weak var delegate: ExtoleAppDelegate?
     
-    public weak var delegate: ExtoleAppDelegate?
-    
-    public init(program: Program) {
+    public init(program: Program, delegate: ExtoleAppDelegate?) {
         self.program = program
+        self.delegate = delegate
     }
     
-    public let settings = UserDefaults.init()
-    
-    var savedToken : String? {
+    private var savedToken : String? {
         get {
             return settings.string(forKey: "extole.access_token")
         }
@@ -30,16 +28,11 @@ open class ExtoleApp {
             settings.set(newSavedToken, forKey: "extole.access_token")
         }
     }
-    
-    public var selectedShareableCode : String? {
-        get {
-            return settings.string(forKey: "extole.shareable_code")
-        }
-        set(newShareableKey) {
-            settings.set(newShareableKey, forKey: "extole.shareable_code")
-        }
+   
+    public func reset() {
+        self.savedToken = nil
     }
-    
+
     public func activate() {
         if let existingToken = self.savedToken {
             self.sessionManager.resumeSession(existingToken: existingToken)
@@ -47,45 +40,23 @@ open class ExtoleApp {
             self.sessionManager.newSession()
         }
     }
-    
-    
-}
 
-extension ExtoleApp: SessionManagerDelegate {
-    
-    public func reload(complete: @escaping () -> Void) {
-        if let session = self.sessionManager.session {
-            
-            session.getToken(success: { token in
-                self.delegate?.load()
-                self.preloader?.load(session: session, complete: {
-                    self.delegate?.ready()
-                })
-            }) { error in
-                complete()
-            }
-        }
-    }
-    
     public func serverError(error: ExtoleError) {
         
     }
     
     public func onSessionInvalid() {
-        delegate?.initialize()
+        delegate?.invalidate()
         self.sessionManager.newSession()
     }
     
     public func onSessionDeleted() {
-        delegate?.initialize()
+        delegate?.invalidate()
         self.sessionManager.newSession()
     }
     
     public func onNewSession(session: ProgramSession) {
         self.savedToken = session.accessToken
-        delegate?.load()
-        preloader?.load(session: session, complete: {
-            self.delegate?.ready()
-        })
+        delegate?.load(session: session)
     }
 }

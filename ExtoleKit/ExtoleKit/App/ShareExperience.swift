@@ -2,7 +2,8 @@
 
 import Foundation
 
-public protocol ShareExperince {
+/// Describes Extole share experience
+public protocol ShareExperience {
     /// Activate will resume Extole session, and prepare for sharing
     func activate()
     
@@ -27,6 +28,10 @@ public protocol ShareExperince {
         get
     }
     
+    var session: ConsumerSession? {
+        get
+    }
+    
     
 }
 public protocol HasShareApp {
@@ -35,10 +40,11 @@ public protocol HasShareApp {
     }
 }
 
-public extension ShareExperince where Self: HasShareApp {
+public extension ShareExperience where Self: HasShareApp {
     func activate() {
         shareApp.activate()
     }
+
     var session : ConsumerSession? {
         get {
             return shareApp.session

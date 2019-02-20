@@ -12,7 +12,7 @@ public protocol ExtoleShareAppDelegate : class {
 
 
 /// High level API for Extole Share Experience
-public final class ExtoleShareApp : ShareExperince {
+public final class ExtoleShareApp : ShareExperience {
     /// Underlying Extole app
     private var extoleApp: ExtoleApp!
     /// Share Experience event handler
@@ -28,9 +28,10 @@ public final class ExtoleShareApp : ShareExperince {
 
     /// Creates new Extole share experince
     public init(programUrl: URL, programLabel label: String, delegate: ExtoleShareAppDelegate?,
-                extraLoaders: [Loader]) {
+                extraLoaders: [Loader] = [],
+                network: Network = Network()) {
         self.label = label
-        self.extoleApp = ExtoleApp(with: ProgramURL(baseUrl: programUrl), delegate: self)
+        self.extoleApp = ExtoleApp(with: ProgramURL(baseUrl: programUrl, network: network), delegate: self)
         self.delegate = delegate
         
         shareableLoader = ShareableLoader(delegate: self)

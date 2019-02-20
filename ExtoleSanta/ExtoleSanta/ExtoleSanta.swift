@@ -12,7 +12,7 @@ struct ShareSettings : Codable {
     public let shareMessage: String
 }
 
-class ExtoleSanta : HasShareApp, ShareExperince {
+class ExtoleSanta : HasShareApp, ShareExperience {
 
     /// Loads consumer profile
     public private(set) var profileLoader = ProfileLoader()

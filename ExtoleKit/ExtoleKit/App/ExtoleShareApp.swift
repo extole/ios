@@ -21,7 +21,6 @@ public final class ExtoleShareApp : ShareExperince {
     private let label : String
     /// Composite preloader to load profile, shareables, and settings at once
     private var preloader: CompositeLoader!
-    
     /// Active consumer session
     public private(set) var session: ConsumerSession?
     /// Loads consumer shareables
@@ -49,12 +48,12 @@ public final class ExtoleShareApp : ShareExperince {
 
     /// Cleans current Extole session, and share resources
     public func reset() {
-        selectedShareableCode = nil
+        savedShareableCode = nil
         extoleApp.reset()
     }
 
     /// Shareable code used in this share session
-    public var selectedShareableCode : String? {
+    private var savedShareableCode : String? {
         get {
             return extoleApp.settings.string(forKey: "shareable_code")
         }
@@ -83,7 +82,7 @@ public final class ExtoleShareApp : ShareExperince {
                             error: @escaping(ExtoleError) -> Void) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
         
-        if let session = session, let shareableCode = selectedShareableCode{
+        if let session = session, let shareableCode = selectedShareable?.code {
             let share = CustomShare.init(advocate_code: shareableCode, channel: channel)
             session.customShare(share: share, success: { pollingResponse in
                 session.pollCustomShare(pollingResponse: pollingResponse!,
@@ -97,7 +96,7 @@ public final class ExtoleShareApp : ShareExperince {
                       success: @escaping (EmailSharePollingResult?)->Void,
                       error: @escaping(ExtoleError) -> Void) {
         extoleInfo(format: "sharing to email %s", arg: email)
-        if let session = session, let shareableCode = selectedShareableCode {
+        if let session = session, let shareableCode = selectedShareable?.code {
             let share = EmailShare.init(advocate_code: shareableCode,
                                         recipient_email: email)
             session.emailShare(share: share, success: { pollingResponse in
@@ -110,7 +109,7 @@ public final class ExtoleShareApp : ShareExperince {
     public var selectedShareable: MyShareable? {
         get {
             return shareableLoader?.shareables?.filter({ shareable in
-                shareable.code == self.selectedShareableCode
+                shareable.code == self.savedShareableCode
             }).first
         }
     }
@@ -121,13 +120,13 @@ extension ExtoleShareApp : ShareableLoaderDelegate {
         if let shareable = self.selectedShareable {
             extoleInfo(format: "re-using previosly selected shareable %s", arg: shareable.code)
         } else {
-            self.selectedShareableCode = nil
+            self.savedShareableCode = nil
             let uniqueKey = NSUUID().uuidString
             let newShareable = MyShareable.init(label: self.label, key: uniqueKey)
             self.session?.createShareable(shareable: newShareable, success: { pollingId in
                 self.session?.pollShareable(pollingResponse: pollingId!,
                                             success: { shareableResult in
-                                                self.selectedShareableCode = shareableResult?.code
+                                                self.savedShareableCode = shareableResult?.code
                                                 self.shareableLoader?.load(session: self.session!){}
                 }, error: {_ in
                     
@@ -153,8 +152,4 @@ extension ExtoleShareApp : ExtoleAppDelegate {
     public func extoleAppError(error: ExtoleError) {
         
     }
-    
-    
 }
-
-

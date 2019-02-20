@@ -9,10 +9,6 @@ public protocol ShareExperince {
     /// Cleans current Extole session, and share resources
     func reset()
     
-    /// Shareable code used in this share session
-    var selectedShareableCode : String? {
-        get
-    }
     /// reloads share experince, within the same consumer session
     func reload(complete: @escaping () -> Void)
     
@@ -73,11 +69,5 @@ public extension ShareExperince where Self: HasShareApp {
                       success: @escaping (EmailSharePollingResult?)->Void,
                       error: @escaping(ExtoleError) -> Void) {
         shareApp.share(email: email, success: success, error: error)
-    }
-    
-    public var selectedShareableCode: String? {
-        get {
-            return shareApp.selectedShareableCode
-        }
     }
 }

@@ -6,12 +6,12 @@ import ExtoleKit
 
 class IdentifyViewController: UIViewController {
     
-    var shareApp: ExtoleShareApp!
+    var santaApp: ExtoleSanta!
     
     var emailText: UITextField!
     
-    init(with shareApp: ExtoleShareApp) {
-        self.shareApp = shareApp
+    init(with santaApp: ExtoleSanta) {
+        self.santaApp = santaApp
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -22,7 +22,7 @@ class IdentifyViewController: UIViewController {
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
             let identify = MyProfile(email: email)
-            shareApp.session?.updateProfile(profile: identify, success: {
+            santaApp.session?.updateProfile(profile: identify, success: {
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)
                 }
@@ -66,6 +66,6 @@ class IdentifyViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.emailText.text = shareApp.profileLoader?.profile?.email ?? ""
+        self.emailText.text = santaApp.profile?.email ?? ""
     }
 }

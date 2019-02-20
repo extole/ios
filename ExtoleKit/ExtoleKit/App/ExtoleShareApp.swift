@@ -10,6 +10,7 @@ public protocol ExtoleShareAppDelegate : class {
     func extoleShareAppReady()
 }
 
+
 /// High level API for Extole Share Experience
 public final class ExtoleShareApp {
     /// Underlying Extole app

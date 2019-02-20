@@ -35,10 +35,10 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var shareButton : UIBarButtonItem!
     var toolbar: UIToolbar!
     
-    var shareApp: ExtoleShareApp!
+    var santaApp: ExtoleSanta!
     
-    init(with shareApp: ExtoleShareApp) {
-        self.shareApp = shareApp
+    init(with santaApp: ExtoleSanta) {
+        self.santaApp = santaApp
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -52,7 +52,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     override func viewWillAppear(_ animated: Bool) {
-        self.wishItems = shareApp.selectedShareable?.data ?? [:]
+        self.wishItems = santaApp.selectedShareable?.data ?? [:]
         wishList.reloadData()
     }
     
@@ -69,7 +69,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         navigationItem.rightBarButtonItems = [shareButton, addButton]
         
-        let message = shareApp.settingsLoader?.zoneData?.shareMessage ?? "Dear Santa, check my wishlist at"
+        let message = santaApp.shareSettings?.shareMessage ?? "Dear Santa, check my wishlist at"
         messageText = view.newLabel(text: message)
         messageText.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         if #available(iOS 11.0, *) {
@@ -99,8 +99,8 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func addWishToShareable(item: String) {
         self.wishItems[item] = "please-santa"
         let updateShareable = UpdateShareable.init(data: self.wishItems)
-        let shareableCode = self.shareApp.selectedShareable?.code
-        self.shareApp.session?.updateShareable(code: shareableCode!,
+        let shareableCode = self.santaApp.selectedShareable?.code
+        self.santaApp.session?.updateShareable(code: shareableCode!,
                                                 shareable: updateShareable,
                                                 success: {
                                                     DispatchQueue.main.async {
@@ -132,7 +132,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     @objc func handleShare(_ sender: UIButton) {
-        guard let shareLink = shareApp.selectedShareable?.link else {
+        guard let shareLink = santaApp.selectedShareable?.link else {
             self.showError(message: "No Shareable")
             return
         }
@@ -141,7 +141,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
                                        message: fullMessage,
                                        shortMessage: shareLink)
         let textToShare = [ shareItem  ]
-        self.extoleShare = ExtoleShareActivity.init(extoleApp: self.shareApp)
+        self.extoleShare = ExtoleShareActivity.init(santaApp: self.santaApp)
         let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: [self.extoleShare])
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
@@ -153,7 +153,7 @@ class ShareViewController: UIViewController, UITableViewDelegate, UITableViewDat
             if let completedActivity = activityType, completed {
                 switch (completedActivity) {
                     case ExtoleShare: break
-                default : self.shareApp.signalShare(channel: completedActivity.rawValue, success : { _ in }, error : { _ in })
+                default : self.santaApp.signalShare(channel: completedActivity.rawValue, success : { _ in }, error : { _ in })
                 }
                 
             }

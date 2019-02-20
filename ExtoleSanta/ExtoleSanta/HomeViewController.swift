@@ -6,7 +6,7 @@ import ExtoleKit
 
 class HomeViewController : UITableViewController {
    
-    var shareApp: ExtoleShareApp!
+    var santaApp: ExtoleSanta!
     var refreshControlCompat: UIRefreshControl?
     
     var identifyViewController: IdentifyViewController!
@@ -57,11 +57,10 @@ class HomeViewController : UITableViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.shareApp = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
-                                       programLabel: "refer-a-friend", delegate: self)
-        self.identifyViewController = IdentifyViewController.init(with : shareApp)
-        self.profileViewController = ProfileViewController.init(with : shareApp)
-        self.shareController = ShareViewController(with: shareApp)
+        self.santaApp = ExtoleSanta(delegate: self)
+        self.identifyViewController = IdentifyViewController.init(with : santaApp)
+        self.profileViewController = ProfileViewController.init(with : santaApp)
+        self.shareController = ShareViewController(with: santaApp)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -74,7 +73,7 @@ class HomeViewController : UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        shareApp.activate()
+        santaApp.activate()
         self.title = "Home"
         self.view.backgroundColor = UIColor.white
         
@@ -93,7 +92,7 @@ class HomeViewController : UITableViewController {
     }
     
     @objc private func refreshData(_ sender: Any) {
-        shareApp.reload() {
+        santaApp.reload() {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.refreshControlCompat?.endRefreshing()
@@ -103,13 +102,13 @@ class HomeViewController : UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let selectedSection = sections[section]
-        return selectedSection.getMainSection(profile: shareApp.profileLoader.profile).controls.count
+        return selectedSection.getMainSection(profile: santaApp.profile).controls.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         let section = sections[indexPath.section]
-        let value = section.getMainSection(profile: shareApp.profileLoader.profile).controls[indexPath.row]()
+        let value = section.getMainSection(profile: santaApp.profile).controls[indexPath.row]()
         
         if let presentValue = value {
             cell.textLabel?.text = presentValue
@@ -126,7 +125,7 @@ class HomeViewController : UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let selectedSection = sections[section]
-        return selectedSection.getMainSection(profile: shareApp.profileLoader.profile).name;
+        return selectedSection.getMainSection(profile: santaApp.profile).name;
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -146,7 +145,7 @@ class HomeViewController : UITableViewController {
         DispatchQueue.main.async {
             self.navigationItem.title = "Home"
             self.tableView.reloadData()
-            if let _ = self.shareApp.profileLoader.profile {
+            if let _ = self.santaApp.profile {
                 
                 let logout = UIBarButtonItem.init(title: "Logout", style: .plain, target: self, action: #selector(self.logoutClick))
                 self.navigationItem.leftBarButtonItem = logout
@@ -163,7 +162,7 @@ class HomeViewController : UITableViewController {
     }
     
     @objc func anonymousClick(_ sender: UIButton) {
-        shareApp.session?.updateProfile(profile: MyProfile.init(),
+        santaApp.session?.updateProfile(profile: MyProfile.init(),
                                          success: {
                                             
         }, error : { error in
@@ -180,25 +179,21 @@ class HomeViewController : UITableViewController {
         let logoutConfimation = UIAlertController(title: "Logout", message: "Confirm logout.", preferredStyle: .actionSheet)
         
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes, Log me out", comment: "Default action"), style: .destructive, handler: { _ in
-            self.shareApp.reset()
+            self.santaApp.reset()
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel action"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
     }
 }
 
-extension HomeViewController : ExtoleShareAppDelegate {
-    func extoleShareAppBusy() {
-        DispatchQueue.main.async {
-            self.refreshControlCompat?.beginRefreshing()
-            self.showState()
-        }
+extension HomeViewController : ExtoleSantaDelegate {
+    func santaIsBusy() {
+        self.refreshControlCompat?.beginRefreshing()
+        self.showState()
     }
     
-    func extoleShareAppReady() {
-        DispatchQueue.main.async {
-            self.refreshControlCompat?.endRefreshing()
-            self.showState()
-        }
+    func santaIsReady() {
+        self.refreshControlCompat?.endRefreshing()
+        self.showState()
     }
 }

@@ -18,6 +18,7 @@
 		4925B8C5220DB07200D9CD4A /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BE220DB07200D9CD4A /* ShareViewController.swift */; };
 		4925B8C6220DB07200D9CD4A /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BF220DB07200D9CD4A /* ProfileViewController.swift */; };
 		4925B8C8220DB07200D9CD4A /* IdentifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8C1220DB07200D9CD4A /* IdentifyViewController.swift */; };
+		49E800F3221D8A17007281DE /* ExtoleSanta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E800F2221D8A17007281DE /* ExtoleSanta.swift */; };
 		49FBE83C2211BDE8006AEFEB /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B88E220DAC5E00D9CD4A /* ExtoleKit.framework */; };
 		49FBE83D2211BDE8006AEFEB /* ExtoleKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B88E220DAC5E00D9CD4A /* ExtoleKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49FBE8402212FD4E006AEFEB /* ExtoleShareActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FBE83F2212FD4E006AEFEB /* ExtoleShareActivity.swift */; };
@@ -65,6 +66,7 @@
 		4925B8BF220DB07200D9CD4A /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		4925B8C1220DB07200D9CD4A /* IdentifyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentifyViewController.swift; sourceTree = "<group>"; };
 		4925B8D3220DC10100D9CD4A /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49E800F2221D8A17007281DE /* ExtoleSanta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleSanta.swift; sourceTree = "<group>"; };
 		49FBE83F2212FD4E006AEFEB /* ExtoleShareActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleShareActivity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +124,7 @@
 				4925B876220DAC4100D9CD4A /* LaunchScreen.storyboard */,
 				4925B879220DAC4100D9CD4A /* Info.plist */,
 				49FBE83F2212FD4E006AEFEB /* ExtoleShareActivity.swift */,
+				49E800F2221D8A17007281DE /* ExtoleSanta.swift */,
 			);
 			path = ExtoleSanta;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 				4925B8C6220DB07200D9CD4A /* ProfileViewController.swift in Sources */,
 				4925B8C8220DB07200D9CD4A /* IdentifyViewController.swift in Sources */,
 				49FBE8402212FD4E006AEFEB /* ExtoleShareActivity.swift in Sources */,
+				49E800F3221D8A17007281DE /* ExtoleSanta.swift in Sources */,
 				4925B8C4220DB07200D9CD4A /* Common.swift in Sources */,
 				4925B8C2220DB07200D9CD4A /* HomeViewController.swift in Sources */,
 			);

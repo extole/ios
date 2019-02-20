@@ -8,8 +8,17 @@ protocol ExtoleSantaDelegate: class {
     func santaIsReady()
 }
 
+struct ShareSettings : Codable {
+    public let shareMessage: String
+}
+
 class ExtoleSanta : ShareExperince {
 
+    /// Loads consumer profile
+    public private(set) var profileLoader = ProfileLoader()
+    /// Loads share settings
+    public private(set) var settingsLoader = ZoneLoader<ShareSettings>(zoneName: "settings")
+    
     init(delegate: ExtoleSantaDelegate) {
         self.delegate = delegate
     }
@@ -17,7 +26,19 @@ class ExtoleSanta : ShareExperince {
     
     lazy var shareApp = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
                                        programLabel: "refer-a-friend",
-                                       delegate: self)
+                                       delegate: self,
+                                       extraLoaders: [profileLoader, settingsLoader])
+    var profile: MyProfile? {
+        get {
+            return profileLoader.profile
+        }
+    }
+    
+    var shareSettings : ShareSettings? {
+        get {
+            return settingsLoader.zoneData
+        }
+    }
     
 }
 

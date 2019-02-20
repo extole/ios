@@ -24,24 +24,23 @@ public final class ExtoleShareApp {
     
     /// Active consumer session
     public private(set) var session: ConsumerSession?
-    /// Loads consumer profile
-    public private(set) var profileLoader: ProfileLoader!
     /// Loads consumer shareables
     public private(set) var shareableLoader: ShareableLoader!
-    /// Loads share settings
-    public private(set) var settingsLoader: ZoneLoader<ShareSettings>!
 
     /// Creates new Extole share experince
-    public init(programUrl: URL, programLabel label: String, delegate: ExtoleShareAppDelegate?) {
+    public init(programUrl: URL, programLabel label: String, delegate: ExtoleShareAppDelegate?,
+                extraLoaders: [Loader]) {
         self.label = label
         self.extoleApp = ExtoleApp(with: ProgramURL(baseUrl: programUrl), delegate: self)
         self.delegate = delegate
         
-        profileLoader = ProfileLoader()
-        settingsLoader = ZoneLoader(zoneName: "settings")
         shareableLoader = ShareableLoader(delegate: self)
         
-        self.preloader = CompositeLoader(loaders: [profileLoader!, settingsLoader!, shareableLoader!])
+        var loaders = [Loader]()
+        loaders.append(shareableLoader)
+        loaders.append(contentsOf: extraLoaders)
+        
+        self.preloader = CompositeLoader(loaders: loaders)
     }
     /// Activate will resume Extole session, and prepare for sharing
     public func activate() {
@@ -165,6 +164,4 @@ extension ExtoleShareApp : ExtoleAppDelegate {
     
 }
 
-public struct ShareSettings : Codable {
-    public let shareMessage: String
-}
+

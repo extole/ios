@@ -46,22 +46,12 @@ public extension ShareExperince {
         }
     }
     
-    var profile: MyProfile? {
-        get {
-            return shareApp.profileLoader.profile
-        }
-    }
     var selectedShareable: MyShareable? {
         get {
             return shareApp.selectedShareable
         }
     }
-    var shareSettings : ShareSettings? {
-        get {
-            return shareApp.settingsLoader.zoneData
-        }
-    }
-    
+
     func reset() {
         shareApp.reset()
     }

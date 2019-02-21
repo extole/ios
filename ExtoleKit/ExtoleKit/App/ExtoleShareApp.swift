@@ -140,6 +140,7 @@ extension ExtoleShareApp : ShareableLoaderDelegate {
 }
 extension ExtoleShareApp : ExtoleAppDelegate {
     public func extoleAppInvalid() {
+        self.delegate?.extoleShareAppBusy()
         session = nil
     }
     
@@ -148,9 +149,5 @@ extension ExtoleShareApp : ExtoleAppDelegate {
         preloader.load(session: session){
             self.delegate?.extoleShareAppReady()
         }
-    }
-    
-    public func extoleAppError(error: ExtoleError) {
-        
     }
 }

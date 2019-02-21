@@ -18,7 +18,7 @@ public func extoleDebug(format: StaticString, arg: CVarArg? = nil) {
     }
 }
 
-public func extoleInfo(format: StaticString, arg: CVarArg? = nil) {
+public func extoleInfo(format: StaticString, arg: String? = nil) {
     if #available(iOS 10.0, *) {
         os_log(format, log: modelLog, type: OSLogType.info, arg ?? "")
     } else {

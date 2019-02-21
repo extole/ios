@@ -8,12 +8,12 @@ public protocol ExtoleAppDelegate : class {
     func extoleAppInvalid()
     /// ExtoleApp is ready
     func extoleAppReady(session: ConsumerSession)
-    /// ExtoleApp is ready
-    func extoleAppError(error: ExtoleError)
 }
 
 /// High level API for Extole
 public final class ExtoleApp {
+    let errorRecoveryQueue = DispatchQueue(label: "ExtoleApp.errorRecovery")
+    var errorCount = 0
     /// stores key-value pairs for Extole
     public let settings = UserDefaults(suiteName: "extoleKit")!
     /// program url
@@ -58,20 +58,40 @@ public final class ExtoleApp {
 /// Handlers events from sessionManager
 extension ExtoleApp : SessionManagerDelegate{
     
-    public func serverError(error: ExtoleError) {
-        delegate?.extoleAppError(error: error)
+    public func onSessionServerError(error: ExtoleError) {
+        errorCount += 1
+        extoleInfo(format: "Session error %{public}@", arg: String(errorCount))
+        delegate?.extoleAppInvalid()
+        if errorCount > 20 {
+            extoleInfo(format: "Max error count reached, giving up")
+            return
+        }
+        let retryAfter = 5.0 * Double(errorCount * errorCount)
+        extoleInfo(format: "Schedule error recovery in %{public}@ seconds", arg: String(retryAfter))
+        errorRecoveryQueue.asyncAfter(deadline: .now() + retryAfter) {
+            if let existingToken = self.savedToken {
+                extoleInfo(format: "resuming session after error")
+                self.sessionManager.resumeSession(existingToken: existingToken)
+            } else {
+                extoleInfo(format: "new session after error")
+                self.sessionManager.newSession()
+            }
+        }
     }
     
     public func onSessionInvalid() {
         delegate?.extoleAppInvalid()
+        savedToken = nil
         self.sessionManager.newSession()
     }
     
     public func onSessionDeleted() {
+        savedToken = nil
         delegate?.extoleAppInvalid()
     }
     
     public func onNewSession(session: ConsumerSession) {
+        errorCount = 0
         self.savedToken = session.accessToken
         delegate?.extoleAppReady(session: session)
     }

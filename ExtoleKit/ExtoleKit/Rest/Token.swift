@@ -7,9 +7,13 @@ func tokenUrl(baseUrl: URL) -> URL {
 }
 
 public enum GetTokenError : ExtoleError {
+    
     public static func fromCode(code: String) -> ExtoleError? {
         switch(code) {
-            case "invalid_access_token": return GetTokenError.invalidAccessToken
+            case "invalid_access_token": return invalidAccessToken
+            case "expired_access_token": return expiredAccessToken
+            case "invalid_program_domain": return invalidProgramDomain
+            case "missing_program_domain": return missingProgramDomain
             default: return nil
         }
     }
@@ -19,6 +23,9 @@ public enum GetTokenError : ExtoleError {
     }
     case invalidProtocol(error: ExtoleApiError)
     case invalidAccessToken
+    case expiredAccessToken
+    case invalidProgramDomain
+    case missingProgramDomain
 }
 
 public struct ConsumerToken : Codable {

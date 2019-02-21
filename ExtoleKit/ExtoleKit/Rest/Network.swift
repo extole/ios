@@ -111,6 +111,7 @@ public class Network {
         executor.dataTask(with: request) { data, response, error in
             if let serverError = error {
                 errorHandler(ExtoleApiError.serverError(error: serverError))
+                return
             }
             guard let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode) else {

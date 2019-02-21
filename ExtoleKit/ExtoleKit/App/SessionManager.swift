@@ -7,7 +7,7 @@ public protocol SessionManagerDelegate : class {
     func onSessionInvalid()
     func onSessionDeleted()
     func onNewSession(session: ConsumerSession)
-    func serverError(error: ExtoleError)
+    func onSessionServerError(error: ExtoleError)
 }
 
 /// Manages Extole consumer session
@@ -26,8 +26,10 @@ public final class SessionManager {
             self.onVerifiedToken(verifiedToken: verifiedToken!)
         }, error: { verifyTokenError in
             switch(verifyTokenError) {
-            case .invalidAccessToken :self.delegate?.onSessionInvalid()
-            default: self.delegate?.serverError(error: verifyTokenError)
+            case .invalidAccessToken: self.delegate?.onSessionInvalid()
+            case .expiredAccessToken: self.delegate?.onSessionInvalid()
+            case .invalidProgramDomain: self.delegate?.onSessionInvalid()
+            default: self.delegate?.onSessionServerError(error: verifyTokenError)
             }
         })
     }
@@ -40,7 +42,9 @@ public final class SessionManager {
         }, error: { verifyTokenError in
             switch(verifyTokenError) {
             case .invalidAccessToken :self.delegate?.onSessionInvalid()
-            default: self.delegate?.serverError(error: verifyTokenError)
+            case .expiredAccessToken: self.delegate?.onSessionInvalid()
+            case .invalidProgramDomain: self.delegate?.onSessionInvalid()
+            default: self.delegate?.onSessionServerError(error: verifyTokenError)
             }
         })
     }
@@ -50,7 +54,7 @@ public final class SessionManager {
         self.program.getToken(success: { token in
             self.onVerifiedToken(verifiedToken: token!)
         }, error: { error in
-            self.delegate?.serverError(error: error);
+            self.delegate?.onSessionServerError(error: error);
         })
     }
     
@@ -58,7 +62,7 @@ public final class SessionManager {
         session!.deleteToken(success: {
             self.delegate?.onSessionDeleted()
         }, error: { error in
-            self.delegate?.serverError(error: error);
+            self.delegate?.onSessionServerError(error: error);
         })
     }
     

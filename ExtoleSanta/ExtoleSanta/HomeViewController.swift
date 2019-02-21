@@ -188,6 +188,8 @@ class HomeViewController : UITableViewController {
 
 extension HomeViewController : ExtoleSantaDelegate {
     func santaIsBusy() {
+        let offset = CGPoint(x: 0, y: -200)
+        self.tableView.setContentOffset(offset, animated: true)
         self.refreshControlCompat?.beginRefreshing()
         self.showState()
     }

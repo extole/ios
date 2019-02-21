@@ -31,7 +31,7 @@ class ProfileViewController: UIViewController {
             }
         }, error:  { error in
             DispatchQueue.main.async {
-                self.showError(message: "\(error)")
+                self.showError(title: "Update error", message: String(describing: error))
             }
         })
     }

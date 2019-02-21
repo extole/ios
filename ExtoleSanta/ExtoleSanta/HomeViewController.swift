@@ -195,13 +195,18 @@ class HomeViewController : UITableViewController {
         let wishPicker = UIAlertController(title: "Pick your wish", message: "Santa has following items", preferredStyle: .actionSheet)
         wishPicker.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
-        wishPicker.addAction(UIAlertAction(title: NSLocalizedString("Playstation", comment: "Great Education tool"), style: .default,  handler: { _ in
-            self.addWishToShareable(item: "Playstation")
-        }))
+        [ santaApp.shareSettings?.item1,
+          santaApp.shareSettings?.item2,
+          santaApp.shareSettings?.item3,
+          santaApp.shareSettings?.item4].forEach { item in
+            if let giftItem = item {
+            wishPicker.addAction(UIAlertAction(title: NSLocalizedString(giftItem, comment: giftItem),
+                                               style: .default,  handler: { _ in
+                                                self.addWishToShareable(item: giftItem)
+            }))
+            }
+        }
         
-        wishPicker.addAction(UIAlertAction(title: NSLocalizedString("XBox", comment: "Great Education tool"), style: .default,  handler: { _ in
-            self.addWishToShareable(item: "XBox")
-        }))
         wishPicker.addAction(UIAlertAction(title: NSLocalizedString("I am good", comment: "Dont add any wishes"), style: .cancel, handler: nil))
         self.present(wishPicker, animated: true, completion: nil)
     }
@@ -216,7 +221,7 @@ class HomeViewController : UITableViewController {
                                                success: {
                                                 self.refreshData(self)
                                                 } , error : { error in
-            self.showError(message: "Update Error \(String(describing: error))")
+                                                    self.showError(title: "UpdateError", message: String(describing: error))
         })
         
     }
@@ -227,7 +232,7 @@ class HomeViewController : UITableViewController {
     
     @objc func handleShare(_ sender: UIButton) {
         guard let shareLink = santaApp.selectedShareable?.link else {
-            self.showError(message: "No Shareable")
+            self.showError(title: "Invalid state", message: "No Shareable")
             return
         }
         let message = santaApp.shareSettings?.shareMessage ?? "Default message"
@@ -249,9 +254,18 @@ class HomeViewController : UITableViewController {
             if let completedActivity = activityType, completed {
                 switch (completedActivity) {
                 case ExtoleShare: break
-                default : self.santaApp.signalShare(channel: completedActivity.rawValue, success : { _ in }, error : { _ in })
+                default : do {
+                    self.busyIndicator.startAnimating()
+                    self.santaApp.signalShare(channel: completedActivity.rawValue,
+                                              success : { _ in
+                                                self.busyIndicator.stopAnimating()
+                                                },
+                                              error : { error in
+                                                self.busyIndicator.stopAnimating()
+                                                self.showError(title: "Share Error", message: String(describing: error))
+                                                })
+                    }
                 }
-                
             }
         }
         self.present(activityViewController, animated: true, completion: nil)

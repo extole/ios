@@ -74,11 +74,7 @@ class ExtoleShareViewController: UIViewController {
                             success: { _ in
                 self.activity.activityDidFinish(true)
             }, error : { error in
-                let errorAlert = UIAlertController(title: "Share Error", message: "\(error)", preferredStyle: .alert)
-                errorAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: { _ in
-                    self.activity.activityDidFinish(false)
-                }))
-                self.present(errorAlert, animated: true, completion: nil)
+                self.showError(title: "Share Error", message: String(describing: error))
             })
             
         }

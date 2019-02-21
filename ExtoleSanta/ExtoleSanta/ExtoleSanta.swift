@@ -9,7 +9,11 @@ protocol ExtoleSantaDelegate: class {
 }
 
 struct ShareSettings : Codable {
-    public let shareMessage: String
+    let shareMessage: String?
+    let item1: String?
+    let item2: String?
+    let item3: String?
+    let item4: String?
 }
 
 class ExtoleSanta : HasShareApp, ShareExperience {

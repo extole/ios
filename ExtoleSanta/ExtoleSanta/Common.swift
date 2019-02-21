@@ -61,9 +61,9 @@ extension  UIViewController {
     }
     
 
-    func showError(message : String) {
+    func showError(title: String, message : String) {
         DispatchQueue.main.async {
-            let errorAlert = UIAlertController(title: "Identify Error", message: message, preferredStyle: .alert)
+            let errorAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             errorAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: { _ in
                 //
             }))

@@ -43,7 +43,7 @@ class ExtoleSanta : HasShareApp, ShareExperience {
 }
 
 extension ExtoleSanta : ExtoleShareAppDelegate {
-    func extoleShareAppBusy() {
+    func extoleShareAppInvalid() {
         DispatchQueue.main.async {
             self.delegate?.santaIsBusy()
         }

@@ -45,7 +45,7 @@ public enum PollShareError : ExtoleError {
 public struct CustomSharePollingResult : Codable {
     let polling_id : String
     let status : String
-    let share_id : String
+    let share_id : String?
 }
 
 extension ConsumerSession {

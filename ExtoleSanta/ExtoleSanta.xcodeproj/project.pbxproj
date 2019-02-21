@@ -15,7 +15,6 @@
 		4925B8C2220DB07200D9CD4A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BB220DB07200D9CD4A /* HomeViewController.swift */; };
 		4925B8C3220DB07200D9CD4A /* ShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BC220DB07200D9CD4A /* ShareItem.swift */; };
 		4925B8C4220DB07200D9CD4A /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BD220DB07200D9CD4A /* Common.swift */; };
-		4925B8C5220DB07200D9CD4A /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BE220DB07200D9CD4A /* ShareViewController.swift */; };
 		4925B8C6220DB07200D9CD4A /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8BF220DB07200D9CD4A /* ProfileViewController.swift */; };
 		4925B8C8220DB07200D9CD4A /* IdentifyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8C1220DB07200D9CD4A /* IdentifyViewController.swift */; };
 		49E800F3221D8A17007281DE /* ExtoleSanta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E800F2221D8A17007281DE /* ExtoleSanta.swift */; };
@@ -62,7 +61,6 @@
 		4925B8BB220DB07200D9CD4A /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		4925B8BC220DB07200D9CD4A /* ShareItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareItem.swift; sourceTree = "<group>"; };
 		4925B8BD220DB07200D9CD4A /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
-		4925B8BE220DB07200D9CD4A /* ShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		4925B8BF220DB07200D9CD4A /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		4925B8C1220DB07200D9CD4A /* IdentifyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentifyViewController.swift; sourceTree = "<group>"; };
 		4925B8D3220DC10100D9CD4A /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,7 +115,6 @@
 				4925B8C1220DB07200D9CD4A /* IdentifyViewController.swift */,
 				4925B8BF220DB07200D9CD4A /* ProfileViewController.swift */,
 				4925B8BC220DB07200D9CD4A /* ShareItem.swift */,
-				4925B8BE220DB07200D9CD4A /* ShareViewController.swift */,
 				4925B86D220DAC4000D9CD4A /* AppDelegate.swift */,
 				4925B871220DAC4000D9CD4A /* Main.storyboard */,
 				4925B874220DAC4100D9CD4A /* Assets.xcassets */,
@@ -248,7 +245,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4925B8C5220DB07200D9CD4A /* ShareViewController.swift in Sources */,
 				4925B8C3220DB07200D9CD4A /* ShareItem.swift in Sources */,
 				4925B86E220DAC4000D9CD4A /* AppDelegate.swift in Sources */,
 				4925B8C6220DB07200D9CD4A /* ProfileViewController.swift in Sources */,

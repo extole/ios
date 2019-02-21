@@ -24,8 +24,10 @@ class ProfileViewController: UIViewController {
         let updatedProfile = MyProfile.init(first_name: firstNameText.text,
                                             last_name: lastNameText.text)
         santaApp.session?.updateProfile(profile: updatedProfile, success: {
-            DispatchQueue.main.async {
-                self.navigationController?.popViewController(animated: true)
+            self.santaApp.reload {
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
             }
         }, error:  { error in
             DispatchQueue.main.async {

@@ -86,8 +86,9 @@ extension ExtoleApp : SessionManagerDelegate{
     }
     
     public func onSessionDeleted() {
-        savedToken = nil
         delegate?.extoleAppInvalid()
+        savedToken = nil
+        self.sessionManager.newSession()
     }
     
     public func onNewSession(session: ConsumerSession) {

@@ -5,7 +5,7 @@ import Foundation
 /// Handles events for ExtoleShareApp
 public protocol ExtoleShareAppDelegate : class {
     /// signals ExtoleShareApp is busy
-    func extoleShareAppBusy()
+    func extoleShareAppInvalid()
     /// signals ExtoleShareApp is ready
     func extoleShareAppReady()
 }
@@ -67,12 +67,12 @@ public final class ExtoleShareApp : ShareExperience {
     public func reload(complete: @escaping () -> Void) {
         if let session = session {
             session.getToken(success: { token in
-                self.delegate?.extoleShareAppBusy()
                 self.preloader?.load(session: session, complete: {
-                    self.delegate?.extoleShareAppReady()
+                    complete()
                 })
             }) { error in
                 complete()
+                self.extoleApp.onSessionServerError(error: error)
             }
         }
     }
@@ -94,12 +94,14 @@ public final class ExtoleShareApp : ShareExperience {
 
     /// Sends a share to given email, using Extole email service
     public func share(email: String,
+                      message: String,
                       success: @escaping (EmailSharePollingResult?)->Void,
                       error: @escaping(ExtoleError) -> Void) {
         extoleInfo(format: "sharing to email %s", arg: email)
         if let session = session, let shareableCode = selectedShareable?.code {
             let share = EmailShare.init(advocate_code: shareableCode,
-                                        recipient_email: email)
+                                        recipient_email: email,
+                                        message: message)
             session.emailShare(share: share, success: { pollingResponse in
                 session.pollEmailShare(pollingResponse: pollingResponse!,success:success, error: error)
             }, error: error)
@@ -140,7 +142,7 @@ extension ExtoleShareApp : ShareableLoaderDelegate {
 }
 extension ExtoleShareApp : ExtoleAppDelegate {
     public func extoleAppInvalid() {
-        self.delegate?.extoleShareAppBusy()
+        self.delegate?.extoleShareAppInvalid()
         session = nil
     }
     

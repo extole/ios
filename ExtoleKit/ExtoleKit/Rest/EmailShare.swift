@@ -3,8 +3,8 @@
 import Foundation
 
 public struct EmailShare : Codable {
-    public init(advocate_code: String, recipient_email: String? = nil,
-         message: String? = nil,
+    public init(advocate_code: String, recipient_email: String,
+         message: String,
          subject: String? = nil,
          data: [String:String]? = nil) {
         self.advocate_code = advocate_code
@@ -14,7 +14,7 @@ public struct EmailShare : Codable {
         self.data = data
     }
     let advocate_code: String
-    let message: String?
+    let message: String
     let subject: String?
     let recipient_email: String?
     let data: [String:String]?
@@ -48,7 +48,7 @@ public enum PollEmailShareError : ExtoleError {
 public struct EmailSharePollingResult : Codable {
     let polling_id : String
     let status : String
-    let share_id : String
+    let share_id : String?
 }
 
 extension ConsumerSession {

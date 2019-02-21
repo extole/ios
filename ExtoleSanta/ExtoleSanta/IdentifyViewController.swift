@@ -23,8 +23,10 @@ class IdentifyViewController: UIViewController {
         if let email = emailText.text {
             let identify = MyProfile(email: email)
             santaApp.session?.updateProfile(profile: identify, success: {
-                DispatchQueue.main.async {
-                    self.navigationController?.popViewController(animated: true)
+                self.santaApp.reload {
+                    DispatchQueue.main.async {
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 }
             }, error: { error in
                 DispatchQueue.main.async {

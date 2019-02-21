@@ -68,7 +68,8 @@ class ShareTest: XCTestCase {
 
         let pollingExpectation = expectation(description: "share polling")
         programSession.pollCustomShare(pollingResponse: sharePollingId, success: { customShareResult in
-            XCTAssertGreaterThan(customShareResult!.share_id, "1111")
+            XCTAssertNotNil(customShareResult?.share_id)
+            XCTAssertGreaterThan(customShareResult!.share_id!, "1111")
             pollingExpectation.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

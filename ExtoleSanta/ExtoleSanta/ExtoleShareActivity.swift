@@ -7,14 +7,16 @@ import ExtoleKit
 let ExtoleShare = UIActivity.ActivityType.init("ExtoleShare")
 
 class ExtoleShareActivity: UIActivity {
-    var santaApp: ExtoleSanta
+    let santaApp: ExtoleSanta
+    let shareItem: ShareItem
     
     lazy var shareController: UIViewController = {
         return UINavigationController.init(rootViewController:  ExtoleShareViewController.init(with: self.santaApp, activity: self))
     }()
     
-    init(santaApp: ExtoleSanta){
+    init(santaApp: ExtoleSanta, shareItem: ShareItem){
         self.santaApp = santaApp
+        self.shareItem = shareItem
     }
     // returns activity title
     override var activityTitle: String?{
@@ -43,6 +45,7 @@ class ExtoleShareActivity: UIActivity {
     
     //prepare the data to perform with
     override func prepare(withActivityItems activityItems: [Any]) {
+        
     }
 
 }
@@ -50,13 +53,13 @@ class ExtoleShareActivity: UIActivity {
 class ExtoleShareViewController: UIViewController {
     
     var santaApp: ExtoleSanta!
-    var activity: UIActivity
+    var activity: ExtoleShareActivity
     
     var emailText: UITextField!
     
     init(with santaApp: ExtoleSanta, activity: UIActivity) {
         self.santaApp = santaApp
-        self.activity = activity
+        self.activity = activity as! ExtoleShareActivity
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -66,10 +69,18 @@ class ExtoleShareViewController: UIViewController {
     
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
-            santaApp.share(email: email, success: { _ in }, error : { _ in })
-            self.activity.activityDidFinish(true)
-            //self.dismiss(animated: true)
-
+            santaApp.share(email: email,
+                            message: activity.shareItem.message,
+                            success: { _ in
+                self.activity.activityDidFinish(true)
+            }, error : { error in
+                let errorAlert = UIAlertController(title: "Share Error", message: "\(error)", preferredStyle: .alert)
+                errorAlert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: { _ in
+                    self.activity.activityDidFinish(false)
+                }))
+                self.present(errorAlert, animated: true, completion: nil)
+            })
+            
         }
     }
 

@@ -4,13 +4,15 @@ import Foundation
 import UIKit
 import ExtoleKit
 
-class HomeViewController : UITableViewController {
+class HomeViewController : UIViewController {
    
     var santaApp: ExtoleSanta!
     var refreshControlCompat: UIRefreshControl?
+    var tableView: UITableView!
     
     var identifyViewController: IdentifyViewController!
     var profileViewController: ProfileViewController!
+    var activityViewController: UIActivityViewController!
     
     let cellId = "cellId"
     
@@ -29,7 +31,11 @@ class HomeViewController : UITableViewController {
         case Wishlist
 
         func wishList(shareable: MyShareable?) -> [() -> String?] {
-            let wishItems = shareable?.data ?? [:]
+            var wishItems = shareable?.data ?? [:]
+            if wishItems.isEmpty {
+                wishItems["Add items from Extole Santa list"] = "default"
+            }
+            
             return wishItems.keys.map { key -> (() -> String?) in
                 return {
                     key
@@ -66,7 +72,7 @@ class HomeViewController : UITableViewController {
         }
     }
     
-    let sections: [Section] = [.Identity, .Profile, .Wishlist]
+    let sections: [Section] = [.Wishlist, .Identity, .Profile]
     
     let busyIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     
@@ -83,12 +89,33 @@ class HomeViewController : UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        santaApp.activate()
         self.title = "Home"
         self.view.backgroundColor = UIColor.white
+        tableView = self.view.newTableView()
+
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        if #available(iOS 11.0, *) {
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        } else {
+            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: self.safeArea()).isActive = true
+            // Fallback on earlier versions
+        }
+        tableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0).isActive = true
+        tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8).isActive = true
         
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
-        
+
+        tableView.separatorStyle = .singleLine
+
+        busyIndicator.frame = CGRect(x: 0, y: 0, width: 240, height: 240)
+        var viewCenter = view.center
+        viewCenter.y /= 2
+        busyIndicator.center = viewCenter
+        self.view.addSubview(busyIndicator)
+        self.view.bringSubviewToFront(busyIndicator)
+
         self.refreshControlCompat = UIRefreshControl()
         if #available(iOS 10.0, *) {
             self.tableView.refreshControl = refreshControlCompat
@@ -96,15 +123,9 @@ class HomeViewController : UITableViewController {
             self.tableView.addSubview(refreshControlCompat!)
         }
         refreshControlCompat?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        
-        tableView.separatorStyle = .singleLine
-        
-        busyIndicator.frame = CGRect(x: 0, y: 0, width: 240, height: 240)
-        busyIndicator.center = view.center
-        self.view.addSubview(busyIndicator)
-        self.view.bringSubviewToFront(busyIndicator)
-        
-        showState()
+
+        santaApp.activate()
+        busyIndicator.startAnimating()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -120,48 +141,7 @@ class HomeViewController : UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let selectedSection = sections[section]
-        return selectedSection.getMainSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).controls.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        let section = sections[indexPath.section]
-        let value = section.getMainSection(profile: santaApp.profile,
-                                           shareable: santaApp.selectedShareable).controls[indexPath.row]()
-        
-        if let presentValue = value {
-            cell.textLabel?.text = presentValue
-            cell.textLabel?.isEnabled = true
-        } else {
-            cell.textLabel?.text = "(none)"
-            cell.textLabel?.isEnabled = false
-            
-        }
-        cell.accessoryType = .disclosureIndicator
-        
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let selectedSection = sections[section]
-        return selectedSection.getMainSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).name;
-    }
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return self.sections.count
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let section = sections[indexPath.section]
-        if let editController = section.getEditController(controller: self) {
-            self.navigationController?.pushViewController(
-                editController, animated: false)
-        }
-        
-    }
-    
     func showState() {
         self.tableView.reloadData()
         if let _ = self.santaApp.session {
@@ -225,11 +205,7 @@ class HomeViewController : UITableViewController {
         })
         
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
-    
+
     @objc func handleShare(_ sender: UIButton) {
         guard let shareLink = santaApp.selectedShareable?.link else {
             self.showError(title: "Invalid state", message: "No Shareable")
@@ -243,7 +219,7 @@ class HomeViewController : UITableViewController {
                                        shortMessage: shareLink)
         let textToShare = [ shareItem  ]
         let extoleShare = ExtoleShareActivity.init(santaApp: self.santaApp, shareItem: shareItem)
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: [extoleShare])
+        self.activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: [extoleShare])
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
         // exclude some activity types from the list (optional)
@@ -258,11 +234,15 @@ class HomeViewController : UITableViewController {
                     self.busyIndicator.startAnimating()
                     self.santaApp.signalShare(channel: completedActivity.rawValue,
                                               success : { _ in
-                                                self.busyIndicator.stopAnimating()
+                                                DispatchQueue.main.async {
+                                                    self.busyIndicator.stopAnimating()
+                                                }
                                                 },
                                               error : { error in
-                                                self.busyIndicator.stopAnimating()
-                                                self.showError(title: "Share Error", message: String(describing: error))
+                                                DispatchQueue.main.async {
+                                                    self.busyIndicator.stopAnimating()
+                                                    self.showError(title: "Share Error", message: String(describing: error))
+                                                    }
                                                 })
                     }
                 }
@@ -281,5 +261,50 @@ extension HomeViewController : ExtoleSantaDelegate {
     func santaIsReady() {
         busyIndicator.stopAnimating()
         self.showState()
+    }
+}
+
+extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let selectedSection = sections[section]
+        return selectedSection.getMainSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).controls.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let section = sections[indexPath.section]
+        let value = section.getMainSection(profile: santaApp.profile,
+                                           shareable: santaApp.selectedShareable).controls[indexPath.row]()
+        
+        if let presentValue = value {
+            cell.textLabel?.text = presentValue
+            cell.textLabel?.isEnabled = true
+        } else {
+            cell.textLabel?.text = "(none)"
+            cell.textLabel?.isEnabled = false
+            
+        }
+        cell.accessoryType = .disclosureIndicator
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let selectedSection = sections[section]
+        return selectedSection.getMainSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).name;
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.sections.count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let section = sections[indexPath.section]
+        if let editController = section.getEditController(controller: self) {
+            self.navigationController?.pushViewController(
+                editController, animated: false)
+        }
+        
     }
 }

@@ -80,6 +80,10 @@ class ExtoleShareViewController: UIViewController {
         }
     }
 
+    @objc func cancel(_ sender: UIButton) {
+        self.activity.activityDidFinish(false)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Santa Postbox"
@@ -105,6 +109,9 @@ class ExtoleShareViewController: UIViewController {
         
         let done = UIBarButtonItem.init(title: "Done", style: .plain, target: self, action: #selector(self.done))
         self.navigationItem.rightBarButtonItem = done
+        
+        let cancel = UIBarButtonItem.init(title: "Cancel", style: .plain, target: self, action: #selector(self.cancel))
+        self.navigationItem.leftBarButtonItem = cancel
     }
     
     override func viewWillAppear(_ animated: Bool) {

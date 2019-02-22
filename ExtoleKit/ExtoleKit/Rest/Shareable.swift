@@ -34,7 +34,7 @@ public struct UpdateShareable : Codable {
     public let data: [String: String]?
 }
 
-public struct MyShareable : Codable {
+@objc public final class MyShareable : NSObject, Codable {
     public init(label: String, code:String? = nil, key:String? = nil) {
         self.label = label
         self.code = code
@@ -42,11 +42,11 @@ public struct MyShareable : Codable {
         self.link = nil
         self.data = nil
     }
-    public let key: String?
-    public let code: String?
-    public let label: String?
-    public let link: String?
-    public let data: [String: String]?
+    @objc public let key: String?
+    @objc public let code: String?
+    @objc public let label: String?
+    @objc public let link: String?
+    @objc public let data: [String: String]?
 }
 public enum GetShareablesError : ExtoleError {
     public static func fromCode(code: String) -> ExtoleError? {
@@ -99,6 +99,16 @@ extension ConsumerSession {
         let request = self.network.getRequest(accessToken: token,
                                  url: url)
         self.network.processRequest(with: request, success: success, error: error)
+    }
+    
+    @objc public func getShareable(code: String, success: @escaping (MyShareable?) -> Void,
+                              error errorCallback: @escaping (String) -> Void) {
+        let url = URL(string: "\(baseUrl)/api/v5/shareables/\(code)")!
+        let request = self.network.getRequest(accessToken: token,
+                                              url: url)
+        self.network.processRequest(with: request, success: success, error: { (error:GetShareablesError) in
+            errorCallback(String(describing: error))
+        })
     }
     
     public func updateShareable(code: String,

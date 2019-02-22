@@ -15,7 +15,6 @@
 		49E9D28022201F1500846166 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E9D27F22201F1500846166 /* main.m */; };
 		49E9D28A22201F1500846166 /* SantaPostboxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E9D28922201F1500846166 /* SantaPostboxTests.m */; };
 		49E9D29C2220237200846166 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E9D29B2220237200846166 /* CoreFoundation.framework */; };
-		49E9D29E2220239000846166 /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E9D29D2220239000846166 /* ExtoleKit.framework */; };
 		49E9D29F2220239000846166 /* ExtoleKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49E9D29D2220239000846166 /* ExtoleKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -68,7 +67,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49E9D29E2220239000846166 /* ExtoleKit.framework in Frameworks */,
 				49E9D29C2220237200846166 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

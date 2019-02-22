@@ -2,10 +2,10 @@
 
 import Foundation
 
-public struct ProgramURL {
+@objc public final class ProgramURL : NSObject {
     let baseUrl: URL
     let network : Network
-    public init(baseUrl: URL, network: Network = Network.init()) {
+    @objc public init(baseUrl: URL, network: Network = Network.init()) {
         self.baseUrl = baseUrl
         self.network = network
     }

@@ -2,7 +2,7 @@
 
 import Foundation
 
-public struct ConsumerSession{
+@objc public final class ConsumerSession: NSObject{
     let program: ProgramURL
     let token: ConsumerToken
     let network = Network.init()
@@ -12,7 +12,7 @@ public struct ConsumerSession{
         }
     }
     
-    public var accessToken : String {
+    @objc public var accessToken : String {
         get {
             return token.access_token
         }

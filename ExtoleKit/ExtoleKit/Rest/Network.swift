@@ -2,10 +2,8 @@
 
 import Foundation
 
-public class NetworkExecutor {
-    public init() {
-        
-    }
+@objc public class NetworkExecutor : NSObject {
+    
     let urlSession = URLSession(configuration: URLSessionConfiguration.ephemeral)
     
     func dataTask(with request: URLRequest,
@@ -16,11 +14,11 @@ public class NetworkExecutor {
     
 }
 
-public class Network {
+@objc public class Network : NSObject {
     
     let executor : NetworkExecutor
     
-    public init(executor: NetworkExecutor = NetworkExecutor.init()) {
+    @objc public init(executor: NetworkExecutor = NetworkExecutor.init()) {
         self.executor = executor
     }
     

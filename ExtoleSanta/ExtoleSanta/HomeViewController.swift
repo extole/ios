@@ -16,63 +16,11 @@ class HomeViewController : UIViewController {
     
     let cellId = "cellId"
     
-    struct MainSection {
-        let name: String
-        let controls: [()->String?]
-    }
-    
     func getIdentity() -> String {
         return "ID"
     }
-    
-    enum Section {
-        case Identity
-        case Profile
-        case Wishlist
 
-        func wishList(shareable: MyShareable?) -> [() -> String?] {
-            var wishItems = shareable?.data ?? [:]
-            if wishItems.isEmpty {
-                wishItems["Add items from Extole Santa list"] = "default"
-            }
-            
-            return wishItems.keys.map { key -> (() -> String?) in
-                return {
-                    key
-                }
-            }
-        }
-        
-        func getMainSection(profile: MyProfile?, shareable: MyShareable?) -> MainSection{
-            switch self {
-            case .Identity:
-                return MainSection(name: "Identity", controls: [{
-                    return profile?.email}
-                    ])
-            case .Profile:
-                return MainSection(name: "Profile", controls: [{
-                        return profile?.first_name
-                    }, {
-                        return profile?.last_name
-                    }])
-            case .Wishlist:
-                return MainSection(name: "Wish List", controls: wishList(shareable: shareable))
-            }
-        }
-        
-        func getEditController(controller: HomeViewController) -> UIViewController? {
-            switch self {
-            case .Identity:
-                return controller.identifyViewController
-            case .Profile:
-                return controller.profileViewController
-            default:
-                return nil
-            }
-        }
-    }
-    
-    let sections: [Section] = [.Wishlist, .Identity, .Profile]
+    let sections: [TableSection] = [.Wishlist, .Identity, .Profile]
     
     let busyIndicator: UIActivityIndicatorView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
     
@@ -98,7 +46,6 @@ class HomeViewController : UIViewController {
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         } else {
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: self.safeArea()).isActive = true
-            // Fallback on earlier versions
         }
         tableView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0).isActive = true
         tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8).isActive = true
@@ -140,7 +87,6 @@ class HomeViewController : UIViewController {
             }
         }
     }
-
 
     func showState() {
         self.tableView.reloadData()
@@ -203,7 +149,6 @@ class HomeViewController : UIViewController {
                                                 } , error : { error in
                                                     self.showError(title: "UpdateError", message: String(describing: error))
         })
-        
     }
 
     @objc func handleShare(_ sender: UIButton) {
@@ -268,14 +213,14 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let selectedSection = sections[section]
-        return selectedSection.getMainSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).controls.count
+        return selectedSection.getIUTableSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).values.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         let section = sections[indexPath.section]
-        let value = section.getMainSection(profile: santaApp.profile,
-                                           shareable: santaApp.selectedShareable).controls[indexPath.row]()
+        let value = section.getIUTableSection(profile: santaApp.profile,
+                                           shareable: santaApp.selectedShareable).values[indexPath.row]
         
         if let presentValue = value {
             cell.textLabel?.text = presentValue
@@ -292,11 +237,16 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let selectedSection = sections[section]
-        return selectedSection.getMainSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).name;
+        return selectedSection.getIUTableSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).title;
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.sections.count
+    }
+    
+    func tableView(_ tableView: UITableView, canFocusRowAt indexPath: IndexPath) -> Bool {
+        let section = sections[indexPath.section]
+        return section.getEditController(controller: self) != nil
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -305,6 +255,51 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.pushViewController(
                 editController, animated: false)
         }
+    }
+}
+
+struct UITableSection {
+    let title: String
+    let values: [String?]
+}
+
+enum TableSection {
+    case Identity
+    case Profile
+    case Wishlist
+    
+    private func wishList(shareable: MyShareable?) -> [String?] {
+        var wishItems = shareable?.data ?? [:]
+        if wishItems.isEmpty {
+            wishItems["Add items from Extole Santa list"] = "default"
+        }
         
+        return wishItems.keys.map { key -> String? in
+            return key
+        }
+    }
+    
+    func getIUTableSection(profile: MyProfile?, shareable: MyShareable?) -> UITableSection{
+        switch self {
+        case .Identity:
+            return UITableSection(title: "Identity", values: [ profile?.email] )
+        case .Profile:
+            return UITableSection(title: "Profile", values: [
+                profile?.first_name,
+                profile?.last_name ])
+        case .Wishlist:
+            return UITableSection(title: "Wish List", values: wishList(shareable: shareable))
+        }
+    }
+    
+    func getEditController(controller: HomeViewController) -> UIViewController? {
+        switch self {
+        case .Identity:
+            return controller.identifyViewController
+        case .Profile:
+            return controller.profileViewController
+        default:
+            return nil
+        }
     }
 }

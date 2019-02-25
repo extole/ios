@@ -37,7 +37,8 @@ public final class SessionManager {
 
     public func resumeSession(existingToken: String) {
         let consumerToken = ConsumerToken.init(access_token: existingToken)
-        self.session = ConsumerSession.init(program: self.program, token: consumerToken)
+        self.session = ConsumerSession.init(program: self.program,
+                                            token: consumerToken)
         self.session!.getToken(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken!)
         }, error: { verifyTokenError in

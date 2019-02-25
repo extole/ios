@@ -2,11 +2,16 @@
 
 import Foundation
 
-@objc public class NetworkExecutor : NSObject {
+@objc public protocol NetworkExecutor {
+    @objc func dataTask(with request: URLRequest,
+                  completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void);
+}
+
+@objc public class DefaultNetworkExecutor : NSObject, NetworkExecutor {
     
     let urlSession = URLSession(configuration: URLSessionConfiguration.ephemeral)
     
-    func dataTask(with request: URLRequest,
+    public func dataTask(with request: URLRequest,
                   completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
         let task = urlSession.dataTask(with: request, completionHandler: completionHandler)
         task.resume()
@@ -18,7 +23,7 @@ import Foundation
     
     let executor : NetworkExecutor
     
-    @objc public init(executor: NetworkExecutor = NetworkExecutor.init()) {
+    @objc public init(executor: NetworkExecutor = DefaultNetworkExecutor.init()) {
         self.executor = executor
     }
     

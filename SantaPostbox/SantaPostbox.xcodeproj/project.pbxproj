@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		498600BB22240148009378D5 /* CustomNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 498600BA22240148009378D5 /* CustomNetwork.m */; };
 		49E9D27222201F1300846166 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E9D27122201F1300846166 /* AppDelegate.m */; };
 		49E9D27522201F1300846166 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E9D27422201F1300846166 /* ViewController.m */; };
 		49E9D27822201F1300846166 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49E9D27622201F1300846166 /* Main.storyboard */; };
@@ -43,6 +44,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		498600BA22240148009378D5 /* CustomNetwork.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomNetwork.m; sourceTree = "<group>"; };
+		498600BD222405AF009378D5 /* CustomNetwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomNetwork.h; sourceTree = "<group>"; };
 		49E9D26D22201F1300846166 /* SantaPostbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SantaPostbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49E9D27022201F1300846166 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		49E9D27122201F1300846166 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -114,6 +117,8 @@
 				49E9D27B22201F1500846166 /* LaunchScreen.storyboard */,
 				49E9D27E22201F1500846166 /* Info.plist */,
 				49E9D27F22201F1500846166 /* main.m */,
+				498600BA22240148009378D5 /* CustomNetwork.m */,
+				498600BD222405AF009378D5 /* CustomNetwork.h */,
 			);
 			path = SantaPostbox;
 			sourceTree = "<group>";
@@ -240,6 +245,7 @@
 				49E9D27522201F1300846166 /* ViewController.m in Sources */,
 				49E9D28022201F1500846166 /* main.m in Sources */,
 				49E9D27222201F1300846166 /* AppDelegate.m in Sources */,
+				498600BB22240148009378D5 /* CustomNetwork.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

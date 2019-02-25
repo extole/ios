@@ -18,6 +18,7 @@ import Foundation
     public let settings = UserDefaults(suiteName: "extoleKit")!
     /// program url
     private let programUrl: ProgramURL
+    
     /// manages active Extole session
     lazy private var sessionManager = SessionManager.init(program: programUrl, delegate: self)
     /// handles events for ExtoleApp

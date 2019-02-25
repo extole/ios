@@ -1,6 +1,7 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 #import "ViewController.h"
+#import "CustomNetwork.h"
 @import ExtoleKit;
 
 @interface ViewController () <ExtoleAppDelegate>
@@ -78,7 +79,7 @@
     
     _app = ExtoleApp.alloc;
     NSURL *programUrl = [[NSURL alloc] initWithString:(@"https://ios-santa.extole.io")];
-    NetworkExecutor* executor = [[NetworkExecutor alloc] init];
+    CustomNetwork* executor = [[CustomNetwork alloc] init];
     Network* network = [[Network alloc] initWithExecutor:executor];
     ProgramURL *program = [[ProgramURL alloc] initWithBaseUrl:programUrl network:network];
     _app = [[ExtoleApp alloc] initWith:program delegate:self];

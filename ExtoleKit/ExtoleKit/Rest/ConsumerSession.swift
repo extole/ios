@@ -5,10 +5,14 @@ import Foundation
 @objc public final class ConsumerSession: NSObject{
     let program: ProgramURL
     let token: ConsumerToken
-    let network = Network.init()
     var baseUrl: URL {
         get {
             return program.baseUrl
+        }
+    }
+    var network: Network {
+        get {
+            return program.network
         }
     }
     

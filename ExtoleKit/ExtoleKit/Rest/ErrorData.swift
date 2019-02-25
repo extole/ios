@@ -2,18 +2,16 @@
 
 import Foundation
 
-public struct ErrorData: Codable {
-    let code: String
+@objc public final class ExtoleError: NSObject, Codable {
+    @objc public let code: String
+    public init(code: String) {
+        self.code = code
+    }
 }
 
-public enum ExtoleApiError {
-    case serverError(error: Error)
-    case decodingError(data: Data)
-    case noContent
-    case genericError(errorData: ErrorData)
-}
-
-public protocol ExtoleError : Error {
-    static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError
-    static func fromCode(code: String) -> ExtoleError?
+@objc public protocol ExtoleApiErrorHandler {
+    @objc func serverError(error: Error)
+    @objc func decodingError(data: Data)
+    @objc func noContent()
+    @objc func genericError(errorData: ExtoleError)
 }

@@ -19,10 +19,10 @@ class CustomNetworkTest : XCTestCase {
     }
     
     class CustomNetwork: Network {
-        override func processRequest<T, E>(with request: URLRequest,
+        override func processRequest<T>(with request: URLRequest,
                                            success: @escaping (T?) -> Void,
-                                           error: @escaping (E) -> Void)
-            where T : Decodable, T : Encodable, E : ExtoleError {
+                                           error: @escaping (ExtoleError) -> Void)
+            where T : Decodable, T : Encodable {
                 let token = ConsumerToken(access_token: "custom")
                 success(token as? T)
         }

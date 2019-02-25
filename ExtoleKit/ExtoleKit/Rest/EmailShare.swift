@@ -20,31 +20,6 @@ public struct EmailShare : Codable {
     let data: [String:String]?
 }
 
-public enum EmailShareError : ExtoleError {
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return EmailShareError.invalidProtocol(error: error)
-    }
-    
-    public static func fromCode(code: String) -> ExtoleError? {
-        return nil
-    }
-    
-    case invalidProtocol(error: ExtoleApiError)
-}
-
-public enum PollEmailShareError : ExtoleError {
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return PollEmailShareError.invalidProtocol(error: error)
-    }
-    
-    public static func fromCode(code: String) -> ExtoleError? {
-        return nil
-    }
-    
-    case invalidProtocol(error: ExtoleApiError)
-    case pollingTimeout
-}
-
 public struct EmailSharePollingResult : Codable {
     let polling_id : String
     let status : String
@@ -55,7 +30,7 @@ extension ConsumerSession {
     
     public func emailShare(share: EmailShare,
                            success : @escaping (PollingIdResponse?) -> Void,
-                           error: @escaping (EmailShareError) -> Void) {
+                           error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share")!
         let request = self.network.postRequest(accessToken: token,
                                   url: url,
@@ -65,7 +40,7 @@ extension ConsumerSession {
     
     public func getEmailShareStatus(pollingResponse: PollingIdResponse,
                                     success : @escaping (EmailSharePollingResult?) -> Void,
-                                    error: @escaping (PollEmailShareError) -> Void) {
+                                    error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share/status/\(pollingResponse.polling_id)")!
         let request = self.network.getRequest(accessToken: token,
                                               url: url)
@@ -74,7 +49,7 @@ extension ConsumerSession {
 
     public func pollEmailShare(pollingResponse: PollingIdResponse,
                                 success : @escaping (EmailSharePollingResult?) -> Void,
-                                error: @escaping (PollEmailShareError) -> Void) {
+                                error: @escaping (ExtoleError) -> Void) {
         func poll(retries: UInt = 10) {
             getEmailShareStatus(pollingResponse: pollingResponse, success: { pollingResult in
                 if let pollingStatus = pollingResult?.status {
@@ -84,7 +59,7 @@ extension ConsumerSession {
                         sleep(1)
                         poll(retries: retries - 1)
                     } else {
-                        error(.pollingTimeout)
+                        error(ExtoleError.init(code: "polling_timout"))
                     }
                 }
             }, error : { pollingError in

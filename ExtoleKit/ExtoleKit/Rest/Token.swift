@@ -6,28 +6,6 @@ func tokenUrl(baseUrl: URL) -> URL {
     return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
 }
 
-public enum GetTokenError : ExtoleError {
-    
-    public static func fromCode(code: String) -> ExtoleError? {
-        switch(code) {
-            case "invalid_access_token": return invalidAccessToken
-            case "expired_access_token": return expiredAccessToken
-            case "invalid_program_domain": return invalidProgramDomain
-            case "missing_program_domain": return missingProgramDomain
-            default: return nil
-        }
-    }
-
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return GetTokenError.invalidProtocol(error: error)
-    }
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidAccessToken
-    case expiredAccessToken
-    case invalidProgramDomain
-    case missingProgramDomain
-}
-
 public struct ConsumerToken : Codable {
     init(access_token: String) {
         self.access_token = access_token
@@ -45,7 +23,7 @@ public struct ConsumerToken : Codable {
 
 extension ProgramURL {
     public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
-                         error: @escaping (_: GetTokenError) -> Void) {
+                         error: @escaping (_: ExtoleError) -> Void) {
         let request = self.network.getRequest(url: tokenUrl(baseUrl: baseUrl))
 
         self.network.processRequest(with: request, success: success, error: error)
@@ -54,17 +32,33 @@ extension ProgramURL {
 extension ConsumerSession {
     
     public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
-                         error: @escaping (_: GetTokenError) -> Void) {
+                         error: @escaping (_: ExtoleError) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
         let request = self.network.getRequest(url: url)
         self.network.processRequest(with: request, success: success, error: error)
     }
     
     public func deleteToken(success: @escaping ()->Void,
-                            error:  @escaping (_: GetTokenError) -> Void) {
+                            error:  @escaping (_: ExtoleError) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
         let request = self.network.deleteRequest(url: url)
         extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
         self.network.processNoContentRequest(with: request, success: success, error: error)
+    }
+}
+
+
+extension ExtoleError {
+    func isInvalidAccessToken() -> Bool {
+        return code == "invalid_access_token"
+    }
+    func isMissingAccessToken() -> Bool {
+        return code == "missing_access_token"
+    }
+    func isExpiredAccessToken() -> Bool {
+        return code == "expired_access_token"
+    }
+    func isInvalidProgramDomain() -> Bool {
+        return code == "invalid_program_domain"
     }
 }

@@ -111,9 +111,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self displayWishList: shareable];
         });
-    } error:^(NSString * error) {
+    } error:^(ExtoleError * error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self->_label setText:[message stringByAppendingString:error]];
+            [self->_label setText:[message stringByAppendingString:error.code]];
         });
     }];
 }

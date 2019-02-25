@@ -27,12 +27,8 @@ class TokenTest: XCTestCase {
         programSession.getToken(success: { token in
             XCTFail("unexpected success")
         }, error: { verifyTokenError in
-            switch(verifyTokenError) {
-            case .invalidAccessToken : do {
-                promise.fulfill()
-                }
-            default : XCTFail("Unexpected error: \(verifyTokenError)")
-            }
+            XCTAssertEqual("invalid_access_token", verifyTokenError.code)
+            promise.fulfill()
         })
         waitForExpectations(timeout: 5, handler: nil)
     }
@@ -67,10 +63,7 @@ class TokenTest: XCTestCase {
         programSession.getToken(success: { token in
             XCTFail("unexpected success")
         }, error: { error in
-            switch(error) {
-            case GetTokenError.invalidAccessToken: break
-            default: XCTFail("Unexpected error \(error)")
-            }
+            XCTAssertTrue(error.isInvalidAccessToken())
             verifyTokenDeleted.fulfill()
         })
         

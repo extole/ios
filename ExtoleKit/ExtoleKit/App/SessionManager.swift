@@ -25,11 +25,12 @@ public final class SessionManager {
         self.session!.getToken(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken!)
         }, error: { verifyTokenError in
-            switch(verifyTokenError) {
-            case .invalidAccessToken: self.delegate?.onSessionInvalid()
-            case .expiredAccessToken: self.delegate?.onSessionInvalid()
-            case .invalidProgramDomain: self.delegate?.onSessionInvalid()
-            default: self.delegate?.onSessionServerError(error: verifyTokenError)
+            if (verifyTokenError.isInvalidAccessToken() ||
+                verifyTokenError.isExpiredAccessToken() ||
+                verifyTokenError.isInvalidProgramDomain()) {
+                self.delegate?.onSessionInvalid()
+            } else {
+                self.delegate?.onSessionServerError(error: verifyTokenError)
             }
         })
     }
@@ -40,11 +41,12 @@ public final class SessionManager {
         self.session!.getToken(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken!)
         }, error: { verifyTokenError in
-            switch(verifyTokenError) {
-            case .invalidAccessToken :self.delegate?.onSessionInvalid()
-            case .expiredAccessToken: self.delegate?.onSessionInvalid()
-            case .invalidProgramDomain: self.delegate?.onSessionInvalid()
-            default: self.delegate?.onSessionServerError(error: verifyTokenError)
+            if (verifyTokenError.isInvalidAccessToken() ||
+                verifyTokenError.isExpiredAccessToken() ||
+                verifyTokenError.isInvalidProgramDomain()) {
+                self.delegate?.onSessionInvalid()
+            } else {
+                self.delegate?.onSessionServerError(error: verifyTokenError)
             }
         })
     }

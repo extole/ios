@@ -12,21 +12,6 @@ public struct ShareablePollingResult : Codable {
     public let code : String?
 }
 
-public enum UpdateShareableError : ExtoleError {
-    public static func fromCode(code: String) -> ExtoleError? {
-        switch(code) {
-        case "invalid_access_token": return UpdateShareableError.invalidAccessToken
-        default: return nil
-        }
-    }
-
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return GetProfileError.invalidProtocol(error: error)
-    }
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidAccessToken
-}
-
 public struct UpdateShareable : Codable {
     public init(data: [String: String]) {
         self.data = data
@@ -48,53 +33,10 @@ public struct UpdateShareable : Codable {
     @objc public let link: String?
     @objc public let data: [String: String]?
 }
-public enum GetShareablesError : ExtoleError {
-    public static func fromCode(code: String) -> ExtoleError? {
-        switch(code) {
-        case "invalid_access_token": return GetShareablesError.invalidAccessToken
-        default: return nil
-        }
-    }
-    
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return GetShareablesError.invalidProtocol(error: error)
-    }
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidAccessToken
-}
-public enum CreateShareableError : ExtoleError {
-    public static func fromCode(code: String) -> ExtoleError? {
-        switch(code) {
-        case "invalid_access_token": return GetShareablesError.invalidAccessToken
-        default: return nil
-        }
-    }
-    
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return CreateShareableError.invalidProtocol(error: error)
-    }
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidAccessToken
-}
-public enum PollShareableError : ExtoleError {
-    public static func fromCode(code: String) -> ExtoleError? {
-        switch(code) {
-        case "invalid_access_token": return PollShareableError.invalidAccessToken
-        default: return nil
-        }
-    }
-    
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return PollShareableError.invalidProtocol(error: error)
-    }
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidAccessToken
-}
-
 
 extension ConsumerSession {
     public func getShareables(success: @escaping ([MyShareable]?) -> Void,
-                              error: @escaping (GetShareablesError?) -> Void) {
+                              error: @escaping (ExtoleError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
         let request = self.network.getRequest(accessToken: token,
                                  url: url)
@@ -102,19 +44,19 @@ extension ConsumerSession {
     }
     
     @objc public func getShareable(code: String, success: @escaping (MyShareable?) -> Void,
-                              error errorCallback: @escaping (String) -> Void) {
+                              error errorCallback: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/shareables/\(code)")!
         let request = self.network.getRequest(accessToken: token,
                                               url: url)
-        self.network.processRequest(with: request, success: success, error: { (error:GetShareablesError) in
-            errorCallback(String(describing: error))
+        self.network.processRequest(with: request, success: success, error: { (error:ExtoleError) in
+            errorCallback(error)
         })
     }
     
     public func updateShareable(code: String,
                                 shareable: UpdateShareable,
                                 success: @escaping () -> Void,
-                                error : @escaping (UpdateShareableError?) -> Void) {
+                                error : @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables/\(code)")!
         let request = self.network.putRequest(accessToken: token,
                                   url: url,
@@ -124,7 +66,7 @@ extension ConsumerSession {
 
     public func createShareable(shareable: MyShareable,
                                 success: @escaping (PollingIdResponse?) -> Void,
-                                error: @escaping (CreateShareableError?) -> Void)  {
+                                error: @escaping (ExtoleError) -> Void)  {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
         let request = self.network.postRequest(accessToken: token,
                                  url: url,
@@ -134,7 +76,7 @@ extension ConsumerSession {
 
     public func pollShareable(pollingResponse: PollingIdResponse,
                               success: @escaping (ShareablePollingResult?) -> Void,
-                              error: @escaping (PollShareableError?) -> Void) {
+                              error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables/status/\(pollingResponse.polling_id)")!
 
         let request = self.network.getRequest(accessToken: token,

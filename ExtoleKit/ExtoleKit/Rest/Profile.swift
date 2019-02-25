@@ -20,45 +20,11 @@ public struct SuccessResponse : Codable {
     let status: String
 }
 
-public enum GetProfileError : ExtoleError {
-    public static func fromCode(code: String) -> ExtoleError? {
-        switch(code) {
-        case "invalid_access_token": return GetProfileError.invalidAccessToken
-        default: return nil
-        }
-    }
-    
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return GetProfileError.invalidProtocol(error: error)
-    }
-    
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidAccessToken
-}
-
-
-public enum UpdateProfileError : ExtoleError {
-    public static func fromCode(code: String) -> ExtoleError? {
-        switch(code) {
-        case "invalid_access_token": return UpdateProfileError.invalidAccessToken
-        case "invalid_person_email": return UpdateProfileError.invalidPersonEmail
-        default: return nil
-        }
-    }
-    
-    public static func toInvalidProtocol(error: ExtoleApiError) -> ExtoleError {
-        return UpdateProfileError.invalidProtocol(error: error)
-    }
-    case invalidProtocol(error: ExtoleApiError)
-    case invalidPersonEmail
-    case invalidAccessToken
-}
-
 extension ConsumerSession {
     
     public func updateProfile(profile: MyProfile,
                               success: @escaping () -> Void,
-                              error : @escaping (UpdateProfileError) -> Void) {
+                              error : @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
         let request = self.network.postRequest(accessToken: token,
                                  url: url,
@@ -67,7 +33,7 @@ extension ConsumerSession {
     }
 
     public func getProfile(success: @escaping (MyProfile?) -> Void,
-                           error: @escaping (GetProfileError) -> Void) {
+                           error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
         let request = self.network.getRequest(accessToken: token,
                                               url: url)

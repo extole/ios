@@ -4,7 +4,7 @@ import Foundation
 
 /// Handles shareable loader events
 public protocol ShareableLoaderDelegate : class {
-    func success(shareables: [MyShareable]?)
+    func success(shareables: [MyShareable])
 }
 
 /// Loads shareables for consumer session

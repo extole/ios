@@ -35,7 +35,7 @@ public struct UpdateShareable : Codable {
 }
 
 extension ConsumerSession {
-    public func getShareables(success: @escaping ([MyShareable]?) -> Void,
+    public func getShareables(success: @escaping ([MyShareable]) -> Void,
                               error: @escaping (ExtoleError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
         let request = self.network.getRequest(accessToken: token,
@@ -43,7 +43,7 @@ extension ConsumerSession {
         self.network.processRequest(with: request, success: success, error: error)
     }
     
-    @objc public func getShareable(code: String, success: @escaping (MyShareable?) -> Void,
+    @objc public func getShareable(code: String, success: @escaping (MyShareable) -> Void,
                               error errorCallback: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/shareables/\(code)")!
         let request = self.network.getRequest(accessToken: token,
@@ -65,7 +65,7 @@ extension ConsumerSession {
     }
 
     public func createShareable(shareable: MyShareable,
-                                success: @escaping (PollingIdResponse?) -> Void,
+                                success: @escaping (PollingIdResponse) -> Void,
                                 error: @escaping (ExtoleError) -> Void)  {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
         let request = self.network.postRequest(accessToken: token,
@@ -75,7 +75,7 @@ extension ConsumerSession {
     }
 
     public func pollShareable(pollingResponse: PollingIdResponse,
-                              success: @escaping (ShareablePollingResult?) -> Void,
+                              success: @escaping (ShareablePollingResult) -> Void,
                               error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables/status/\(pollingResponse.polling_id)")!
 

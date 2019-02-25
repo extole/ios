@@ -12,9 +12,8 @@ class ProfileTest: XCTestCase {
     override func setUp() {
         let promise = expectation(description: "invalid token response")
         program.getToken(success: { token in
-            XCTAssert(token != nil)
-            XCTAssert(!token!.access_token.isEmpty)
-            self.programSession = ConsumerSession.init(program: self.program, token: token!)
+            XCTAssert(!token.access_token.isEmpty)
+            self.programSession = ConsumerSession.init(program: self.program, token: token)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -37,7 +36,7 @@ class ProfileTest: XCTestCase {
         
         let verifyIdentity = expectation(description: "verifyIdentity response")
         self.programSession.getProfile(success: { profile in
-            XCTAssertEqual("testidentify@extole.com", profile?.email)
+            XCTAssertEqual("testidentify@extole.com", profile.email)
             verifyIdentity.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -62,10 +61,10 @@ class ProfileTest: XCTestCase {
         
         let verifyIdentity = expectation(description: "verifyIdentity response")
         programSession.getProfile(success: { profile in
-            XCTAssertEqual(profile?.email, myProfile.email)
-            XCTAssertEqual(profile?.partner_user_id, myProfile.partner_user_id)
-            XCTAssertEqual(profile?.first_name, myProfile.first_name)
-            XCTAssertEqual(profile?.last_name, myProfile.last_name)
+            XCTAssertEqual(profile.email, myProfile.email)
+            XCTAssertEqual(profile.partner_user_id, myProfile.partner_user_id)
+            XCTAssertEqual(profile.first_name, myProfile.first_name)
+            XCTAssertEqual(profile.last_name, myProfile.last_name)
             verifyIdentity.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

@@ -39,7 +39,7 @@ extension ConsumerSession {
     }
     
     public func getEmailShareStatus(pollingResponse: PollingIdResponse,
-                                    success : @escaping (EmailSharePollingResult?) -> Void,
+                                    success : @escaping (EmailSharePollingResult) -> Void,
                                     error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share/status/\(pollingResponse.polling_id)")!
         let request = self.network.getRequest(accessToken: token,
@@ -48,19 +48,17 @@ extension ConsumerSession {
     }
 
     public func pollEmailShare(pollingResponse: PollingIdResponse,
-                                success : @escaping (EmailSharePollingResult?) -> Void,
+                                success : @escaping (EmailSharePollingResult) -> Void,
                                 error: @escaping (ExtoleError) -> Void) {
         func poll(retries: UInt = 10) {
             getEmailShareStatus(pollingResponse: pollingResponse, success: { pollingResult in
-                if let pollingStatus = pollingResult?.status {
-                    if pollingStatus == "SUCCEEDED" {
-                        success(pollingResult)
-                    } else if retries > 0 {
-                        sleep(1)
-                        poll(retries: retries - 1)
-                    } else {
-                        error(ExtoleError.init(code: "polling_timout"))
-                    }
+                if pollingResult.status == "SUCCEEDED" {
+                    success(pollingResult)
+                } else if retries > 0 {
+                    sleep(1)
+                    poll(retries: retries - 1)
+                } else {
+                    error(ExtoleError.init(code: "polling_timout"))
                 }
             }, error : { pollingError in
                 error(pollingError)

@@ -32,7 +32,7 @@ extension ConsumerSession {
         self.network.processNoContentRequest(with: request, success: success, error: error)
     }
 
-    public func getProfile(success: @escaping (MyProfile?) -> Void,
+    public func getProfile(success: @escaping (MyProfile) -> Void,
                            error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
         let request = self.network.getRequest(accessToken: token,

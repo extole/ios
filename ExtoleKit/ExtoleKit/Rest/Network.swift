@@ -19,6 +19,13 @@ import Foundation
     
 }
 
+@objc public protocol ExtoleApiErrorHandler {
+    @objc func serverError(error: Error)
+    @objc func decodingError(data: Data)
+    @objc func noContent()
+    @objc func genericError(errorData: ExtoleError)
+}
+
 @objc public class Network : NSObject {
     
     let executor : NetworkExecutor
@@ -72,7 +79,7 @@ import Foundation
         return request
     }
 
-    final func dataHandler<T : Codable>(success: @escaping (_: T?) -> Void,
+    final func dataHandler<T : Codable>(success: @escaping (_: T) -> Void,
                                                   error: @escaping(ExtoleError) -> Void)
         -> ((_ : Data?) -> Void)  {
             return { data in
@@ -117,7 +124,7 @@ import Foundation
     }
 
     func processRequest(with request: URLRequest,
-                        dataHandler:  @escaping (_: Data?) -> Void,
+                        dataHandler:  @escaping (_: Data) -> Void,
                         errorHandler: ExtoleApiErrorHandler) {
         executor.dataTask(with: request) { data, response, error in
             if let serverError = error {
@@ -149,8 +156,8 @@ import Foundation
     }
 
     func processRequest<T: Codable>(with request: URLRequest,
-                                                    success : @escaping (_: T?) -> Void,
-                                                    error: @escaping (_: ExtoleError) -> Void) {
+                                    success : @escaping (_: T) -> Void,
+                                    error: @escaping (_: ExtoleError) -> Void) {
         processRequest(with: request,
                        dataHandler :dataHandler(success: success, error: error),
                        errorHandler:errorHandler(error: error))
@@ -165,5 +172,3 @@ import Foundation
     }
       
 }
-
-

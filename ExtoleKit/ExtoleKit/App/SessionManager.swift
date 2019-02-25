@@ -23,7 +23,7 @@ public final class SessionManager {
     
     public func reload() {
         self.session!.getToken(success: { verifiedToken in
-            self.onVerifiedToken(verifiedToken: verifiedToken!)
+            self.onVerifiedToken(verifiedToken: verifiedToken)
         }, error: { verifyTokenError in
             if (verifyTokenError.isInvalidAccessToken() ||
                 verifyTokenError.isExpiredAccessToken() ||
@@ -40,7 +40,7 @@ public final class SessionManager {
         self.session = ConsumerSession.init(program: self.program,
                                             token: consumerToken)
         self.session!.getToken(success: { verifiedToken in
-            self.onVerifiedToken(verifiedToken: verifiedToken!)
+            self.onVerifiedToken(verifiedToken: verifiedToken)
         }, error: { verifyTokenError in
             if (verifyTokenError.isInvalidAccessToken() ||
                 verifyTokenError.isExpiredAccessToken() ||
@@ -55,7 +55,7 @@ public final class SessionManager {
     public func newSession() {
         self.session = nil
         self.program.getToken(success: { token in
-            self.onVerifiedToken(verifiedToken: token!)
+            self.onVerifiedToken(verifiedToken: token)
         }, error: { error in
             self.delegate?.onSessionServerError(error: error);
         })

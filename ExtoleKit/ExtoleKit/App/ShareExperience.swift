@@ -15,13 +15,13 @@ public protocol ShareExperience {
     
     /// Sends custom share event to Extole
     func signalShare(channel: String,
-                     success: @escaping (CustomSharePollingResult?)->Void,
+                     success: @escaping (CustomSharePollingResult)->Void,
                      error: @escaping(ExtoleError) -> Void)
     
     /// Sends a share to given email, using Extole email service
     func share(email: String,
                message: String,
-               success: @escaping (EmailSharePollingResult?)->Void,
+               success: @escaping (EmailSharePollingResult)->Void,
                error: @escaping(ExtoleError) -> Void)
     
     /// Shareable used for current consumer session
@@ -67,14 +67,14 @@ public extension ShareExperience where Self: HasShareApp {
     }
     
     public func signalShare(channel: String,
-                            success: @escaping (CustomSharePollingResult?)->Void,
+                            success: @escaping (CustomSharePollingResult)->Void,
                             error: @escaping(ExtoleError) -> Void) {
         shareApp.signalShare(channel: channel, success: success, error: error)
     }
     
     public func share(email: String,
                       message: String,
-                      success: @escaping (EmailSharePollingResult?)->Void,
+                      success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
         shareApp.share(email: email, message: message, success: success, error: error)
     }

@@ -22,7 +22,7 @@ public struct ConsumerToken : Codable {
 }
 
 extension ProgramURL {
-    public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
+    public func getToken(success : @escaping (_: ConsumerToken) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         let request = self.network.getRequest(url: tokenUrl(baseUrl: baseUrl))
 
@@ -31,7 +31,7 @@ extension ProgramURL {
 }
 extension ConsumerSession {
     
-    public func getToken(success : @escaping (_: ConsumerToken?) -> Void,
+    public func getToken(success : @escaping (_: ConsumerToken) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
         let request = self.network.getRequest(url: url)

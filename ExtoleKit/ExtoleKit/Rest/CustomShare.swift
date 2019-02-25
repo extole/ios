@@ -26,7 +26,7 @@ public struct CustomSharePollingResult : Codable {
 extension ConsumerSession {
     
     public func customShare(share: CustomShare,
-                            success : @escaping (PollingIdResponse?) -> Void,
+                            success : @escaping (PollingIdResponse) -> Void,
                             error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
         let request = network.postRequest(accessToken: token,
@@ -36,7 +36,7 @@ extension ConsumerSession {
     }
     
     public func getCustomShareStatus(pollingResponse: PollingIdResponse,
-                                success : @escaping (CustomSharePollingResult?) -> Void,
+                                success : @escaping (CustomSharePollingResult) -> Void,
                                 error: @escaping(ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
         let request = self.network.getRequest(accessToken: token,
@@ -46,20 +46,18 @@ extension ConsumerSession {
     }
     
     public func pollCustomShare(pollingResponse: PollingIdResponse,
-                                     success : @escaping (CustomSharePollingResult?) -> Void,
+                                     success : @escaping (CustomSharePollingResult) -> Void,
                                      error: @escaping(ExtoleError) -> Void) {
         func poll(retries: UInt) {
             getCustomShareStatus(pollingResponse: pollingResponse,
                                  success: { pollingResult in
-                                    if let pollingStatus = pollingResult?.status {
-                                        if pollingStatus == "SUCCEEDED" {
-                                            success(pollingResult)
-                                        } else if retries > 0 {
-                                            sleep(1)
-                                            poll(retries: retries - 1)
-                                        } else {
-                                            error(ExtoleError.init(code: "polling_timeout"))
-                                        }
+                                    if pollingResult.status == "SUCCEEDED" {
+                                        success(pollingResult)
+                                    } else if retries > 0 {
+                                        sleep(1)
+                                        poll(retries: retries - 1)
+                                    } else {
+                                        error(ExtoleError.init(code: "polling_timeout"))
                                     }
             }, error: { pollingError in
                 error(pollingError)

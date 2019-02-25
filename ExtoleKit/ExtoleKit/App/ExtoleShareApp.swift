@@ -79,14 +79,14 @@ public final class ExtoleShareApp : ShareExperience {
 
     /// Sends custom share event to Extole
     public func signalShare(channel: String,
-                            success: @escaping (CustomSharePollingResult?)->Void,
+                            success: @escaping (CustomSharePollingResult)->Void,
                             error: @escaping(ExtoleError) -> Void) {
         extoleInfo(format: "shared via custom channel %s", arg: channel)
         
         if let session = session, let shareableCode = selectedShareable?.code {
             let share = CustomShare.init(advocate_code: shareableCode, channel: channel)
             session.customShare(share: share, success: { pollingResponse in
-                session.pollCustomShare(pollingResponse: pollingResponse!,
+                session.pollCustomShare(pollingResponse: pollingResponse,
                                         success: success, error: error)
             }, error: error)
         }
@@ -95,7 +95,7 @@ public final class ExtoleShareApp : ShareExperience {
     /// Sends a share to given email, using Extole email service
     public func share(email: String,
                       message: String,
-                      success: @escaping (EmailSharePollingResult?)->Void,
+                      success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
         extoleInfo(format: "sharing to email %s", arg: email)
         if let session = session, let shareableCode = selectedShareable?.code {
@@ -119,7 +119,7 @@ public final class ExtoleShareApp : ShareExperience {
 }
 
 extension ExtoleShareApp : ShareableLoaderDelegate {
-    public func success(shareables: [MyShareable]?) {
+    public func success(shareables: [MyShareable]) {
         if let shareable = self.selectedShareable {
             extoleInfo(format: "re-using previosly selected shareable %s", arg: shareable.code)
         } else {
@@ -127,9 +127,9 @@ extension ExtoleShareApp : ShareableLoaderDelegate {
             let uniqueKey = NSUUID().uuidString
             let newShareable = MyShareable.init(label: self.label, key: uniqueKey)
             self.session?.createShareable(shareable: newShareable, success: { pollingId in
-                self.session?.pollShareable(pollingResponse: pollingId!,
+                self.session?.pollShareable(pollingResponse: pollingId,
                                             success: { shareableResult in
-                                                self.savedShareableCode = shareableResult?.code
+                                                self.savedShareableCode = shareableResult.code
                                                 self.shareableLoader?.load(session: self.session!){}
                 }, error: {_ in
                     

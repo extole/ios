@@ -13,9 +13,8 @@ class ShareTest: XCTestCase {
     override func setUp() {
         let promise = expectation(description: "invalid token response")
         program.getToken(success: { token in
-            XCTAssert(token != nil)
-            XCTAssert(!token!.access_token.isEmpty)
-            self.programSession = ConsumerSession.init(program: self.program, token: token!)
+            XCTAssert(!token.access_token.isEmpty)
+            self.programSession = ConsumerSession.init(program: self.program, token: token)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -27,8 +26,8 @@ class ShareTest: XCTestCase {
         let newShareable = MyShareable.init(label: "refer-a-friend")
         var shareableResult: PollingIdResponse!
         programSession.createShareable(shareable: newShareable,
-                                       success: { response in
-            shareableResult = response!
+                                       success: { result in
+            shareableResult = result
             createShareablePromise.fulfill()
         }, error: { error in
             XCTAssertNil(error)
@@ -39,7 +38,7 @@ class ShareTest: XCTestCase {
         let pollShareablePromise = expectation(description: "poll shareable response")
         programSession.pollShareable(pollingResponse: shareableResult!,
                                      success: { result in
-            self.advocateCode = result!.code!
+            self.advocateCode = result.code!
             pollShareablePromise.fulfill()
         }, error: { error in
             XCTAssertNil(error)
@@ -57,8 +56,8 @@ class ShareTest: XCTestCase {
         let shareExpectation = expectation(description: "share")
         var sharePollingId : PollingIdResponse!
         programSession.customShare(share: customShare, success: { shareResponse in
-            XCTAssertGreaterThan(shareResponse!.polling_id, "1111")
-            sharePollingId = shareResponse!
+            XCTAssertGreaterThan(shareResponse.polling_id, "1111")
+            sharePollingId = shareResponse
             shareExpectation.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -68,8 +67,8 @@ class ShareTest: XCTestCase {
 
         let pollingExpectation = expectation(description: "share polling")
         programSession.pollCustomShare(pollingResponse: sharePollingId, success: { customShareResult in
-            XCTAssertNotNil(customShareResult?.share_id)
-            XCTAssertGreaterThan(customShareResult!.share_id!, "1111")
+            XCTAssertNotNil(customShareResult.share_id)
+            XCTAssertGreaterThan(customShareResult.share_id!, "1111")
             pollingExpectation.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

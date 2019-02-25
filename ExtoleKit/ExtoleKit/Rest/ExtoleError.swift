@@ -8,10 +8,3 @@ import Foundation
         self.code = code
     }
 }
-
-@objc public protocol ExtoleApiErrorHandler {
-    @objc func serverError(error: Error)
-    @objc func decodingError(data: Data)
-    @objc func noContent()
-    @objc func genericError(errorData: ExtoleError)
-}

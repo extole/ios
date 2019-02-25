@@ -11,9 +11,7 @@ public final class ProfileLoader : Loader{
     }
     public func load(session: ConsumerSession, complete: @escaping () -> Void) {
         session.getProfile(success: { profile in
-            if let identified = profile {
-                self.profile = identified
-            }
+            self.profile = profile
             complete()
         }, error: { error in
             complete()

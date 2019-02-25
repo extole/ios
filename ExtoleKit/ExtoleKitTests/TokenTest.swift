@@ -11,8 +11,7 @@ class TokenTest: XCTestCase {
     func testGetToken() {
         let promise = expectation(description: "get token response")
         program.getToken(success: { token in
-            XCTAssert(token != nil)
-            XCTAssert(!token!.access_token.isEmpty)
+            XCTAssert(!token.access_token.isEmpty)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -38,8 +37,7 @@ class TokenTest: XCTestCase {
 
         var token: ConsumerToken!
         program.getToken(success: { tokenResponse in
-            XCTAssert(tokenResponse != nil)
-            XCTAssert(!tokenResponse!.access_token.isEmpty)
+            XCTAssert(!tokenResponse.access_token.isEmpty)
             token = tokenResponse
             getToken.fulfill()
         }, error: { error in

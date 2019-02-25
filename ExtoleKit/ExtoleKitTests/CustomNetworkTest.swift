@@ -7,7 +7,7 @@ import XCTest
 class CustomNetworkTest : XCTestCase {
     
     class CustomExecutor : NetworkExecutor {
-        override func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
             let token = ConsumerToken(access_token: "custom_executor")
             let response = HTTPURLResponse.init(url: request.url!,
                                                 statusCode: 200,
@@ -20,11 +20,11 @@ class CustomNetworkTest : XCTestCase {
     
     class CustomNetwork: Network {
         override func processRequest<T>(with request: URLRequest,
-                                           success: @escaping (T?) -> Void,
+                                           success: @escaping (T) -> Void,
                                            error: @escaping (ExtoleError) -> Void)
             where T : Decodable, T : Encodable {
                 let token = ConsumerToken(access_token: "custom")
-                success(token as? T)
+                success(token as! T)
         }
     }
 
@@ -35,7 +35,7 @@ class CustomNetworkTest : XCTestCase {
                               network: network)
         let promise = expectation(description: "get token response")
         program.getToken(success: { token in
-            XCTAssertEqual("custom", token?.access_token)
+            XCTAssertEqual("custom", token.access_token)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -50,7 +50,7 @@ class CustomNetworkTest : XCTestCase {
                               network: network)
         let promise = expectation(description: "get token response")
         program.getToken(success: { token in
-            XCTAssertEqual("custom_executor", token?.access_token)
+            XCTAssertEqual("custom_executor", token.access_token)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

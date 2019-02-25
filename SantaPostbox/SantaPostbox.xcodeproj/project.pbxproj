@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		498600BB22240148009378D5 /* CustomNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 498600BA22240148009378D5 /* CustomNetwork.m */; };
+		498600BE222439DD009378D5 /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E9D2952220201300846166 /* ExtoleKit.framework */; };
+		498600BF222439DD009378D5 /* ExtoleKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49E9D2952220201300846166 /* ExtoleKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49E9D27222201F1300846166 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E9D27122201F1300846166 /* AppDelegate.m */; };
 		49E9D27522201F1300846166 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E9D27422201F1300846166 /* ViewController.m */; };
 		49E9D27822201F1300846166 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49E9D27622201F1300846166 /* Main.storyboard */; };
@@ -15,8 +17,6 @@
 		49E9D27D22201F1500846166 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49E9D27B22201F1500846166 /* LaunchScreen.storyboard */; };
 		49E9D28022201F1500846166 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E9D27F22201F1500846166 /* main.m */; };
 		49E9D28A22201F1500846166 /* SantaPostboxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 49E9D28922201F1500846166 /* SantaPostboxTests.m */; };
-		49E9D29C2220237200846166 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E9D29B2220237200846166 /* CoreFoundation.framework */; };
-		49E9D29F2220239000846166 /* ExtoleKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49E9D29D2220239000846166 /* ExtoleKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,13 +30,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		49E9D2A02220239000846166 /* Embed Frameworks */ = {
+		498600C0222439DD009378D5 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				49E9D29F2220239000846166 /* ExtoleKit.framework in Embed Frameworks */,
+				498600BF222439DD009378D5 /* ExtoleKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -60,9 +60,7 @@
 		49E9D28922201F1500846166 /* SantaPostboxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SantaPostboxTests.m; sourceTree = "<group>"; };
 		49E9D28B22201F1500846166 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49E9D2952220201300846166 /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		49E9D2972220202700846166 /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49E9D29B2220237200846166 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		49E9D29D2220239000846166 /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49E9D29C2220237200846166 /* CoreFoundation.framework in Frameworks */,
+				498600BE222439DD009378D5 /* ExtoleKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,8 +85,6 @@
 		49E9D26422201F1300846166 = {
 			isa = PBXGroup;
 			children = (
-				49E9D29D2220239000846166 /* ExtoleKit.framework */,
-				49E9D2972220202700846166 /* ExtoleKit.framework */,
 				49E9D26F22201F1300846166 /* SantaPostbox */,
 				49E9D28822201F1500846166 /* SantaPostboxTests */,
 				49E9D26E22201F1300846166 /* Products */,
@@ -151,7 +147,7 @@
 				49E9D26922201F1300846166 /* Sources */,
 				49E9D26A22201F1300846166 /* Frameworks */,
 				49E9D26B22201F1300846166 /* Resources */,
-				49E9D2A02220239000846166 /* Embed Frameworks */,
+				498600C0222439DD009378D5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

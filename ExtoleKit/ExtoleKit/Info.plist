@@ -19,6 +19,6 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>gitRevision</key>
-	<string>85dcc70</string>
+	<string>66bf404</string>
 </dict>
 </plist>

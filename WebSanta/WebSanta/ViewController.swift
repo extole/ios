@@ -3,46 +3,97 @@
 import UIKit
 import WebKit
 
+let programUrl = URL(string:"https://ios-santa.extole.io/zone/microsite")
+
+func openExternal(url: URL) {
+    UIApplication.shared.open(url,
+                              options: [:],
+                              completionHandler: {success in
+                                print("openExternal", url, success)
+    })
+}
+
 class ViewController: UIViewController {
 
-    var webView: WKWebView!
-    var webPopupView: WKWebView?
-
+    var topView: WKWebView!
+    var popupView: WKWebView?
+    
+    var popupDelegate: PopupDelegate?
+    
+    func closePopup() {
+        self.popupView?.removeFromSuperview()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "WebView"
+        self.title = "WebView Example"
         let top =  UIApplication.shared.statusBarFrame.height
         let rect = CGRect(x: 0, y:  top, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         
-        webView = WKWebView(frame: rect)
-        self.view.addSubview(webView)
-        webView.navigationDelegate = self
-        webView.uiDelegate = self
-        let myURL = URL(string:"https://ios-santa.extole.io/zone/microsite")
-        let myRequest = URLRequest(url: myURL!)
-        webView.load(myRequest)
-    }
-}
-extension ViewController: WKUIDelegate {
-    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-        print("create web view for", navigationAction.request)
-        if let popup = self.webPopupView {
-            popup.removeFromSuperview()
-        }
-        let rect = CGRect(x: 0, y:  64, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2 )
-        self.webPopupView = WKWebView(frame: view.bounds, configuration: configuration)   // Must use the configuration provided by this method
-        self.webPopupView?.navigationDelegate = self
-        self.webPopupView?.uiDelegate = self
-        self.view.addSubview(self.webPopupView!)
-        //webView.removeFromSuperview()
-        return webPopupView
-    }
-    func webViewDidClose(_ webView: WKWebView) {
-        print("closed")
+        let topViewDelegate = self
+        self.popupDelegate  = PopupDelegate()
+        self.popupDelegate?.topViewController = self
+        
+        topView = WKWebView(frame: rect)
+        self.view.addSubview(topView)
+        topView.navigationDelegate = topViewDelegate
+        topView.uiDelegate = topViewDelegate
+        
+        let myRequest = URLRequest(url: programUrl!)
+        topView.load(myRequest)
     }
 }
 
-extension ViewController: WKNavigationDelegate {
+class PopupDelegate : NSObject, WKUIDelegate, WKNavigationDelegate {
+    var topViewController: ViewController?
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        print("checking policy for : ", navigationAction.request.url ?? "(none)")
+        let external = ["https://api.whatsapp.com/send",
+                        "https://www.facebook.com/dialog"]
+        let externalMatch = external.filter { pattern -> Bool in
+            return navigationAction.request.url?.absoluteString.starts(with: pattern) ?? false
+        }.first
+        if let externalMatch = externalMatch {
+            print("matched external ", externalMatch)
+            openExternal(url: navigationAction.request.url!)
+            topViewController?.closePopup()
+            decisionHandler(.cancel)
+        } else {
+            decisionHandler(.allow)
+        }
+    }
+}
+
+extension ViewController : WKUIDelegate, WKNavigationDelegate {
+    // handles window.open
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+        print("create web view for", navigationAction.request)
+        let rect = CGRect(x: 0, y:  64 * 2, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2 )
+        self.popupView = WKWebView(frame: rect, configuration: configuration)   // Must use the configuration provided by this method
+        self.popupView?.navigationDelegate = self.popupDelegate
+        self.popupView?.uiDelegate = self.popupDelegate
+        view.addSubview(self.popupView!)
+        
+        return popupView
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        print("check policy : ", navigationAction.request.url ?? "(none)")
+        if navigationAction.request.url?.scheme == "sms" {
+            openExternal(url: navigationAction.request.url!)
+            decisionHandler(.cancel)
+        } else {
+            
+            decisionHandler(.allow)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        print("allow response", navigationResponse.response.url ?? "(none)")
+        decisionHandler(.allow)
+    }
+    //
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         print("nav error : ", error)
     }
@@ -53,53 +104,9 @@ extension ViewController: WKNavigationDelegate {
         print("finish : ", String(describing: navigation!))
     }
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-         print("commit : ", String(describing: navigation!))
+        print("commit : ", String(describing: navigation!))
     }
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         print("start : ", String(describing: navigation!))
     }
-    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        navigationResponse.response.url
-        print("allow response", navigationResponse.response.url)
-        decisionHandler(.allow)
-    }
-    
-    func openExternal(url: URL) {
-        UIApplication.shared.open(url,
-                                  options: [:],
-                                  completionHandler: {success in
-                                    print("url sent", success)
-        })
-    }
-
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if (navigationAction.request.url!.absoluteString.starts(with: "https://api.whatsapp.com/send")) {
-            openExternal(url: navigationAction.request.url!)
-            decisionHandler(.cancel)
-        } else if (navigationAction.request.url!.absoluteString.starts(with: "https://www.facebook.com/dialog")) {
-            openExternal(url: navigationAction.request.url!)
-            decisionHandler(.cancel)
-        } else if navigationAction.request.url?.scheme == "sms" {
-            UIApplication.shared.open(navigationAction.request.url!,
-                                      options: [:],
-                                      completionHandler: {success in
-                                        print("sms sent", success)
-            })
-            decisionHandler(.cancel)
-        } else if navigationAction.request.url?.scheme == "whatsapp" {
-            UIApplication.shared.open(navigationAction.request.url!,
-                                      options: [:],
-                                      completionHandler: {success in
-                    self.webPopupView?.removeFromSuperview();
-                    self.webPopupView = nil
-                    self.view.addSubview(self.webView)
-                    
-            })
-            decisionHandler(.cancel)
-        } else {
-            print("allow policy : ", navigationAction.request.url)
-            decisionHandler(.allow)
-        }
-    }
 }
-

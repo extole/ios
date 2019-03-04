@@ -11,6 +11,7 @@ func openExternal(url: URL) {
                               completionHandler: {success in
                                 print("openExternal", url, success)
     })
+    
 }
 
 class ViewController: UIViewController {
@@ -39,7 +40,10 @@ class ViewController: UIViewController {
         topView.navigationDelegate = topViewDelegate
         topView.uiDelegate = topViewDelegate
         
-        let myRequest = URLRequest(url: programUrl!)
+        var myRequest = URLRequest(url: programUrl!)
+        if UIApplication.shared.canOpenURL(URL(string:"whatsapp://app")!) {
+            myRequest.addValue("native", forHTTPHeaderField: "whatsapp")
+        }
         topView.load(myRequest)
     }
 }
@@ -49,16 +53,28 @@ class PopupDelegate : NSObject, WKUIDelegate, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         print("checking policy for : ", navigationAction.request.url ?? "(none)")
-        let external = ["https://api.whatsapp.com/send",
-                        "https://www.facebook.com/dialog"]
+        let external = [
+            "https://api.whatsapp.com/send": {
+                guard var urlComponents = URLComponents(string: navigationAction.request.url!.absoluteString) else {return}
+                urlComponents.scheme = "whatsapp"
+                urlComponents.host = "send"
+                urlComponents.path = ""
+                openExternal(url: urlComponents.url!)
+
+                self.topViewController?.closePopup()
+                decisionHandler(.cancel)
+                
+            },
+            "https://www.facebook.com/dialog": {
+                openExternal(url: navigationAction.request.url!)
+                self.topViewController?.closePopup()
+                decisionHandler(.cancel)
+            }]
         let externalMatch = external.filter { pattern -> Bool in
-            return navigationAction.request.url?.absoluteString.starts(with: pattern) ?? false
+            return navigationAction.request.url?.absoluteString.starts(with: pattern.key) ?? false
         }.first
         if let externalMatch = externalMatch {
-            print("matched external ", externalMatch)
-            openExternal(url: navigationAction.request.url!)
-            topViewController?.closePopup()
-            decisionHandler(.cancel)
+            externalMatch.value()
         } else {
             decisionHandler(.allow)
         }
@@ -69,7 +85,7 @@ extension ViewController : WKUIDelegate, WKNavigationDelegate {
     // handles window.open
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         print("create web view for", navigationAction.request)
-        let rect = CGRect(x: 0, y:  64 * 2, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2 )
+        let rect = CGRect(x: 0, y:  UIScreen.main.bounds.height / 4, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2 )
         self.popupView = WKWebView(frame: rect, configuration: configuration)   // Must use the configuration provided by this method
         self.popupView?.navigationDelegate = self.popupDelegate
         self.popupView?.uiDelegate = self.popupDelegate

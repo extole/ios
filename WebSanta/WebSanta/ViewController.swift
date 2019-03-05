@@ -2,6 +2,7 @@
 
 import UIKit
 import WebKit
+import FBSDKShareKit
 
 let programUrl = URL(string:"https://ios-santa.extole.io/zone/microsite")
 
@@ -42,7 +43,10 @@ class ViewController: UIViewController {
         
         var myRequest = URLRequest(url: programUrl!)
         if UIApplication.shared.canOpenURL(URL(string:"whatsapp://app")!) {
-            myRequest.addValue("native", forHTTPHeaderField: "whatsapp")
+            myRequest.addValue("native", forHTTPHeaderField: "whatapps_available")
+        }
+        if UIApplication.shared.canOpenURL(URL(string:"fbauth2://")!){
+            myRequest.addValue("native", forHTTPHeaderField: "facebook_available")
         }
         topView.load(myRequest)
     }
@@ -66,7 +70,31 @@ class PopupDelegate : NSObject, WKUIDelegate, WKNavigationDelegate {
                 
             },
             "https://www.facebook.com/dialog": {
-                openExternal(url: navigationAction.request.url!)
+                // note Info.plist changes https://developers.facebook.com/docs/ios/getting-started/
+                // CFBundleURLTypes - should include fb{your-app-id}
+                // FacebookAppID - {your-app-id}
+                // FacebookDisplayName - - {your-app-name}
+                // Link with Facebook SDK libraries : https://developers.facebook.com/docs/ios/componentsdks
+                // FBSDKCoreKit, FBSDKShareKit
+                let facebookComponents = URLComponents(url: navigationAction.request.url!,
+                                               resolvingAgainstBaseURL: false)
+                let hrefValue = facebookComponents?.queryItems?.filter({ qItem -> Bool in
+                    return qItem.name == "href"
+                }).first?.value ?? "https://santa.extole.io"
+            
+                let facebookContent = FBSDKShareLinkContent.init()
+                
+                facebookContent.contentURL = URL(string: hrefValue)
+                let dialog = FBSDKShareDialog.init()
+                dialog.fromViewController = self.topViewController
+                dialog.shareContent = facebookContent;
+                
+                if UIApplication.shared.canOpenURL(URL(string:"fbauth2://")!){
+                    dialog.mode = .native
+                } else {
+                    dialog.mode = .browser
+                }
+                dialog.show()
                 self.topViewController?.closePopup()
                 decisionHandler(.cancel)
             }]

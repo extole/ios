@@ -3,7 +3,7 @@
 import Foundation
 
 /// Loads content for consumer session
-public protocol Loader{
+@objc public protocol Loader{
     func load(session: ConsumerSession, complete: @escaping () -> Void)
 }
 

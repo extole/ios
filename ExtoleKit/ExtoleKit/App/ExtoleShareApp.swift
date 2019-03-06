@@ -3,7 +3,7 @@
 import Foundation
 
 /// Handles events for ExtoleShareApp
-public protocol ExtoleShareAppDelegate : class {
+@objc public protocol ExtoleShareAppDelegate : class {
     /// signals ExtoleShareApp is busy
     func extoleShareAppInvalid()
     /// signals ExtoleShareApp is ready
@@ -12,7 +12,8 @@ public protocol ExtoleShareAppDelegate : class {
 
 
 /// High level API for Extole Share Experience
-public final class ExtoleShareApp : ShareExperience {
+public final class ExtoleShareApp : NSObject, ShareExperience, ServiceQueue {
+
     /// Underlying Extole app
     private var extoleApp: ExtoleApp!
     /// Share Experience event handler
@@ -31,10 +32,14 @@ public final class ExtoleShareApp : ShareExperience {
     let serialQueue = DispatchQueue(label: "com.extole.ExtoleShareApp")
 
     /// Creates new Extole share experince
-    public init(programUrl: URL, programLabel label: String, delegate: ExtoleShareAppDelegate?,
+    @objc public init(programUrl: URL,
+                programLabel label: String,
+                delegate: ExtoleShareAppDelegate?,
                 extraLoaders: [Loader] = [],
                 network: Network = Network()) {
         self.label = label
+        super.init()
+        
         self.extoleApp = ExtoleApp(with: ProgramURL(baseUrl: programUrl, network: network), delegate: self)
         self.delegate = delegate
         
@@ -69,12 +74,12 @@ public final class ExtoleShareApp : ShareExperience {
     }
 
     ///
-    public func whenReady(onReady: @escaping (ExtoleShareApp) -> Void ) {
+    public func enque(command: @escaping (Any) -> Void ) {
         serialQueue.async {
             if let _ = self.session, let _ = self.selectedShareable?.code {
-                onReady(self)
+                command(self)
             } else {
-                self.readyHandlers.append(onReady)
+                self.readyHandlers.append(command)
             }
         }
     }

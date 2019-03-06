@@ -69,8 +69,8 @@ public extension ShareExperience where Self: HasShareApp {
     public func signalShare(channel: String,
                             success: @escaping (CustomSharePollingResult)->Void,
                             error: @escaping(ExtoleError) -> Void) {
-        shareApp.whenReady { app in
-            app.signalShare(channel: channel, success: success, error: error)
+        shareApp.enque { app in
+            (app as! ExtoleShareApp).signalShare(channel: channel, success: success, error: error)
         }
     }
     
@@ -78,8 +78,8 @@ public extension ShareExperience where Self: HasShareApp {
                       message: String,
                       success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
-        shareApp.whenReady { app in
-            app.share(email: email, message: message, success: success, error: error)
+        shareApp.enque { app in
+            (app as! ExtoleShareApp).share(email: email, message: message, success: success, error: error)
         }
     }
 }

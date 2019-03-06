@@ -10,8 +10,15 @@ import Foundation
     func extoleAppReady(session: ConsumerSession)
 }
 
+@objc public protocol ServiceQueue {
+    @objc func reset()
+    @objc func enque(command: @escaping (Any) -> Void)
+    //associatedtype ServiceContext: NSObject
+}
+
 /// High level API for Extole
-@objc public final class ExtoleApp: NSObject {
+@objc public final class ExtoleApp: NSObject, ServiceQueue {
+    typealias ServiceContext = ConsumerSession
     let errorRecoveryQueue = DispatchQueue(label: "ExtoleApp.errorRecovery")
     var errorCount = 0
     /// stores key-value pairs for Extole
@@ -23,6 +30,16 @@ import Foundation
     lazy private var sessionManager = SessionManager.init(program: programUrl, delegate: self)
     /// handles events for ExtoleApp
     private weak var delegate: ExtoleAppDelegate?
+    private var session: ConsumerSession?
+    private var commands : [(ConsumerSession) -> Void] = []
+    
+    public func enque(command: @escaping (Any) -> Void) {
+        if let session = session {
+            command(session)
+        } else {
+            commands.append(command)
+        }
+    }
     
     /// Initializes ExtoleApp
     @objc public init(with programUrl: ProgramURL, delegate: ExtoleAppDelegate?) {
@@ -32,6 +49,7 @@ import Foundation
     
     /// cleans saved data, invalidates delegate
     @objc public func reset() {
+        self.commands = []
         self.savedToken = nil
         self.sessionManager.logout()
     }
@@ -60,6 +78,7 @@ import Foundation
 extension ExtoleApp : SessionManagerDelegate{
     
     public func onSessionServerError(error: ExtoleError) {
+        self.session = nil
         errorCount += 1
         extoleInfo(format: "Session error %{public}@", arg: String(errorCount))
         delegate?.extoleAppInvalid()
@@ -81,18 +100,21 @@ extension ExtoleApp : SessionManagerDelegate{
     }
     
     public func onSessionInvalid() {
+        self.session = nil
         delegate?.extoleAppInvalid()
         savedToken = nil
         self.sessionManager.newSession()
     }
     
     public func onSessionDeleted() {
+        self.session = nil
         delegate?.extoleAppInvalid()
         savedToken = nil
         self.sessionManager.newSession()
     }
     
     public func onNewSession(session: ConsumerSession) {
+        self.session = session
         errorCount = 0
         self.savedToken = session.accessToken
         delegate?.extoleAppReady(session: session)

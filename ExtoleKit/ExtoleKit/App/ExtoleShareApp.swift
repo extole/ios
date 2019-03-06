@@ -25,6 +25,10 @@ public final class ExtoleShareApp : ShareExperience {
     public private(set) var session: ConsumerSession?
     /// Loads consumer shareables
     public private(set) var shareableLoader: ShareableLoader!
+    ///
+    var readyHandlers : [(ExtoleShareApp) -> Void] = []
+    
+    let serialQueue = DispatchQueue(label: "com.extole.ExtoleShareApp")
 
     /// Creates new Extole share experince
     public init(programUrl: URL, programLabel label: String, delegate: ExtoleShareAppDelegate?,
@@ -50,6 +54,7 @@ public final class ExtoleShareApp : ShareExperience {
     /// Cleans current Extole session, and share resources
     public func reset() {
         savedShareableCode = nil
+        readyHandlers = []
         extoleApp.reset()
     }
 
@@ -60,6 +65,17 @@ public final class ExtoleShareApp : ShareExperience {
         }
         set(newShareableKey) {
             extoleApp.settings.set(newShareableKey, forKey: "shareable_code")
+        }
+    }
+
+    ///
+    public func whenReady(onReady: @escaping (ExtoleShareApp) -> Void ) {
+        serialQueue.async {
+            if let _ = self.session, let _ = self.selectedShareable?.code {
+                onReady(self)
+            } else {
+                self.readyHandlers.append(onReady)
+            }
         }
     }
 
@@ -119,9 +135,10 @@ public final class ExtoleShareApp : ShareExperience {
 }
 
 extension ExtoleShareApp : ShareableLoaderDelegate {
-    public func success(shareables: [MyShareable]) {
+    public func success(shareables: [MyShareable],  complete: @escaping () -> Void) {
         if let shareable = self.selectedShareable {
             extoleInfo(format: "re-using previosly selected shareable %s", arg: shareable.code)
+            complete()
         } else {
             self.savedShareableCode = nil
             let uniqueKey = NSUUID().uuidString
@@ -130,7 +147,7 @@ extension ExtoleShareApp : ShareableLoaderDelegate {
                 self.session?.pollShareable(pollingResponse: pollingId,
                                             success: { shareableResult in
                                                 self.savedShareableCode = shareableResult.code
-                                                self.shareableLoader?.load(session: self.session!){}
+                                                self.shareableLoader?.load(session: self.session!, complete: complete)
                 }, error: {_ in
                     
                 })
@@ -140,16 +157,24 @@ extension ExtoleShareApp : ShareableLoaderDelegate {
         }
     }
 }
+
 extension ExtoleShareApp : ExtoleAppDelegate {
     public func extoleAppInvalid() {
         self.delegate?.extoleShareAppInvalid()
         session = nil
     }
-    
+
     public func extoleAppReady(session: ConsumerSession) {
         self.session = session
-        preloader.load(session: session){
-            self.delegate?.extoleShareAppReady()
+        preloader.load(session: session) {
+            self.serialQueue.async {
+                let handlers = self.readyHandlers
+                self.readyHandlers = []
+                handlers.forEach { event in
+                    event(self)
+                }
+                self.delegate?.extoleShareAppReady()
+            }
         }
     }
 }

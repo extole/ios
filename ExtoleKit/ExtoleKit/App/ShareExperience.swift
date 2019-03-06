@@ -69,13 +69,17 @@ public extension ShareExperience where Self: HasShareApp {
     public func signalShare(channel: String,
                             success: @escaping (CustomSharePollingResult)->Void,
                             error: @escaping(ExtoleError) -> Void) {
-        shareApp.signalShare(channel: channel, success: success, error: error)
+        shareApp.whenReady { app in
+            app.signalShare(channel: channel, success: success, error: error)
+        }
     }
     
     public func share(email: String,
                       message: String,
                       success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
-        shareApp.share(email: email, message: message, success: success, error: error)
+        shareApp.whenReady { app in
+            app.share(email: email, message: message, success: success, error: error)
+        }
     }
 }

@@ -4,7 +4,7 @@ import Foundation
 
 /// Handles shareable loader events
 public protocol ShareableLoaderDelegate : class {
-    func success(shareables: [MyShareable])
+    func success(shareables: [MyShareable], complete: @escaping () -> Void)
 }
 
 /// Loads shareables for consumer session
@@ -19,8 +19,7 @@ public final class ShareableLoader : Loader {
     public func load(session: ConsumerSession, complete: @escaping () -> Void) {
         session.getShareables(success: { shareables in
             self.shareables = shareables
-            self.delegate?.success(shareables: shareables)
-            complete()
+            self.delegate?.success(shareables: shareables, complete: complete)
         }, error: { error in
             complete()
         })

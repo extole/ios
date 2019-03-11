@@ -28,6 +28,7 @@
 		4974F026221C4480009C9931 /* ExtoleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974F025221C4480009C9931 /* ExtoleApp.swift */; };
 		4974F028221C5C2F009C9931 /* ExtoleShareApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974F027221C5C2F009C9931 /* ExtoleShareApp.swift */; };
 		4994A4652214498D00EF8666 /* ShareableLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4994A4642214498D00EF8666 /* ShareableLoader.swift */; };
+		49A10E7D223677F2001C7901 /* ShareExperienceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A10E7C223677F2001C7901 /* ShareExperienceTest.swift */; };
 		49BC839022205A2600E9C0B3 /* ExtoleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BC838F22205A2600E9C0B3 /* ExtoleError.swift */; };
 		49E800F5221D924B007281DE /* ShareExperience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E800F4221D924B007281DE /* ShareExperience.swift */; };
 		49F221A0221427160052670D /* ConsumerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F2219F221427160052670D /* ConsumerSession.swift */; };
@@ -72,6 +73,7 @@
 		4974F025221C4480009C9931 /* ExtoleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleApp.swift; sourceTree = "<group>"; };
 		4974F027221C5C2F009C9931 /* ExtoleShareApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleShareApp.swift; sourceTree = "<group>"; };
 		4994A4642214498D00EF8666 /* ShareableLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareableLoader.swift; sourceTree = "<group>"; };
+		49A10E7C223677F2001C7901 /* ShareExperienceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExperienceTest.swift; sourceTree = "<group>"; };
 		49BC838F22205A2600E9C0B3 /* ExtoleError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtoleError.swift; sourceTree = "<group>"; };
 		49E800F4221D924B007281DE /* ShareExperience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExperience.swift; sourceTree = "<group>"; };
 		49F2219F221427160052670D /* ConsumerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumerSession.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */,
 				4925B857220DABE000D9CD4A /* Info.plist */,
 				49250766221B003800EFBF1E /* CustomNetworkTest.swift */,
+				49A10E7C223677F2001C7901 /* ShareExperienceTest.swift */,
 			);
 			path = ExtoleKitTests;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */,
 				4925B8CF220DB66F00D9CD4A /* ZoneTest.swift in Sources */,
 				4925B8CE220DB66F00D9CD4A /* ShareableTest.swift in Sources */,
+				49A10E7D223677F2001C7901 /* ShareExperienceTest.swift in Sources */,
 				49250767221B003800EFBF1E /* CustomNetworkTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -30,6 +30,8 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
     var readyHandlers : [(ExtoleShareApp) -> Void] = []
     
     let serialQueue = DispatchQueue(label: "com.extole.ExtoleShareApp")
+    
+    private var activated = false
 
     /// Creates new Extole share experince
     @objc public init(programUrl: URL,
@@ -53,7 +55,10 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
     }
     /// Activate will resume Extole session, and prepare for sharing
     public func activate() {
-        extoleApp.activate()
+        if !activated {
+            extoleApp.activate()
+            activated = true
+        }
     }
 
     /// Cleans current Extole session, and share resources
@@ -75,6 +80,7 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
 
     ///
     public func enque(command: @escaping (ExtoleShareApp) -> Void ) {
+        activate()
         serialQueue.async {
             if let _ = self.session, let _ = self.selectedShareable?.code {
                 command(self)

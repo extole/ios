@@ -10,14 +10,8 @@ import Foundation
     func extoleAppReady(session: ConsumerSession)
 }
 
-@objc public protocol ServiceQueue {
-    @objc func reset()
-    @objc func enque(command: @escaping (Any) -> Void)
-    //associatedtype ServiceContext: NSObject
-}
-
 /// High level API for Extole
-@objc public final class ExtoleApp: NSObject, ServiceQueue {
+@objc public final class ExtoleApp: NSObject {
     typealias ServiceContext = ConsumerSession
     let errorRecoveryQueue = DispatchQueue(label: "ExtoleApp.errorRecovery")
     var errorCount = 0

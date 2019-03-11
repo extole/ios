@@ -12,7 +12,7 @@ import Foundation
 
 
 /// High level API for Extole Share Experience
-public final class ExtoleShareApp : NSObject, ShareExperience, ServiceQueue {
+public final class ExtoleShareApp : NSObject, ShareExperience {
 
     /// Underlying Extole app
     private var extoleApp: ExtoleApp!
@@ -74,7 +74,7 @@ public final class ExtoleShareApp : NSObject, ShareExperience, ServiceQueue {
     }
 
     ///
-    public func enque(command: @escaping (Any) -> Void ) {
+    public func enque(command: @escaping (ExtoleShareApp) -> Void ) {
         serialQueue.async {
             if let _ = self.session, let _ = self.selectedShareable?.code {
                 command(self)

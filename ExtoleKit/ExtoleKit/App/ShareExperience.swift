@@ -35,6 +35,7 @@ public protocol ShareExperience {
     
     
 }
+
 public protocol HasShareApp {
     var shareApp : ExtoleShareApp {
         get
@@ -70,16 +71,16 @@ public extension ShareExperience where Self: HasShareApp {
                             success: @escaping (CustomSharePollingResult)->Void,
                             error: @escaping(ExtoleError) -> Void) {
         shareApp.enque { app in
-            (app as! ExtoleShareApp).signalShare(channel: channel, success: success, error: error)
+            app.signalShare(channel: channel, success: success, error: error)
         }
     }
-    
+
     public func share(email: String,
                       message: String,
                       success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
         shareApp.enque { app in
-            (app as! ExtoleShareApp).share(email: email, message: message, success: success, error: error)
+            app.share(email: email, message: message, success: success, error: error)
         }
     }
 }

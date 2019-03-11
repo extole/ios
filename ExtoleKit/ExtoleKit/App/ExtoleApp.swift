@@ -12,7 +12,6 @@ import Foundation
 
 /// High level API for Extole
 @objc public final class ExtoleApp: NSObject {
-    typealias ServiceContext = ConsumerSession
     let errorRecoveryQueue = DispatchQueue(label: "ExtoleApp.errorRecovery")
     var errorCount = 0
     /// stores key-value pairs for Extole
@@ -25,16 +24,7 @@ import Foundation
     /// handles events for ExtoleApp
     private weak var delegate: ExtoleAppDelegate?
     private var session: ConsumerSession?
-    private var commands : [(ConsumerSession) -> Void] = []
-    
-    public func enque(command: @escaping (Any) -> Void) {
-        if let session = session {
-            command(session)
-        } else {
-            commands.append(command)
-        }
-    }
-    
+
     /// Initializes ExtoleApp
     @objc public init(with programUrl: ProgramURL, delegate: ExtoleAppDelegate?) {
         self.programUrl = programUrl
@@ -43,7 +33,6 @@ import Foundation
     
     /// cleans saved data, invalidates delegate
     @objc public func reset() {
-        self.commands = []
         self.savedToken = nil
         self.sessionManager.logout()
     }

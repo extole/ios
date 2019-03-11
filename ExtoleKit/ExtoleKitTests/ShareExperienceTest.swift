@@ -13,7 +13,7 @@ class ShareExperienceTest: XCTestCase {
         }) { (error) in
             XCTFail(String(reflecting: error))
         }
-        waitForExpectations(timeout: 105, handler: nil)
+        waitForExpectations(timeout: 5, handler: nil)
     }
 }
 

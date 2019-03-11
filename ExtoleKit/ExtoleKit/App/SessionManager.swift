@@ -62,11 +62,14 @@ public final class SessionManager {
     }
     
     public func logout() {
-        session!.deleteToken(success: {
-            self.delegate?.onSessionDeleted()
-        }, error: { error in
-            self.delegate?.onSessionServerError(error: error);
-        })
+        if let session = session {
+            session.deleteToken(success: {
+                self.delegate?.onSessionDeleted()
+            }, error: { error in
+                self.delegate?.onSessionServerError(error: error);
+            })
+        }
+        
     }
     
     private func onVerifiedToken(verifiedToken: ConsumerToken) {

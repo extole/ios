@@ -116,6 +116,8 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
                 session.pollCustomShare(pollingResponse: pollingResponse,
                                         success: success, error: error)
             }, error: error)
+        } else {
+            error(ExtoleError.init(code: "not_ready"))
         }
     }
 
@@ -173,6 +175,13 @@ extension ExtoleShareApp : ExtoleAppDelegate {
     public func extoleAppInvalid() {
         self.delegate?.extoleShareAppInvalid()
         session = nil
+        self.serialQueue.async {
+            let handlers = self.readyHandlers
+            self.readyHandlers = []
+            handlers.forEach { event in
+                event(self)
+            }
+        }
     }
 
     public func extoleAppReady(session: ConsumerSession) {

@@ -7,6 +7,36 @@
 
 @end
 
+@interface TestErrorHandler : NSObject <ExtoleApiErrorHandler>
+    @property (strong, nonatomic) XCTestCase *testCase;
+    - (instancetype)initWithTest:(XCTestCase*) testCase;
+@end
+
+@implementation TestErrorHandler
+
+- (instancetype)initWithTest:(XCTestCase *)testCase {
+    _testCase = testCase;
+    return self;
+}
+
+- (void)decodingErrorWithData:(NSData * _Nonnull)data {
+    _XCTPrimitiveFail(_testCase, @"decodingErrorWithData");
+}
+
+- (void)genericErrorWithErrorData:(ExtoleError * _Nonnull)errorData {
+    _XCTPrimitiveFail(_testCase, @"genericErrorWithErrorData");
+}
+
+- (void)noContent {
+    _XCTPrimitiveFail(_testCase, @"noContent");
+}
+
+- (void)serverErrorWithError:(NSError * _Nonnull)error {
+    _XCTPrimitiveFail(_testCase, @"serverErrorWithError");
+}
+
+@end
+
 @implementation SimpleShareExperienceTest
 
 - (void)testSignalShare {
@@ -18,6 +48,23 @@
         [promise fulfill];
     } error:^(ExtoleError * _Nonnull error) {
         XCTFail(@"unexpected error");
+    }];
+    [self waitForExpectationsWithTimeout:5 handler:NULL];
+}
+
+- (void) testFetchSettings {
+    XCTestExpectation* promise = [self expectationWithDescription:@"expected share"];
+    NSURL* programUrl = [[NSURL alloc] initWithString:(@"https://ios-santa.extole.io")];
+    SimpleShareExperince* shareExperience = [[SimpleShareExperince alloc] initWithProgramUrl:programUrl programLabel: @"refer-a-friend"];
+    [shareExperience reset];
+    
+    TestErrorHandler* errorHandler = [[TestErrorHandler alloc] init];
+    
+    [shareExperience enqueWithCommand:^(ExtoleShareApp * _Nonnull shareApp) {
+        [shareApp.session fetchDictionaryWithZone:@"settings" success:^(NSDictionary * _Nonnull dict) {
+            XCTAssertEqualObjects(@"Share message", dict[@"shareMessage"]);
+            [promise fulfill];
+        } error:errorHandler];
     }];
     [self waitForExpectationsWithTimeout:5 handler:NULL];
 }

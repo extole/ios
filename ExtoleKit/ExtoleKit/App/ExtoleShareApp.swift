@@ -23,7 +23,7 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
     /// Composite preloader to load profile, shareables, and settings at once
     private var preloader: CompositeLoader!
     /// Active consumer session
-    public private(set) var session: ConsumerSession?
+    @objc public private(set) var session: ConsumerSession?
     /// Loads consumer shareables
     public private(set) var shareableLoader: ShareableLoader!
     ///

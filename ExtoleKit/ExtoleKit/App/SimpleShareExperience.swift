@@ -11,6 +11,10 @@ import Foundation
         self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
     }
 
+    @objc public func enque(command: @escaping (ExtoleShareApp) -> Void ) {
+        shareApp.enque(command: command)
+    }
+
     @objc public func signalShare(channel: String, success: @escaping (CustomSharePollingResult) -> Void, error: @escaping (ExtoleError) -> Void) {
         shareApp.enque { app in
             app.signalShare(channel: channel, success: success, error: error)

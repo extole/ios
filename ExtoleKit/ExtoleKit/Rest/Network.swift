@@ -123,7 +123,7 @@ import Foundation
             return DefaultExtoleApiErrorHandler(error: error)
     }
 
-    func processRequest(with request: URLRequest,
+    @objc func processRequest(with request: URLRequest,
                         dataHandler:  @escaping (_: Data) -> Void,
                         errorHandler: ExtoleApiErrorHandler) {
         executor.dataTask(with: request) { data, response, error in

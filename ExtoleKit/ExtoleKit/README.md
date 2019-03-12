@@ -25,7 +25,7 @@ shareApp.signalShare(
 )
 ```
 
-## ExtoleKit REST
+## ExtoleKit REST ( Low Level )
 
 ### Overview
 To use Extole Rest you need :

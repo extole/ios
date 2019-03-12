@@ -11,9 +11,9 @@ class SimpleShareExperienceTest: XCTestCase {
         shareApp.reset()
         shareApp.signalShare(channel: "test", success: { (CustomSharePollingResult) in
             promise.fulfill();
-        }) { (error) in
+        }, error :{ (error) in
             XCTFail(String(reflecting: error))
-        }
+        })
         waitForExpectations(timeout: 5, handler: nil)
     }
     

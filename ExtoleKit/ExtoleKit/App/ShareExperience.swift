@@ -36,7 +36,7 @@ public protocol ShareExperience {
     
 }
 
-public protocol HasShareApp {
+@objc public protocol HasShareApp {
     var shareApp : ExtoleShareApp {
         get
     }

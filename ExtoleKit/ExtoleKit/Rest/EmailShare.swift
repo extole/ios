@@ -20,7 +20,7 @@ public struct EmailShare : Codable {
     let data: [String:String]?
 }
 
-public struct EmailSharePollingResult : Codable {
+@objc public final class EmailSharePollingResult : NSObject, Codable {
     let polling_id : String
     let status : String
     let share_id : String?

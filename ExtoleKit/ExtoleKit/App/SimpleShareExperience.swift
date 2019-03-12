@@ -2,14 +2,23 @@
 
 import Foundation
 
-class SimpleShareExperince: HasShareApp, ShareExperience {
+@objc public class SimpleShareExperince: NSObject {
     
-    let shareApp: ExtoleShareApp
+    public let shareApp: ExtoleShareApp
     let appDelegate = SimpleShareAppDelegate()
     
-    init(programUrl: URL, programLabel: String) {
-        
+    @objc public init(programUrl: URL, programLabel: String) {
         self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
+    }
+
+    @objc public func signalShare(channel: String, success: @escaping (CustomSharePollingResult) -> Void, error: @escaping (ExtoleError) -> Void) {
+        shareApp.enque { app in
+            app.signalShare(channel: channel, success: success, error: error)
+        }
+    }
+    
+    @objc public func reset() {
+        shareApp.reset()
     }
     
     var isValid: Bool? {

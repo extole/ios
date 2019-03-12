@@ -17,7 +17,7 @@ public struct CustomShare : Codable {
     let data: [String:String]?
 }
 
-public struct CustomSharePollingResult : Codable {
+@objc public final class CustomSharePollingResult : NSObject, Codable {
     let polling_id : String
     let status : String
     let share_id : String?

@@ -19,7 +19,9 @@ To use Extole Rest you need :
 
 With ConsumerSession initialized - you can call Extole Rest API.
 
-## Create ConsumerSession
+### Session management
+
+#### Create ConsumerSession
 
 You will need to create new ConsumerSession, before calling any other Extole API.
 Typically you will save ConsumerSession in application private storage,
@@ -37,7 +39,7 @@ program.getToken(success: { token in
 })
 ```
 
-## Resume ConsumerSession
+#### Resume ConsumerSession
 It's possible that ConsumerSession is expired, so you should validate it on application startup.
 
 ```swift
@@ -54,7 +56,7 @@ consumerSession.getToken(success: { token in
 
 ```
 
-## Invalidate ConsumerSession
+#### Invalidate ConsumerSession
 
 ```swift
 let consumerSession = ...
@@ -67,20 +69,19 @@ programSession.deleteToken(success: {
 
 ```
 
-## Get Profile
+### Profile
+
+#### Get Profile
 
 ```swift
 consumerSession.getProfile(success: { profile in
-  // profile?.first_name ..
+  // profile.first_name ..
 }, error: { error in
-  switch(error) {
-  case GetProfileError.invalidAccessToken: // token is invalid, get a new token 
-  default: // some other error happened - retry later
-  }
+  //
 })
 ```
 
-## Update Profile
+#### Update Profile
 ```swift
 let myProfile = MyProfile(email: "testprofile@extole.com",
                                   partner_user_id: "Zorro",
@@ -88,9 +89,6 @@ let myProfile = MyProfile(email: "testprofile@extole.com",
                                   last_name: "Profile")
 programSession.updateProfile(profile: myProfile, success: {
 }, error: { error in
-  switch(error) {
-  case UpdateProfileError.invalidAccessToken: // token is invalid, get a new token 
-  default: // some other error happened - retry later
-  }
+  // 
 }
 ```

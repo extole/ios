@@ -60,7 +60,7 @@ consumerSession.getToken(success: { token in
 
 ```swift
 let consumerSession = ...
-programSession.deleteToken(success: {
+consunmerSession.deleteToken(success: {
       // token is removed from Extole API
       // you will need to create a new ConsumerSession
   }, error: { error in
@@ -83,12 +83,98 @@ consumerSession.getProfile(success: { profile in
 
 #### Update Profile
 ```swift
-let myProfile = MyProfile(email: "testprofile@extole.com",
-                                  partner_user_id: "Zorro",
-                                  first_name: "Test",
-                                  last_name: "Profile")
-programSession.updateProfile(profile: myProfile, success: {
+let myProfile = MyProfile(
+    email: "testprofile@extole.com",
+    partner_user_id: "Zorro",
+    first_name: "Test",
+    last_name: "Profile")
+consumerSession.updateProfile(profile: myProfile, success: {
+  // ok
 }, error: { error in
-  // 
+  // see error.code
 }
+```
+
+### Shareable
+
+#### Create Shareable
+
+```swift
+let newShareable = MyShareable.init(label: "refer-a-friend")
+        
+consumerSession.createShareable(shareable: newShareable, success: { shareableResult in
+  // shareableResult.polling_id
+  }, error: { error in
+  // see error.code
+})
+```
+#### Get Shareables
+
+```swift
+consumerSession.getShareables(success: { result in
+  // result.first?.label
+  }, error:  { error in
+  // see error.code
+})
+
+```
+
+### Share
+#### Create Custom Share
+
+```swift
+let advocateCode = __SHAREABLE_CODE__
+let customShare = CustomShare(advocate_code: advocateCode,
+    channel: "sms",
+    message: "check this out",
+    recipient_email: "friend@extole.com",
+    data: [:])
+        
+consumerSession.customShare(share: customShare, success: { shareResponse in
+  // shareResponse.polling_id
+  }, error: { error in
+  // check error.code
+})
+```
+### Zone
+
+Zone shall return JSON data
+
+#### Fetch Zone
+
+```swift
+struct SettingsSchema : Codable {
+    let shareMessage: String 
+}
+
+consumerSession.fetchObject(zone: "settings",
+  success: { (settings: SettingsSchema) in
+    // settings.shareMessage
+  }, error: { error in
+    // see error.code
+})
+
+```
+
+### Custom Network
+
+You can define custom network, to add logging, custom HTTP headers etc.
+
+```swift
+class CustomExecutor : NetworkExecutor {
+  func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+      var newRequest = request
+      newRequest.addValue("customValue", forHTTPHeaderField: "X-My-Header")
+      let urlSession = URLSession(configuration: URLSessionConfiguration.ephemeral)
+      let task = urlSession.dataTask(with: newRequest, completionHandler: completionHandler)
+      task.resume()
+  }
+}
+
+let network = Network(executor: CustomExecutor())
+
+let program = ProgramURL(baseUrl: URL.init(string: "https://virtual.extole.io")!,
+    network: network)
+
+// program.getToken...
 ```

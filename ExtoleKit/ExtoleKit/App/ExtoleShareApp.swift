@@ -122,15 +122,12 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
     }
 
     /// Sends a share to given email, using Extole email service
-    public func share(email: String,
-                      message: String,
+    public func share(share: EmailShare,
                       success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
-        extoleInfo(format: "sharing to email %s", arg: email)
+        extoleInfo(format: "sharing to email %s", arg: share.recipient_email)
         if let session = session, let shareableCode = selectedShareable?.code {
-            let share = EmailShare.init(advocate_code: shareableCode,
-                                        recipient_email: email,
-                                        message: message)
+            share.advocate_code = shareableCode
             session.emailShare(share: share, success: { pollingResponse in
                 session.pollEmailShare(pollingResponse: pollingResponse!,success:success, error: error)
             }, error: error)

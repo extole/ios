@@ -19,8 +19,7 @@ public protocol ShareExperience {
                  error: @escaping(ExtoleError) -> Void)
     
     /// Sends a share to given email, using Extole email service
-    func share(email: String,
-               message: String,
+    func share(share: EmailShare,
                success: @escaping (EmailSharePollingResult)->Void,
                error: @escaping(ExtoleError) -> Void)
     
@@ -42,7 +41,11 @@ public protocol ShareExperience {
     }
 }
 
-public extension ShareExperience where Self: HasShareApp {
+public protocol DefaultShareExperince : ShareExperience{
+    
+}
+
+public extension DefaultShareExperince where Self: HasShareApp {
     func activate() {
         shareApp.activate()
     }
@@ -75,12 +78,11 @@ public extension ShareExperience where Self: HasShareApp {
         }
     }
 
-    public func share(email: String,
-                      message: String,
+    public func share(share: EmailShare,
                       success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
         shareApp.enque { app in
-            app.share(email: email, message: message, success: success, error: error)
+            app.share(share: share, success: success, error: error)
         }
     }
 }

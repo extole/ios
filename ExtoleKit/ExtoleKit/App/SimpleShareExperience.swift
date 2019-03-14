@@ -2,7 +2,25 @@
 
 import Foundation
 
-@objc public class SimpleShareExperince: NSObject {
+@objc public class SimpleShareExperince: NSObject, ShareExperience {
+    public func activate() {
+        self.shareApp.activate()
+    }
+    
+    public func reload(complete: @escaping () -> Void) {
+        self.shareApp.reload(complete: complete)
+    }
+
+    public func share(share: EmailShare, success: @escaping (EmailSharePollingResult) -> Void, error: @escaping (ExtoleError) -> Void) {
+        shareApp.enque { app in
+            self.shareApp.share(share: share, success: success, error: error)
+        }
+    }
+    
+    
+    public var selectedShareable: MyShareable?
+    
+    public var session: ConsumerSession?
     
     public let shareApp: ExtoleShareApp
     let appDelegate = SimpleShareAppDelegate()

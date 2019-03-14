@@ -2,8 +2,8 @@
 
 import Foundation
 
-public struct EmailShare : Codable {
-    public init(advocate_code: String, recipient_email: String,
+@objc public final class EmailShare : NSObject, Codable {
+    public init(advocate_code: String? = nil, recipient_email: String,
          message: String,
          subject: String? = nil,
          data: [String:String]? = nil) {
@@ -13,11 +13,11 @@ public struct EmailShare : Codable {
         self.recipient_email = recipient_email
         self.data = data
     }
-    let advocate_code: String
-    let message: String
-    let subject: String?
-    let recipient_email: String?
-    let data: [String:String]?
+    var advocate_code: String?
+    var message: String
+    var subject: String?
+    var recipient_email: String?
+    var data: [String:String]?
 }
 
 @objc public final class EmailSharePollingResult : NSObject, Codable {

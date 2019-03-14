@@ -4,48 +4,64 @@ import Foundation
 
 @objc public class SimpleShareExperince: NSObject {
 
-    public func async(command: @escaping (ExtoleShareApp) -> Void) {
-        self.shareApp.async(command: command)
-    }
+    private var activated = false
     
-    public func activate() {
-        self.shareApp.activate()
-    }
-    
-    public func reload(complete: @escaping () -> Void) {
-        self.shareApp.reload(complete: complete)
-    }
-    
-    public var selectedShareable: MyShareable?
-    
-    public var session: ConsumerSession?
-    
-    public let shareApp: ExtoleShareApp
-    
-    let appDelegate = SimpleShareAppDelegate()
-    
-    @objc public init(programUrl: URL, programLabel: String) {
-        self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
+    @objc public func reset() {
+        self.appDelegate.readyHandlers = []
+        shareApp.reset()
     }
 
-    public func signal(zone: String,
-                        parameters: [URLQueryItem]? = nil,
-                        success:@escaping () -> Void = { },
-                        error : @escaping (ExtoleError) -> Void = { _ in }) {
-        self.async { (shareApp) in
-            shareApp.signal(zone: zone,
-                             parameters: parameters,
-                             success: success,
-                             error: error)
+    ///
+    @objc public func async(command: @escaping (ExtoleShareApp?) -> Void ) {
+        if !activated {
+            shareApp.activate()
+            activated = true
+        }
+        self.appDelegate.serialQueue.async {
+            if (self.appDelegate.isValid) {
+                command(self.shareApp)
+            } else {
+                self.appDelegate.readyHandlers.append(command)
+            }
         }
     }
-
+    
     public func fetchObject<T: Codable>(zone: String,
                                         parameters: [URLQueryItem]? = nil,
                                         success:@escaping (T) -> Void,
                                         error : @escaping (ExtoleError) -> Void) {
         self.async { (shareApp) in
-            shareApp.fetchObject(zone: zone, parameters: parameters, success: success, error: error)
+            if let shareApp = shareApp {
+                shareApp.session?.fetchObject(zone: zone, parameters: parameters, success: success, error: error)
+            } else {
+                error(ExtoleError.init(code: "reset"))
+            }
+        }
+    }
+
+    
+    @objc public func notify(share: CustomShare,
+                       success: @escaping (CustomSharePollingResult)->Void,
+                       error: @escaping(ExtoleError) -> Void) {
+        self.async { (shareApp) in
+            if let shareApp = shareApp {
+                shareApp.notify(share: share, success: success, error: error)
+            } else {
+                error(ExtoleError.init(code: "reset"))
+            }
+        }
+    }
+    
+    @objc public func signal(zone: String,
+                             parameters: [URLQueryItem]? = nil,
+                             success:@escaping () -> Void,
+                             error : @escaping (ExtoleError) -> Void) {
+        self.async { (shareApp) in
+            if let shareApp = shareApp {
+                shareApp.session?.signal(zone: zone, parameters: parameters, success: success, error: error)
+            } else {
+                error(ExtoleError.init(code: "reset"))
+            }
         }
     }
     
@@ -54,34 +70,23 @@ import Foundation
                                       success: @escaping (_: NSDictionary) -> Void,
                                       error : ExtoleApiErrorHandler) {
         self.async { (shareApp) in
-            shareApp.fetchDictionary(zone: zone, parameters: parameters, success: success, error: error)
+            if let shareApp = shareApp {
+                shareApp.session?.fetchDictionary(zone: zone, parameters: parameters, success: success, error: error)
+            } else {
+                error.genericError(errorData: ExtoleError.init(code: "reset"))
+            }
         }
     }
 
-    public func send(
-        share: EmailShare,
-        success: @escaping (EmailSharePollingResult) -> Void = { _ in },
-        error: @escaping (ExtoleError) -> Void = { _ in }) {
-        shareApp.async { app in
-            self.shareApp.send(share: share, success: success, error: error)
-        }
+    public let shareApp: ExtoleShareApp
+    
+    let appDelegate = SimpleShareAppDelegate()
+    
+    @objc public init(programUrl: URL, programLabel: String) {
+        self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
     }
     
-    @objc public func notify(
-            share: CustomShare,
-            success: @escaping (CustomSharePollingResult) -> Void = { _ in },
-            error: @escaping (ExtoleError) -> Void = { _ in }) {
-        shareApp.async { app in
-            app.notify(share: share, success: success, error: error)
-        }
-    }
-
-    
-    @objc public func reset() {
-        shareApp.reset()
-    }
-    
-    var isValid: Bool? {
+    var isValid: Bool {
         get {
             return appDelegate.isValid
         }
@@ -90,13 +95,29 @@ import Foundation
 
 class SimpleShareAppDelegate : ExtoleShareAppDelegate {
 
-    var isValid : Bool?;
+    var readyHandlers : [(ExtoleShareApp?) -> Void] = []
+    let serialQueue = DispatchQueue(label: "com.extole.ExtoleShareApp")
+    var isValid = false
     
     func extoleShareAppInvalid() {
+        self.serialQueue.async {
+            let handlers = self.readyHandlers
+            self.readyHandlers = []
+            handlers.forEach { event in
+                event(nil)
+            }
+        }
         isValid = false;
     }
     
-    func extoleShareAppReady() {
-         isValid = true;
+    func extoleShareAppReady(shareApp: ExtoleShareApp) {
+        isValid = true;
+        self.serialQueue.async {
+            let handlers = self.readyHandlers
+            self.readyHandlers = []
+            handlers.forEach { event in
+                event(shareApp)
+            }
+        }
     }
 }

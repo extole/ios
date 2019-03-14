@@ -59,7 +59,7 @@ extension ExtoleSanta : ExtoleShareAppDelegate {
         }
     }
     
-    func extoleShareAppReady() {
+    func extoleShareAppReady(shareApp: ExtoleShareApp) {
         DispatchQueue.main.async {
              self.delegate?.santaIsReady()
         }

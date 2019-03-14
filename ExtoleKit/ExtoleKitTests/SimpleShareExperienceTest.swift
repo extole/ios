@@ -30,7 +30,7 @@ class SimpleShareExperienceTest: XCTestCase {
         shareApp.notify(share: CustomShare(channel:"test"), success: { (CustomSharePollingResult) in
             XCTFail("unexpected success")
         }) { (error) in
-            XCTAssertEqual("not_ready", error.code)
+            XCTAssertEqual("reset", error.code)
             promise.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)

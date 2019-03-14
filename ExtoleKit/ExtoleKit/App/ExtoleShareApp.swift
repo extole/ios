@@ -7,9 +7,8 @@ import Foundation
     /// signals ExtoleShareApp is busy
     func extoleShareAppInvalid()
     /// signals ExtoleShareApp is ready
-    func extoleShareAppReady()
+    func extoleShareAppReady(shareApp: ExtoleShareApp)
 }
-
 
 /// High level API for Extole Share Experience
 public final class ExtoleShareApp : NSObject {
@@ -27,11 +26,6 @@ public final class ExtoleShareApp : NSObject {
     /// Loads consumer shareables
     public private(set) var shareableLoader: ShareableLoader!
     ///
-    var readyHandlers : [(ExtoleShareApp) -> Void] = []
-    
-    let serialQueue = DispatchQueue(label: "com.extole.ExtoleShareApp")
-    
-    private var activated = false
 
     /// Creates new Extole share experince
     @objc public init(programUrl: URL,
@@ -55,16 +49,12 @@ public final class ExtoleShareApp : NSObject {
     }
     /// Activate will resume Extole session, and prepare for sharing
     public func activate() {
-        if !activated {
-            extoleApp.activate()
-            activated = true
-        }
+        extoleApp.activate()
     }
 
     /// Cleans current Extole session, and share resources
     public func reset() {
         savedShareableCode = nil
-        readyHandlers = []
         extoleApp.reset()
     }
 
@@ -78,18 +68,7 @@ public final class ExtoleShareApp : NSObject {
         }
     }
 
-    ///
-    public func async(command: @escaping (ExtoleShareApp) -> Void ) {
-        activate()
-        serialQueue.async {
-            if let _ = self.session, let _ = self.selectedShareable?.code {
-                command(self)
-            } else {
-                self.readyHandlers.append(command)
-            }
-        }
-    }
-
+    
     /// reloads share experince, within the same consumer session
     public func reload(complete: @escaping () -> Void) {
         if let session = session {
@@ -134,32 +113,7 @@ public final class ExtoleShareApp : NSObject {
         }
     }
     
-    public func fetchObject<T: Codable>(zone: String,
-                                        parameters: [URLQueryItem]? = nil,
-                                        success:@escaping (T) -> Void,
-                                        error : @escaping (ExtoleError) -> Void) {
-        self.async { (shareApp) in
-            shareApp.session?.fetchObject(zone: zone, parameters: parameters, success: success, error: error)
-        }
-    }
-    
-    @objc public func signal(zone: String,
-                            parameters: [URLQueryItem]? = nil,
-                            success:@escaping () -> Void,
-                            error : @escaping (ExtoleError) -> Void) {
-        self.async { (shareApp) in
-            shareApp.session?.signal(zone: zone, parameters: parameters, success: success, error: error)
-        }
-    }
-
-    @objc public func fetchDictionary(zone: String,
-                                      parameters: [URLQueryItem]?,
-                                      success: @escaping (_: NSDictionary) -> Void,
-                                      error : ExtoleApiErrorHandler) {
-        self.async { (shareApp) in
-            shareApp.session?.fetchDictionary(zone: zone, parameters: parameters, success: success, error: error)
-        }
-    }
+   
     
     /// Shareable used for current consumer session
     public var selectedShareable: MyShareable? {
@@ -199,26 +153,13 @@ extension ExtoleShareApp : ExtoleAppDelegate {
     public func extoleAppInvalid() {
         self.delegate?.extoleShareAppInvalid()
         session = nil
-        self.serialQueue.async {
-            let handlers = self.readyHandlers
-            self.readyHandlers = []
-            handlers.forEach { event in
-                event(self)
-            }
-        }
+        
     }
 
     public func extoleAppReady(session: ConsumerSession) {
         self.session = session
         preloader.load(session: session) {
-            self.serialQueue.async {
-                let handlers = self.readyHandlers
-                self.readyHandlers = []
-                handlers.forEach { event in
-                    event(self)
-                }
-                self.delegate?.extoleShareAppReady()
-            }
+            self.delegate?.extoleShareAppReady(shareApp: self)
         }
     }
 }

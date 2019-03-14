@@ -74,6 +74,18 @@ import Foundation
             }
         }
     }
+
+    @objc public func update(profile: MyProfile,
+                             success: @escaping () -> Void = {},
+                             error: @escaping (ExtoleError) -> Void = { _ in }) {
+        self.async { (shareApp) in
+            if let shareApp = shareApp {
+                shareApp.session?.updateProfile(profile: profile, success: success, error: error)
+            } else {
+                error(ExtoleError.init(code: "reset"))
+            }
+        }
+    }
     
     @objc public func fetchDictionary(zone: String,
                                       parameters: [URLQueryItem]?,

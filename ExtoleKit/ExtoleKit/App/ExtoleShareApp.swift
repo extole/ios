@@ -25,7 +25,6 @@ public final class ExtoleShareApp : NSObject {
     @objc public private(set) var session: ConsumerSession?
     /// Loads consumer shareables
     public private(set) var shareableLoader: ShareableLoader!
-    ///
 
     /// Creates new Extole share experince
     @objc public init(programUrl: URL,

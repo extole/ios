@@ -63,5 +63,32 @@ class SimpleShareExperienceTest: XCTestCase {
         })
         waitForExpectations(timeout: 5, handler: nil)
     }
+    
+    func testUpdateProfile() {
+        let updateProfile = expectation(description: "update profile")
+        let shareApp = ExtoleShareExperince(programUrl: URL.init(string: "https://ios-santa.extole.io")!, programLabel: "missing")
+        shareApp.reset()
+        let profile = MyProfile(first_name: "test profile")
+        
+        shareApp.update(profile: profile, success: {
+            updateProfile.fulfill()
+        }, error: { (error) in
+            XCTFail("unexpected error " + error.code)
+        })
+        
+        wait(for: [updateProfile], timeout: 5)
+        let fetchProfile = expectation(description: "fetch profile")
+        
+        shareApp.async { (app) in
+            app?.session?.getProfile(success: { (profile) in
+                XCTAssertEqual("test profile", profile.first_name)
+                fetchProfile.fulfill()
+            }, error: { error in
+                 XCTFail("unexpected error " + error.code)
+            })
+        }
+        
+        waitForExpectations(timeout: 5, handler: nil)
+    }
 }
 

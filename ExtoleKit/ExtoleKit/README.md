@@ -13,6 +13,8 @@ ExtoleShareExperience :
 * prefetch CTAs etc
 * signal events
 * notify Extole about share action
+* update profile
+* access lower level abstractions
 
 ### Notify Extole that share happened within application
 
@@ -59,8 +61,32 @@ let parameters : [URLQueryItem] = [
     URLQueryItem(name: "cart_value", value: "12.31")
 ]
 shareExperience.signal(zone: "conversion", parameters: parameters)
-
 ```
+### Update profile
+
+```swift
+let shareExperience = ExtoleShareExperience(
+  programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+  programLabel: "refer-a-friend")
+shareExperience.update(profile: MyProfile(email: "me@extolel.com"))
+```
+
+### Access Rest API
+```swift
+let shareExperience = ExtoleShareExperience(
+  programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+  programLabel: "refer-a-friend")
+
+shareApp.async { (app) in
+    app?.session?.getProfile(success: { (profile) in
+      // read profile
+    }, error: { error in
+      // handle error
+    })
+}
+```
+
+
 ## ExtoleKit Low Level abstractions
 
 * ExtoleShareApp - creates shareable when activated, pre-loads other content when activated

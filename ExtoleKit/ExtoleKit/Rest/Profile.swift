@@ -2,7 +2,7 @@
 
 import Foundation
 
-public struct MyProfile : Codable {
+@objc public final class MyProfile : NSObject, Codable {
     public init(email: String? = nil, partner_user_id: String? = nil,
          first_name:String? = nil, last_name:String? = nil) {
         self.email = email

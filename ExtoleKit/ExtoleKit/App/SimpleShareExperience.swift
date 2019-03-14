@@ -10,13 +10,6 @@ import Foundation
     public func reload(complete: @escaping () -> Void) {
         self.shareApp.reload(complete: complete)
     }
-
-    public func share(share: EmailShare, success: @escaping (EmailSharePollingResult) -> Void, error: @escaping (ExtoleError) -> Void) {
-        shareApp.enque { app in
-            self.shareApp.share(share: share, success: success, error: error)
-        }
-    }
-    
     
     public var selectedShareable: MyShareable?
     
@@ -33,13 +26,21 @@ import Foundation
         shareApp.enque(command: command)
     }
 
-    @objc public func
-        signal(
+    public func send(
+        share: EmailShare,
+        success: @escaping (EmailSharePollingResult) -> Void = { _ in },
+        error: @escaping (ExtoleError) -> Void = { _ in }) {
+        shareApp.enque { app in
+            self.shareApp.send(share: share, success: success, error: error)
+        }
+    }
+    
+    @objc public func notify(
             share: CustomShare,
             success: @escaping (CustomSharePollingResult) -> Void = { _ in },
             error: @escaping (ExtoleError) -> Void = { _ in }) {
         shareApp.enque { app in
-            app.signal(share: share, success: success, error: error)
+            app.notify(share: share, success: success, error: error)
         }
     }
     

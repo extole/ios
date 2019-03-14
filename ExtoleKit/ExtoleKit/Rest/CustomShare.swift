@@ -30,7 +30,7 @@ import Foundation
 }
 
 extension ConsumerSession {
-    
+
     public func customShare(share: CustomShare,
                             success : @escaping (PollingIdResponse) -> Void,
                             error: @escaping (ExtoleError) -> Void) {

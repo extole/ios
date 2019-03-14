@@ -9,7 +9,7 @@ ExtoleKit is written in Swift, key abstractions are also available for Objective
 
 ## ExtoleKit High Level API
 
-### Signal Share
+### Notify Extole that share happened in application
 
 ```swift
 let shareApp = SimpleShareExperince(
@@ -17,7 +17,17 @@ let shareApp = SimpleShareExperince(
   programLabel: "refer-a-friend")
 
 let customShare = CustomShare(channel: "sms")
-shareApp.signal(share: customShare)
+shareApp.notify(share: customShare)
+```
+### Send Email Share via Extole
+
+```swift
+let shareApp = SimpleShareExperince(
+  programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+  programLabel: "refer-a-friend")
+
+let share = EmailShare(recipient_email: email, message: "Check this out")
+shareApp.send(share: customShare)
 ```
 
 ## ExtoleKit REST ( Low Level )

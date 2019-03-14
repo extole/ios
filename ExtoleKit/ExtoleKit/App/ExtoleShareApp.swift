@@ -105,7 +105,7 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
     }
 
     /// Sends custom share event to Extole
-    public func signal(share: CustomShare,
+    public func notify(share: CustomShare,
                         success: @escaping (CustomSharePollingResult)->Void,
                         error: @escaping(ExtoleError) -> Void) {
         extoleInfo(format: "shared via custom channel %s", arg: share.channel)
@@ -122,7 +122,7 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
     }
 
     /// Sends a share to given email, using Extole email service
-    public func share(share: EmailShare,
+    public func send(share: EmailShare,
                       success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
         extoleInfo(format: "sharing to email %s", arg: share.recipient_email)

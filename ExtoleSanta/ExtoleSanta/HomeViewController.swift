@@ -178,7 +178,7 @@ class HomeViewController : UIViewController {
                 default : do {
                     self.busyIndicator.startAnimating()
                     let share = CustomShare(channel: completedActivity.rawValue)
-                    self.santaApp.signal(share: share,
+                    self.santaApp.notify(share: share,
                                               success : { _ in
                                                 DispatchQueue.main.async {
                                                     self.busyIndicator.stopAnimating()

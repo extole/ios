@@ -42,7 +42,7 @@
 - (void)testSignalShare {
     XCTestExpectation* promise = [self expectationWithDescription:@"expected share"];
     NSURL* programUrl = [[NSURL alloc] initWithString:(@"https://ios-santa.extole.io")];
-    SimpleShareExperince* shareExperience = [[SimpleShareExperince alloc] initWithProgramUrl:programUrl programLabel: @"refer-a-friend"];
+    ExtoleShareExperince* shareExperience = [[ExtoleShareExperince alloc] initWithProgramUrl:programUrl programLabel: @"refer-a-friend"];
     [shareExperience reset];
     CustomShare* share = [[CustomShare alloc] initWithChannel:@"test"];
     [shareExperience notifyWithShare:share success:^(CustomSharePollingResult * result) {
@@ -56,7 +56,7 @@
 - (void) testFetchSettings {
     XCTestExpectation* promise = [self expectationWithDescription:@"expected share"];
     NSURL* programUrl = [[NSURL alloc] initWithString:(@"https://ios-santa.extole.io")];
-    SimpleShareExperince* shareExperience = [[SimpleShareExperince alloc] initWithProgramUrl:programUrl programLabel: @"refer-a-friend"];
+    ExtoleShareExperince* shareExperience = [[ExtoleShareExperince alloc] initWithProgramUrl:programUrl programLabel: @"refer-a-friend"];
     [shareExperience reset];
     
     TestErrorHandler* errorHandler = [[TestErrorHandler alloc] init];

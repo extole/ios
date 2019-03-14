@@ -2,9 +2,15 @@
 
 import Foundation
 
-@objc public class SimpleShareExperince: NSObject {
+@objc public class ExtoleShareExperince: NSObject {
 
     private var activated = false
+    private let shareApp: ExtoleShareApp
+    private let appDelegate = SimpleShareAppDelegate()
+    
+    @objc public init(programUrl: URL, programLabel: String) {
+        self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
+    }
     
     @objc public func reset() {
         self.appDelegate.readyHandlers = []
@@ -18,7 +24,7 @@ import Foundation
             activated = true
         }
         self.appDelegate.serialQueue.async {
-            if (self.appDelegate.isValid) {
+            if (self.isValid) {
                 command(self.shareApp)
             } else {
                 self.appDelegate.readyHandlers.append(command)
@@ -78,14 +84,7 @@ import Foundation
         }
     }
 
-    public let shareApp: ExtoleShareApp
-    
-    let appDelegate = SimpleShareAppDelegate()
-    
-    @objc public init(programUrl: URL, programLabel: String) {
-        self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
-    }
-    
+
     var isValid: Bool {
         get {
             return appDelegate.isValid

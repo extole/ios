@@ -39,9 +39,22 @@ let shareApp = SimpleShareExperince(
 
 shareApp.fetchObject(zone: "settings", success: { (settings: Settings) in
              // use settings
-        }, error: { (error) in
- 	   // handle error 
-        })
+    }, error: { (error) in
+   // handle error 
+    })
+```
+
+### Signal zone event
+
+```swift
+let shareApp = SimpleShareExperince(
+  programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+  programLabel: "refer-a-friend")
+let parameters : [URLQueryItem] = [
+    URLQueryItem(name: "cart_value", value: "12.31")
+]
+shareApp.signal(zone: "conversion", parameters: parameters)
+
 ```
 
 ## ExtoleKit REST ( Low Level )

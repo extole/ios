@@ -24,7 +24,7 @@ class ProfileViewController: UIViewController {
         let updatedProfile = MyProfile.init(first_name: firstNameText.text,
                                             last_name: lastNameText.text)
         santaApp.session?.updateProfile(profile: updatedProfile, success: {
-            self.santaApp.reload {
+            self.santaApp.shareApp.reload {
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)
                 }

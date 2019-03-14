@@ -16,7 +16,7 @@ struct ShareSettings : Codable {
     let item4: String?
 }
 
-class ExtoleSanta : HasShareApp, DefaultShareExperince {
+class ExtoleSanta {
 
     /// Loads consumer profile
     public private(set) var profileLoader = ProfileLoader()
@@ -41,6 +41,12 @@ class ExtoleSanta : HasShareApp, DefaultShareExperince {
     var shareSettings : ShareSettings? {
         get {
             return settingsLoader.zoneData
+        }
+    }
+    
+    var session : ConsumerSession? {
+        get {
+            return shareApp.session
         }
     }
     

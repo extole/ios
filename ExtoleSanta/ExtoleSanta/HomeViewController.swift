@@ -71,7 +71,7 @@ class HomeViewController : UIViewController {
         }
         refreshControlCompat?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
 
-        santaApp.activate()
+        santaApp.shareApp.activate()
         busyIndicator.startAnimating()
     }
 
@@ -80,7 +80,7 @@ class HomeViewController : UIViewController {
     }
     
     @objc private func refreshData(_ sender: Any) {
-        santaApp.reload() {
+        santaApp.shareApp.reload() {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 self.refreshControlCompat?.endRefreshing()
@@ -111,7 +111,7 @@ class HomeViewController : UIViewController {
         let logoutConfimation = UIAlertController(title: "Reset confirmation", message: "Resetting removes your profile and wishlist from device", preferredStyle: .actionSheet)
         
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Yes", comment: "Go ahead"), style: .destructive, handler: { _ in
-            self.santaApp.reset()
+            self.santaApp.shareApp.reset()
         }))
         logoutConfimation.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Hold on"), style: .cancel, handler: nil))
         self.present(logoutConfimation, animated: true, completion: nil)
@@ -138,10 +138,10 @@ class HomeViewController : UIViewController {
     }
     
     func addWishToShareable(item: String) {
-        var wishItems = santaApp.selectedShareable?.data ?? [:]
+        var wishItems = santaApp.shareApp.selectedShareable?.data ?? [:]
         wishItems[item] = "please santa"
         let updateShareable = UpdateShareable.init(data: wishItems)
-        let shareableCode = self.santaApp.selectedShareable?.code
+        let shareableCode = self.santaApp.shareApp.selectedShareable?.code
         self.santaApp.session?.updateShareable(code: shareableCode!,
                                                shareable: updateShareable,
                                                success: {
@@ -152,7 +152,7 @@ class HomeViewController : UIViewController {
     }
 
     @objc func handleShare(_ sender: UIButton) {
-        guard let shareLink = santaApp.selectedShareable?.link else {
+        guard let shareLink = santaApp.shareApp.selectedShareable?.link else {
             self.showError(title: "Invalid state", message: "No Shareable")
             return
         }
@@ -178,7 +178,7 @@ class HomeViewController : UIViewController {
                 default : do {
                     self.busyIndicator.startAnimating()
                     let share = CustomShare(channel: completedActivity.rawValue)
-                    self.santaApp.notify(share: share,
+                    self.santaApp.shareApp.notify(share: share,
                                               success : { _ in
                                                 DispatchQueue.main.async {
                                                     self.busyIndicator.stopAnimating()
@@ -214,14 +214,14 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let selectedSection = sections[section]
-        return selectedSection.getIUTableSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).values.count
+        return selectedSection.getIUTableSection(profile: santaApp.profile, shareable: santaApp.shareApp.selectedShareable).values.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         let section = sections[indexPath.section]
         let value = section.getIUTableSection(profile: santaApp.profile,
-                                           shareable: santaApp.selectedShareable).values[indexPath.row]
+                                           shareable: santaApp.shareApp.selectedShareable).values[indexPath.row]
         
         if let presentValue = value {
             cell.textLabel?.text = presentValue
@@ -238,7 +238,7 @@ extension HomeViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let selectedSection = sections[section]
-        return selectedSection.getIUTableSection(profile: santaApp.profile, shareable: santaApp.selectedShareable).title;
+        return selectedSection.getIUTableSection(profile: santaApp.profile, shareable: santaApp.shareApp.selectedShareable).title;
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

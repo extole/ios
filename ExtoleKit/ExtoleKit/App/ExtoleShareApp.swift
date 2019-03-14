@@ -12,7 +12,7 @@ import Foundation
 
 
 /// High level API for Extole Share Experience
-public final class ExtoleShareApp : NSObject, ShareExperience {
+public final class ExtoleShareApp : NSObject {
 
     /// Underlying Extole app
     private var extoleApp: ExtoleApp!
@@ -143,6 +143,15 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
         }
     }
     
+    @objc public func signal(zone: String,
+                            parameters: [URLQueryItem]? = nil,
+                            success:@escaping () -> Void,
+                            error : @escaping (ExtoleError) -> Void) {
+        self.async { (shareApp) in
+            shareApp.session?.signal(zone: zone, parameters: parameters, success: success, error: error)
+        }
+    }
+
     @objc public func fetchDictionary(zone: String,
                                       parameters: [URLQueryItem]?,
                                       success: @escaping (_: NSDictionary) -> Void,

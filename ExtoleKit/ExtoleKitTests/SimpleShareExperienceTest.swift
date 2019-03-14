@@ -48,5 +48,20 @@ class SimpleShareExperienceTest: XCTestCase {
         })
         waitForExpectations(timeout: 5, handler: nil)
     }
+    
+    func testSignal() {
+        let promise = expectation(description: "conversion response")
+        let shareApp = SimpleShareExperince(programUrl: URL.init(string: "https://ios-santa.extole.io")!, programLabel: "missing")
+        shareApp.reset()
+        let parameters : [URLQueryItem] = [
+            URLQueryItem(name: "cart_value", value: "12.31")
+        ]
+        shareApp.signal(zone: "conversion", parameters: parameters, success: {
+            promise.fulfill()
+        }, error: { (error) in
+            XCTFail("unexpected error " + error.code)
+        })
+        waitForExpectations(timeout: 5, handler: nil)
+    }
 }
 

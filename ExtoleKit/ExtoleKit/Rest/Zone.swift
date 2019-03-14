@@ -4,6 +4,17 @@ import Foundation
 
 extension ConsumerSession {
     
+    public func signal(zone: String,
+                        parameters: [URLQueryItem]? = nil,
+                        success:@escaping () -> Void,
+                        error : @escaping (ExtoleError) -> Void) {
+        var components = URLComponents(string: "\(baseUrl)/zone/\(zone)")!
+        components.queryItems = parameters
+        let request = self.network.getRequest(accessToken: token,
+                                              url: components.url!)
+        self.network.processNoContentRequest(with: request, success: success, error: error)
+    }
+
     public func fetchObject<T: Codable>(zone: String,
                             parameters: [URLQueryItem]? = nil,
                             success:@escaping (T) -> Void,

@@ -80,7 +80,7 @@ import Foundation
     }
 
     final func dataHandler<T : Codable>(success: @escaping (_: T) -> Void,
-                                                  error: @escaping(ExtoleError) -> Void)
+                                        error: @escaping(ExtoleError) -> Void)
         -> ((_ : Data?) -> Void)  {
             return { data in
                 if let data = data {

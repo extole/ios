@@ -2,7 +2,12 @@
 
 import Foundation
 
-@objc public class SimpleShareExperince: NSObject, ShareExperience {
+@objc public class SimpleShareExperince: NSObject {
+
+    public func async(command: @escaping (ExtoleShareApp) -> Void) {
+        self.shareApp.async(command: command)
+    }
+    
     public func activate() {
         self.shareApp.activate()
     }
@@ -23,10 +28,18 @@ import Foundation
         self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
     }
 
-    @objc public func async(command: @escaping (ExtoleShareApp) -> Void ) {
-        shareApp.async(command: command)
+    public func signal(zone: String,
+                        parameters: [URLQueryItem]? = nil,
+                        success:@escaping () -> Void = { },
+                        error : @escaping (ExtoleError) -> Void = { _ in }) {
+        self.async { (shareApp) in
+            shareApp.signal(zone: zone,
+                             parameters: parameters,
+                             success: success,
+                             error: error)
+        }
     }
-    
+
     public func fetchObject<T: Codable>(zone: String,
                                         parameters: [URLQueryItem]? = nil,
                                         success:@escaping (T) -> Void,

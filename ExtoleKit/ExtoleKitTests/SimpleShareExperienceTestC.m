@@ -61,12 +61,10 @@
     
     TestErrorHandler* errorHandler = [[TestErrorHandler alloc] init];
     
-    [shareExperience asyncWithCommand:^(ExtoleShareApp * _Nonnull shareApp) {
-        [shareApp.session fetchDictionaryWithZone:@"settings" parameters: NULL  success:^(NSDictionary * _Nonnull dict) {
+    [shareExperience fetchDictionaryWithZone:@"settings" parameters: NULL  success:^(NSDictionary * _Nonnull dict) {
             XCTAssertEqualObjects(@"Share message", dict[@"shareMessage"]);
             [promise fulfill];
         } error:errorHandler];
-    }];
     [self waitForExpectationsWithTimeout:5 handler:NULL];
 }
 

@@ -5,12 +5,16 @@ import XCTest
 
 class SimpleShareExperienceTest: XCTestCase {
 
+    struct Settings : Codable {
+        let shareMessage: String
+    }
+
     func testSignalShare() {
         let promise = expectation(description: "invalid share response")
         let shareApp = SimpleShareExperince(programUrl: URL.init(string: "https://ios-santa.extole.io")!, programLabel: "refer-a-friend")
         shareApp.reset()
         let share = CustomShare(channel:"test")
-        shareApp.signal(share: share, success: { (CustomSharePollingResult) in
+        shareApp.notify(share: share, success: { (CustomSharePollingResult) in
             promise.fulfill();
         }, error :{ (error) in
             XCTFail(String(reflecting: error))
@@ -23,12 +27,25 @@ class SimpleShareExperienceTest: XCTestCase {
         let shareApp = SimpleShareExperince(programUrl: URL.init(string: "https://ios-santa-missing.extole.io")!, programLabel: "missing")
         shareApp.reset()
         
-        shareApp.signal(share: CustomShare(channel:"test"), success: { (CustomSharePollingResult) in
+        shareApp.notify(share: CustomShare(channel:"test"), success: { (CustomSharePollingResult) in
             XCTFail("unexpected success")
         }) { (error) in
             XCTAssertEqual("not_ready", error.code)
             promise.fulfill()
         }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testFetchSettings() {
+        let promise = expectation(description: "settings response")
+        let shareApp = SimpleShareExperince(programUrl: URL.init(string: "https://ios-santa.extole.io")!, programLabel: "missing")
+        shareApp.reset()
+        
+        shareApp.fetchObject(zone: "settings", success: { (settings: Settings) in
+             promise.fulfill()
+        }, error: { (error) in
+             XCTFail("unexpected error " + error.code)
+        })
         waitForExpectations(timeout: 5, handler: nil)
     }
 }

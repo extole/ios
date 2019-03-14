@@ -79,7 +79,7 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
     }
 
     ///
-    public func enque(command: @escaping (ExtoleShareApp) -> Void ) {
+    public func async(command: @escaping (ExtoleShareApp) -> Void ) {
         activate()
         serialQueue.async {
             if let _ = self.session, let _ = self.selectedShareable?.code {
@@ -131,6 +131,24 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
             session.emailShare(share: share, success: { pollingResponse in
                 session.pollEmailShare(pollingResponse: pollingResponse!,success:success, error: error)
             }, error: error)
+        }
+    }
+    
+    public func fetchObject<T: Codable>(zone: String,
+                                        parameters: [URLQueryItem]? = nil,
+                                        success:@escaping (T) -> Void,
+                                        error : @escaping (ExtoleError) -> Void) {
+        self.async { (shareApp) in
+            shareApp.session?.fetchObject(zone: zone, parameters: parameters, success: success, error: error)
+        }
+    }
+    
+    @objc public func fetchDictionary(zone: String,
+                                      parameters: [URLQueryItem]?,
+                                      success: @escaping (_: NSDictionary) -> Void,
+                                      error : ExtoleApiErrorHandler) {
+        self.async { (shareApp) in
+            shareApp.session?.fetchDictionary(zone: zone, parameters: parameters, success: success, error: error)
         }
     }
     

@@ -30,6 +30,20 @@ let share = EmailShare(recipient_email: email, message: "Check this out")
 shareApp.send(share: customShare)
 ```
 
+### Load JSON from Extole zone request
+
+```swift
+let shareApp = SimpleShareExperince(
+  programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+  programLabel: "refer-a-friend")
+
+shareApp.fetchObject(zone: "settings", success: { (settings: Settings) in
+             // use settings
+        }, error: { (error) in
+ 	   // handle error 
+        })
+```
+
 ## ExtoleKit REST ( Low Level )
 
 ### Overview

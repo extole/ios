@@ -3,7 +3,7 @@
 #import <XCTest/XCTest.h>
 @import ExtoleKit;
 
-@interface SimpleShareExperienceTest : XCTestCase
+@interface SimpleShareExperienceTestC : XCTestCase
 
 @end
 
@@ -37,7 +37,7 @@
 
 @end
 
-@implementation SimpleShareExperienceTest
+@implementation SimpleShareExperienceTestC
 
 - (void)testSignalShare {
     XCTestExpectation* promise = [self expectationWithDescription:@"expected share"];
@@ -45,7 +45,7 @@
     SimpleShareExperince* shareExperience = [[SimpleShareExperince alloc] initWithProgramUrl:programUrl programLabel: @"refer-a-friend"];
     [shareExperience reset];
     CustomShare* share = [[CustomShare alloc] initWithChannel:@"test"];
-    [shareExperience signalWithShare:share success:^(CustomSharePollingResult * result) {
+    [shareExperience notifyWithShare:share success:^(CustomSharePollingResult * result) {
         [promise fulfill];
     } error:^(ExtoleError * _Nonnull error) {
         XCTFail(@"unexpected error");
@@ -61,8 +61,8 @@
     
     TestErrorHandler* errorHandler = [[TestErrorHandler alloc] init];
     
-    [shareExperience enqueWithCommand:^(ExtoleShareApp * _Nonnull shareApp) {
-        [shareApp.session fetchDictionaryWithZone:@"settings" success:^(NSDictionary * _Nonnull dict) {
+    [shareExperience asyncWithCommand:^(ExtoleShareApp * _Nonnull shareApp) {
+        [shareApp.session fetchDictionaryWithZone:@"settings" parameters: NULL  success:^(NSDictionary * _Nonnull dict) {
             XCTAssertEqualObjects(@"Share message", dict[@"shareMessage"]);
             [promise fulfill];
         } error:errorHandler];

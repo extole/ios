@@ -16,21 +16,40 @@ import Foundation
     public var session: ConsumerSession?
     
     public let shareApp: ExtoleShareApp
+    
     let appDelegate = SimpleShareAppDelegate()
     
     @objc public init(programUrl: URL, programLabel: String) {
         self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
     }
 
-    @objc public func enque(command: @escaping (ExtoleShareApp) -> Void ) {
-        shareApp.enque(command: command)
+    @objc public func async(command: @escaping (ExtoleShareApp) -> Void ) {
+        shareApp.async(command: command)
+    }
+    
+    public func fetchObject<T: Codable>(zone: String,
+                                        parameters: [URLQueryItem]? = nil,
+                                        success:@escaping (T) -> Void,
+                                        error : @escaping (ExtoleError) -> Void) {
+        self.async { (shareApp) in
+            shareApp.fetchObject(zone: zone, parameters: parameters, success: success, error: error)
+        }
+    }
+    
+    @objc public func fetchDictionary(zone: String,
+                                      parameters: [URLQueryItem]?,
+                                      success: @escaping (_: NSDictionary) -> Void,
+                                      error : ExtoleApiErrorHandler) {
+        self.async { (shareApp) in
+            shareApp.fetchDictionary(zone: zone, parameters: parameters, success: success, error: error)
+        }
     }
 
     public func send(
         share: EmailShare,
         success: @escaping (EmailSharePollingResult) -> Void = { _ in },
         error: @escaping (ExtoleError) -> Void = { _ in }) {
-        shareApp.enque { app in
+        shareApp.async { app in
             self.shareApp.send(share: share, success: success, error: error)
         }
     }
@@ -39,10 +58,11 @@ import Foundation
             share: CustomShare,
             success: @escaping (CustomSharePollingResult) -> Void = { _ in },
             error: @escaping (ExtoleError) -> Void = { _ in }) {
-        shareApp.enque { app in
+        shareApp.async { app in
             app.notify(share: share, success: success, error: error)
         }
     }
+
     
     @objc public func reset() {
         shareApp.reset()

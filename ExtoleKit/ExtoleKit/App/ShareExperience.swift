@@ -23,6 +23,16 @@ public protocol ShareExperience {
                success: @escaping (EmailSharePollingResult)->Void,
                error: @escaping(ExtoleError) -> Void)
     
+    func fetchObject<T: Codable>(zone: String,
+        parameters: [URLQueryItem]?,
+        success:@escaping (T) -> Void,
+        error : @escaping (ExtoleError) -> Void);
+
+    func fetchDictionary(zone: String,
+                          parameters: [URLQueryItem]?,
+                          success: @escaping (_: NSDictionary) -> Void,
+                          error : ExtoleApiErrorHandler);
+
     /// Shareable used for current consumer session
     var selectedShareable: MyShareable? {
         get
@@ -71,7 +81,7 @@ public extension DefaultShareExperince where Self: HasShareApp {
     public func notify(share: CustomShare,
                             success: @escaping (CustomSharePollingResult)->Void,
                             error: @escaping(ExtoleError) -> Void) {
-        shareApp.enque { app in
+        shareApp.async { app in
             app.notify(share: share, success: success, error: error)
         }
     }
@@ -79,7 +89,7 @@ public extension DefaultShareExperince where Self: HasShareApp {
     public func send(share: EmailShare,
                       success: @escaping (EmailSharePollingResult)->Void,
                       error: @escaping(ExtoleError) -> Void) {
-        shareApp.enque { app in
+        shareApp.async { app in
             app.send(share: share, success: success, error: error)
         }
     }

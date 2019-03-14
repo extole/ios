@@ -5,20 +5,24 @@ import Foundation
 extension ConsumerSession {
     
     public func fetchObject<T: Codable>(zone: String,
+                            parameters: [URLQueryItem]? = nil,
                             success:@escaping (T) -> Void,
                             error : @escaping (ExtoleError) -> Void) {
-        let url = URL(string: "\(baseUrl)/zone/\(zone)")!
+        var components = URLComponents(string: "\(baseUrl)/zone/\(zone)")!
+        components.queryItems = parameters
         let request = self.network.getRequest(accessToken: token,
-                                 url: url)
+                                 url: components.url!)
         self.network.processRequest(with: request, success: success, error: error)
     }
 
     @objc public func fetchDictionary(zone: String,
-                                        success: @escaping (_: NSDictionary) -> Void,
-                                        error : ExtoleApiErrorHandler) {
-        let url = URL(string: "\(baseUrl)/zone/\(zone)")!
+                                      parameters: [URLQueryItem]?,
+                                      success: @escaping (_: NSDictionary) -> Void,
+                                      error : ExtoleApiErrorHandler) {
+        var components = URLComponents(string: "\(baseUrl)/zone/\(zone)")!
+        components.queryItems = parameters
         let request = self.network.getRequest(accessToken: token,
-                                              url: url)
+                                              url: components.url!)
         let dictHandler : ((_: Data) -> Void) = { (data: Data) in
             guard let jsonObject = try? JSONSerialization.jsonObject(with: data) else {
                 return error.decodingError(data: data)

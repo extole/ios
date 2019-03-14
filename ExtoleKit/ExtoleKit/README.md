@@ -8,6 +8,11 @@ ExtoleKit is written in Swift, key abstractions are also available for Objective
 
 
 ## ExtoleKit High Level API
+ExtoleShareExperience :
+* manages Extole session ( access_token )
+* prefetch CTAs etc
+* signal events
+* notify Extole about share action
 
 ### Notify Extole that share happened within application
 
@@ -56,8 +61,16 @@ let parameters : [URLQueryItem] = [
 shareExperience.signal(zone: "conversion", parameters: parameters)
 
 ```
+## ExtoleKit Low Level abstractions
 
-## ExtoleKit REST ( Low Level )
+* ExtoleShareApp - creates shareable when activated, pre-loads other content when activated
+  * ProfileLoader - loads person profile
+  * SharteableLoader - loads person shareable
+  * ZoneLoader - can load JSON from Extole zone ( CTA etc )
+  * Loader - generic loader you can customize
+* ExtoleKit - manages Extole ConsumerSession, keeps access_token in application private settings
+
+## ExtoleKit REST Layer wapper
 
 ### Overview
 To use Extole Rest you need :

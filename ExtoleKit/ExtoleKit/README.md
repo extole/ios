@@ -15,14 +15,9 @@ ExtoleKit is written in Swift, key abstractions are also available for Objective
 let shareApp = SimpleShareExperince(
   programUrl: URL.init(string: "https://ios-santa.extole.io")!,
   programLabel: "refer-a-friend")
-shareApp.signalShare(
-  channel: "sms", 
-  success: { (CustomSharePollingResult) in
-      // good
-  }, error: { (error) in
-      // see error.code 
-  }
-)
+
+let customShare = CustomShare(channel: "sms")
+shareApp.signal(share: customShare)
 ```
 
 ## ExtoleKit REST ( Low Level )

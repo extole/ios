@@ -14,9 +14,9 @@ public protocol ShareExperience {
     func reload(complete: @escaping () -> Void)
     
     /// Sends custom share event to Extole
-    func signalShare(channel: String,
-                     success: @escaping (CustomSharePollingResult)->Void,
-                     error: @escaping(ExtoleError) -> Void)
+    func signal(share: CustomShare,
+                 success: @escaping (CustomSharePollingResult)->Void,
+                 error: @escaping(ExtoleError) -> Void)
     
     /// Sends a share to given email, using Extole email service
     func share(email: String,
@@ -67,11 +67,11 @@ public extension ShareExperience where Self: HasShareApp {
         shareApp.reload(complete: complete)
     }
     
-    public func signalShare(channel: String,
+    public func signal(share: CustomShare,
                             success: @escaping (CustomSharePollingResult)->Void,
                             error: @escaping(ExtoleError) -> Void) {
         shareApp.enque { app in
-            app.signalShare(channel: channel, success: success, error: error)
+            app.signal(share: share, success: success, error: error)
         }
     }
 

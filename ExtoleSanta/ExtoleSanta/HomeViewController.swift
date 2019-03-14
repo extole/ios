@@ -177,7 +177,8 @@ class HomeViewController : UIViewController {
                 case ExtoleShare: break
                 default : do {
                     self.busyIndicator.startAnimating()
-                    self.santaApp.signalShare(channel: completedActivity.rawValue,
+                    let share = CustomShare(channel: completedActivity.rawValue)
+                    self.santaApp.signal(share: share,
                                               success : { _ in
                                                 DispatchQueue.main.async {
                                                     self.busyIndicator.stopAnimating()

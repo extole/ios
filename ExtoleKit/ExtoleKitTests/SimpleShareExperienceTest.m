@@ -44,7 +44,8 @@
     NSURL* programUrl = [[NSURL alloc] initWithString:(@"https://ios-santa.extole.io")];
     SimpleShareExperince* shareExperience = [[SimpleShareExperince alloc] initWithProgramUrl:programUrl programLabel: @"refer-a-friend"];
     [shareExperience reset];
-    [shareExperience signalShareWithChannel:@"test" success:^(CustomSharePollingResult * result) {
+    CustomShare* share = [[CustomShare alloc] initWithChannel:@"test"];
+    [shareExperience signalWithShare:share success:^(CustomSharePollingResult * result) {
         [promise fulfill];
     } error:^(ExtoleError * _Nonnull error) {
         XCTFail(@"unexpected error");

@@ -15,9 +15,13 @@ import Foundation
         shareApp.enque(command: command)
     }
 
-    @objc public func signalShare(channel: String, success: @escaping (CustomSharePollingResult) -> Void, error: @escaping (ExtoleError) -> Void) {
+    @objc public func
+        signal(
+            share: CustomShare,
+            success: @escaping (CustomSharePollingResult) -> Void = { _ in },
+            error: @escaping (ExtoleError) -> Void = { _ in }) {
         shareApp.enque { app in
-            app.signalShare(channel: channel, success: success, error: error)
+            app.signal(share: share, success: success, error: error)
         }
     }
     

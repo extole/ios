@@ -105,13 +105,13 @@ public final class ExtoleShareApp : NSObject, ShareExperience {
     }
 
     /// Sends custom share event to Extole
-    public func signalShare(channel: String,
-                            success: @escaping (CustomSharePollingResult)->Void,
-                            error: @escaping(ExtoleError) -> Void) {
-        extoleInfo(format: "shared via custom channel %s", arg: channel)
+    public func signal(share: CustomShare,
+                        success: @escaping (CustomSharePollingResult)->Void,
+                        error: @escaping(ExtoleError) -> Void) {
+        extoleInfo(format: "shared via custom channel %s", arg: share.channel)
         
         if let session = session, let shareableCode = selectedShareable?.code {
-            let share = CustomShare.init(advocate_code: shareableCode, channel: channel)
+            share.advocate_code = shareableCode
             session.customShare(share: share, success: { pollingResponse in
                 session.pollCustomShare(pollingResponse: pollingResponse,
                                         success: success, error: error)

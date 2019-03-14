@@ -1,8 +1,9 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
-public struct CustomShare : Codable {
-    public init(advocate_code: String, channel: String, message : String? = nil, recipient_email: String? = nil,
+
+@objc public final class CustomShare : NSObject, Codable {
+    @objc public init(advocate_code: String? = nil, channel: String, message : String? = nil, recipient_email: String? = nil,
          data: [String:String]? = nil) {
         self.advocate_code = advocate_code
         self.channel = channel
@@ -10,11 +11,16 @@ public struct CustomShare : Codable {
         self.recipient_email = recipient_email
         self.data = data
     }
-    let advocate_code: String
-    let channel: String
-    let message: String?
-    let recipient_email: String?
-    let data: [String:String]?
+
+    @objc public init(channel: String) {
+        self.channel = channel
+    }
+
+    var advocate_code: String?
+    var channel: String
+    var message: String? = nil
+    var recipient_email: String? = nil
+    var data: [String:String]? = nil
 }
 
 @objc public final class CustomSharePollingResult : NSObject, Codable {

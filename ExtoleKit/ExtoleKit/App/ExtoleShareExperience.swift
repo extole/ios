@@ -12,6 +12,10 @@ import Foundation
         self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
     }
     
+    @objc public init(shareApp:  ExtoleShareApp) {
+        self.shareApp = shareApp
+    }
+    
     @objc public func reset() {
         self.appDelegate.readyHandlers = []
         shareApp.reset()
@@ -87,7 +91,7 @@ import Foundation
 
     var isValid: Bool {
         get {
-            return appDelegate.isValid
+            return appDelegate.isReady
         }
     }
 }
@@ -96,7 +100,7 @@ class SimpleShareAppDelegate : ExtoleShareAppDelegate {
 
     var readyHandlers : [(ExtoleShareApp?) -> Void] = []
     let serialQueue = DispatchQueue(label: "com.extole.ExtoleShareApp")
-    var isValid = false
+    var isReady = false
     
     func extoleShareAppInvalid() {
         self.serialQueue.async {
@@ -106,11 +110,11 @@ class SimpleShareAppDelegate : ExtoleShareAppDelegate {
                 event(nil)
             }
         }
-        isValid = false;
+        isReady = false;
     }
     
     func extoleShareAppReady(shareApp: ExtoleShareApp) {
-        isValid = true;
+        isReady = true;
         self.serialQueue.async {
             let handlers = self.readyHandlers
             self.readyHandlers = []

@@ -9,35 +9,35 @@ ExtoleKit is written in Swift, key abstractions are also available for Objective
 
 ## ExtoleKit High Level API
 
-### Notify Extole that share happened in application
+### Notify Extole that share happened within application
 
 ```swift
-let shareApp = SimpleShareExperince(
+let shareExperience = ExtoleShareExperience(
   programUrl: URL.init(string: "https://ios-santa.extole.io")!,
   programLabel: "refer-a-friend")
 
 let customShare = CustomShare(channel: "sms")
-shareApp.notify(share: customShare)
+shareExperience.notify(share: customShare)
 ```
 ### Send Email Share via Extole
 
 ```swift
-let shareApp = SimpleShareExperince(
+let shareExperience = ExtoleShareExperience(
   programUrl: URL.init(string: "https://ios-santa.extole.io")!,
   programLabel: "refer-a-friend")
 
 let share = EmailShare(recipient_email: email, message: "Check this out")
-shareApp.send(share: customShare)
+shareExperience.send(share: customShare)
 ```
 
 ### Load JSON from Extole zone request
 
 ```swift
-let shareApp = SimpleShareExperince(
+let shareExperience = ExtoleShareExperience(
   programUrl: URL.init(string: "https://ios-santa.extole.io")!,
   programLabel: "refer-a-friend")
 
-shareApp.fetchObject(zone: "settings", success: { (settings: Settings) in
+shareExperience.fetchObject(zone: "settings", success: { (settings: Settings) in
              // use settings
     }, error: { (error) in
    // handle error 
@@ -47,13 +47,13 @@ shareApp.fetchObject(zone: "settings", success: { (settings: Settings) in
 ### Signal zone event
 
 ```swift
-let shareApp = SimpleShareExperince(
+let shareExperience = ExtoleShareExperience(
   programUrl: URL.init(string: "https://ios-santa.extole.io")!,
   programLabel: "refer-a-friend")
 let parameters : [URLQueryItem] = [
     URLQueryItem(name: "cart_value", value: "12.31")
 ]
-shareApp.signal(zone: "conversion", parameters: parameters)
+shareExperience.signal(zone: "conversion", parameters: parameters)
 
 ```
 

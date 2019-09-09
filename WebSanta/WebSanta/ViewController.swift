@@ -121,7 +121,7 @@ extension ViewController : WKUIDelegate, WKNavigationDelegate {
         
         return popupView
     }
-    
+    // handles link clicks
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         print("check policy : ", navigationAction.request.url ?? "(none)")
         if navigationAction.request.url?.scheme == "sms" {

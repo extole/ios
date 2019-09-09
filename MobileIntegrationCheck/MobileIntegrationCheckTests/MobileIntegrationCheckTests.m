@@ -37,7 +37,7 @@ NSString* domain = @"https://ios-santa.extole.io/";
     [NSURLConnection sendAsynchronousRequest:rq queue:queue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         NSError *jsonError = NULL;
         NSMutableDictionary *allCourses = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&jsonError];
-        NSString* accessToken = allCourses[@"access_tokenx"];
+        NSString* accessToken = allCourses[@"access_token"];
         XCTAssertNotNil(accessToken);
         NSLog(@"access_token = %@", accessToken);
         [createTokenExpectation fulfill];

@@ -26,7 +26,7 @@ import Foundation
     let share_id : String?
 }
 
-extension ConsumerSession {
+extension ProgramSession {
     
     public func emailShare(share: EmailShare,
                            success : @escaping (PollingIdResponse?) -> Void,

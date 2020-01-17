@@ -9,7 +9,7 @@
 @property UILabel *label;
 @property UITextField* code;
 @property UIButton* load;
-@property ConsumerSession* extoleSession;
+@property ProgramSession* extoleSession;
 @property UILabel *wishItem;
 @end
 
@@ -81,7 +81,7 @@
     NSURL *programUrl = [[NSURL alloc] initWithString:(@"https://ios-santa.extole.io")];
     CustomNetwork* executor = [[CustomNetwork alloc] init];
     Network* network = [[Network alloc] initWithExecutor:executor];
-    ExtoleAPI *program = [[RequestContext alloc] initWithBaseUrl:programUrl network:network];
+    Program *program = [[RequestContext alloc] initWithBaseUrl:programUrl network:network];
     _app = [[ExtoleApp alloc] initWith:program delegate:self];
     [_app activate];
 }
@@ -91,7 +91,7 @@
     _extoleSession = nil;
 }
 
-- (void)extoleAppReadyWithSession:(ConsumerSession * _Nonnull)session {
+- (void)extoleAppReadyWithSession:(ProgramSession * _Nonnull)session {
     _extoleSession = session;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self->_label setText:(session.accessToken)];

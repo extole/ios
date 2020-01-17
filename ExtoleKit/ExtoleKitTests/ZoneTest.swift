@@ -6,14 +6,14 @@ import XCTest
 
 class ZoneTest: XCTestCase {
 
-    let program = ExtoleAPI(programURL: URL.init(string: "https://ios-santa.extole.io")!)
-    var programSession: ConsumerSession!
+    let program = Program(programURL: URL.init(string: "https://ios-santa.extole.io")!)
+    var programSession: ProgramSession!
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
         program.createToken(success: { token in
             XCTAssert(!token.access_token.isEmpty)
-            self.programSession = ConsumerSession.init(program: self.program, token: token)
+            self.programSession = ProgramSession.init(program: self.program, token: token)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

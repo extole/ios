@@ -6,23 +6,23 @@ import Foundation
 public protocol SessionManagerDelegate : class {
     func onSessionInvalid()
     func onSessionDeleted()
-    func onNewSession(session: ConsumerSession)
+    func onNewSession(session: ProgramSession)
     func onSessionServerError(error: ExtoleError)
 }
 
 /// Manages Extole consumer session
 public final class SessionManager {
-    let program: ExtoleAPI
+    let program: Program
     weak var delegate: SessionManagerDelegate?
-    private var session: ConsumerSession? = nil
+    private var session: ProgramSession? = nil
 
-    public init(program: ExtoleAPI, delegate: SessionManagerDelegate) {
+    public init(program: Program, delegate: SessionManagerDelegate) {
         self.program = program
         self.delegate = delegate
     }
     
     public func reload() {
-        self.session!.verifyToken(success: { verifiedToken in
+        self.session!.verify(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken)
         }, error: { verifyTokenError in
             if (verifyTokenError.isInvalidAccessToken() ||
@@ -37,9 +37,9 @@ public final class SessionManager {
 
     public func resumeSession(existingToken: String) {
         let consumerToken = ConsumerToken.init(access_token: existingToken)
-        self.session = ConsumerSession.init(program: self.program,
+        self.session = ProgramSession.init(program: self.program,
                                             token: consumerToken)
-        self.session!.verifyToken(success: { verifiedToken in
+        self.session!.verify(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken)
         }, error: { verifyTokenError in
             if (verifyTokenError.isInvalidAccessToken() ||
@@ -63,7 +63,7 @@ public final class SessionManager {
     
     public func logout() {
         if let session = session {
-            session.deleteToken(success: {
+            session.invalidate(success: {
                 self.delegate?.onSessionDeleted()
             }, error: { error in
                 self.delegate?.onSessionServerError(error: error);
@@ -73,7 +73,7 @@ public final class SessionManager {
     }
     
     private func onVerifiedToken(verifiedToken: ConsumerToken) {
-        self.session = ConsumerSession.init(program: program, token: verifiedToken)
+        self.session = ProgramSession.init(program: program, token: verifiedToken)
         self.delegate?.onNewSession(session: self.session!)
     }
 }

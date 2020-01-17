@@ -20,7 +20,7 @@ public struct SuccessResponse : Codable {
     let status: String
 }
 
-extension ConsumerSession {
+extension ProgramSession {
     
     public func updateProfile(profile: MyProfile,
                               success: @escaping () -> Void,

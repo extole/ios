@@ -4,14 +4,14 @@ import XCTest
 
 @testable import ExtoleKit
 
-class TokenTest: XCTestCase {
+class AuthenticationTest: XCTestCase {
 
-    let extoleAPI = ExtoleAPI(programURL: URL.init(string: "https://ios-santa.extole.io")!)
+    let program = Program(programURL: URL.init(string: "https://ios-santa.extole.io")!)
     
-    func testCreateToken() {
+    func testCreateSession() {
         let promise = expectation(description: "create token response")
-        extoleAPI.createToken(success: { token in
-            XCTAssert(!token.access_token.isEmpty)
+        program.createSession(success: { session in
+            XCTAssert(session.token.access_token.count > 0)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -20,10 +20,8 @@ class TokenTest: XCTestCase {
     }
 
     func testInvalidToken() {
-        let invalidToken = ConsumerToken(access_token: "invalid")
-        let programSession = ConsumerSession(program: extoleAPI, token: invalidToken)
         let promise = expectation(description: "invalid token response")
-        programSession.verifyToken(success: { token in
+        program.resumeSession(accessToken: "invalid", success: { session in
             XCTFail("unexpected success")
         }, error: { verifyTokenError in
             print(verifyTokenError)
@@ -34,13 +32,13 @@ class TokenTest: XCTestCase {
     }
     
     func testDeleteToken() {
-        let getToken = expectation(description: "get token response")
+        let createSession = expectation(description: "get token response")
 
-        var token: ConsumerToken!
-        extoleAPI.createToken(success: { tokenResponse in
-            XCTAssert(!tokenResponse.access_token.isEmpty)
-            token = tokenResponse
-            getToken.fulfill()
+        var session: ProgramSession!
+        program.createSession(success: { newSession in
+            XCTAssert(!newSession.token.access_token.isEmpty)
+            session = newSession
+            createSession.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
         })
@@ -48,8 +46,7 @@ class TokenTest: XCTestCase {
         
         let deleteToken = expectation(description: "delete token response")
         
-        let programSession = ConsumerSession.init(program: self.extoleAPI, token: token)
-        programSession.deleteToken(success: {
+        session.invalidate(success: {
              deleteToken.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -59,7 +56,7 @@ class TokenTest: XCTestCase {
         
         let verifyTokenDeleted = expectation(description: "verify delete response")
         
-        programSession.verifyToken(success: { token in
+        session.verify(success: { token in
             XCTFail("unexpected success")
         }, error: { error in
             XCTAssertTrue(error.isInvalidAccessToken())

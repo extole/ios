@@ -11,7 +11,7 @@ public final class ZoneLoader<T: Codable> : Loader {
         self.zoneName = zoneName
     }
     
-    public func load(session: ConsumerSession, complete: @escaping () -> Void) {
+    public func load(session: ProgramSession, complete: @escaping () -> Void) {
         session.fetchObject(zone: zoneName, success: { (zoneData:T?) in
             self.zoneData = zoneData
             complete()

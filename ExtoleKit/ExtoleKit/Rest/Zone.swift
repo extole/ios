@@ -2,7 +2,7 @@
 
 import Foundation
 
-extension ConsumerSession {
+extension ProgramSession {
     
     public func signal(zone: String,
                         parameters: [URLQueryItem]? = nil,

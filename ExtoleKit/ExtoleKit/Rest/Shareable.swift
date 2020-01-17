@@ -34,7 +34,7 @@ public struct UpdateShareable : Codable {
     @objc public let data: [String: String]?
 }
 
-extension ConsumerSession {
+extension ProgramSession {
     public func getShareables(success: @escaping ([MyShareable]) -> Void,
                               error: @escaping (ExtoleError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!

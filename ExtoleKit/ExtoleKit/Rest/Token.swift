@@ -10,9 +10,6 @@ func tokenV5Url(baseUrl: URL) -> URL {
 }
 
 public struct ConsumerToken : Codable {
-    init(access_token: String) {
-        self.access_token = access_token
-    }
     public var accessToken : String {
         get {
             return access_token
@@ -28,25 +25,49 @@ public struct CreateTokenRequest: Codable {
     let email: String? = nil
 }
 
-extension ExtoleAPI {
+extension Program {
+    
+    public func createSession(success : @escaping (_: ProgramSession) -> Void,
+                         error: @escaping (_: ExtoleError) -> Void) {
+        
+        let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: CreateTokenRequest())
+
+        self.network.processRequest(with: request, success: {token in
+            success(ProgramSession(program: self, token: token))
+        }, error: error)
+    }
+    
+    public func resumeSession(accessToken: String,
+                              success : @escaping (_: ProgramSession) -> Void,
+                              error: @escaping (_: ExtoleError) -> Void) {
+        let url = URL.init(string: accessToken, relativeTo: tokenV4Url(baseUrl: baseUrl))!
+        let empty : String? = nil
+        let request = self.network.newJsonRequest(method: "GET", url: url, headers: [:], data: empty)
+        self.network.processRequest(with: request, success: { token in
+            success(ProgramSession(program: self, token: token))
+        }, error: error)
+    }
+    
     public func createToken(success : @escaping (_: ConsumerToken) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
+        
         let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: CreateTokenRequest())
 
         self.network.processRequest(with: request, success: success, error: error)
     }
 }
 
-extension ConsumerSession {
+extension ProgramSession {
     
-    public func verifyToken(success : @escaping (_: ConsumerToken) -> Void,
+    public func verify(success : @escaping (_: ConsumerToken) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
-        let url = URL.init(string: token.access_token, relativeTo: tokenV4Url(baseUrl: baseUrl))!
-        let request = self.getRequest(url: url)
-        self.network.processRequest(with: request, success: success, error: error)
+      let url = URL.init(string: token.access_token, relativeTo: tokenV4Url(baseUrl: baseUrl))!
+      let request = self.getRequest(url: url)
+      self.network.processRequest(with: request, success: success, error: error)
+
     }
     
-    public func deleteToken(success: @escaping ()->Void,
+    public func invalidate(success: @escaping ()->Void,
                             error:  @escaping (_: ExtoleError) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenV4Url(baseUrl: baseUrl))!
         let request = self.deleteRequest(url: url)

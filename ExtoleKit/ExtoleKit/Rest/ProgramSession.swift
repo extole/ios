@@ -2,8 +2,8 @@
 
 import Foundation
 
-@objc public final class ConsumerSession: NSObject{
-    let program: ExtoleAPI
+@objc public final class ProgramSession: NSObject{
+    let program: Program
     let token: ConsumerToken
     var baseUrl: URL {
         get {
@@ -46,7 +46,7 @@ import Foundation
         }
     }
     
-    init(program: ExtoleAPI, token: ConsumerToken) {
+    init(program: Program, token: ConsumerToken) {
         self.program = program
         self.token = token
     }

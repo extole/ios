@@ -22,7 +22,7 @@ public final class ExtoleShareApp : NSObject {
     /// Composite preloader to load profile, shareables, and settings at once
     private var preloader: CompositeLoader!
     /// Active consumer session
-    @objc public private(set) var session: ConsumerSession?
+    @objc public private(set) var session: ProgramSession?
     /// Loads consumer shareables
     public private(set) var shareableLoader: ShareableLoader!
 
@@ -35,7 +35,7 @@ public final class ExtoleShareApp : NSObject {
         self.label = label
         super.init()
         
-        self.extoleApp = ExtoleApp(with: ExtoleAPI(programURL: programUrl, network: network), delegate: self)
+        self.extoleApp = ExtoleApp(with: Program(programURL: programUrl, network: network), delegate: self)
         self.delegate = delegate
         
         shareableLoader = ShareableLoader(delegate: self)
@@ -71,7 +71,7 @@ public final class ExtoleShareApp : NSObject {
     /// reloads share experince, within the same consumer session
     public func reload(complete: @escaping () -> Void) {
         if let session = session {
-            session.verifyToken(success: { token in
+            session.verify(success: { token in
                 self.preloader?.load(session: session, complete: {
                     complete()
                 })
@@ -155,7 +155,7 @@ extension ExtoleShareApp : ExtoleAppDelegate {
         
     }
 
-    public func extoleAppReady(session: ConsumerSession) {
+    public func extoleAppReady(session: ProgramSession) {
         self.session = session
         preloader.load(session: session) {
             self.delegate?.extoleShareAppReady(shareApp: self)

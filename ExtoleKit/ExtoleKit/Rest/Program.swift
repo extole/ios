@@ -2,7 +2,7 @@
 
 import Foundation
 
-@objc public final class ExtoleAPI : NSObject {
+@objc public final class Program : NSObject {
     let baseUrl: URL
     let network : Network
     @objc public init(programURL: URL, network: Network = Network.init()) {

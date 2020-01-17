@@ -10,8 +10,7 @@ extension ConsumerSession {
                         error : @escaping (ExtoleError) -> Void) {
         var components = URLComponents(string: "\(baseUrl)/zone/\(zone)")!
         components.queryItems = parameters
-        let request = self.network.getRequest(accessToken: token,
-                                              url: components.url!)
+        let request = self.getRequest(url: components.url!)
         self.network.processNoContentRequest(with: request, success: success, error: error)
     }
 
@@ -21,8 +20,7 @@ extension ConsumerSession {
                             error : @escaping (ExtoleError) -> Void) {
         var components = URLComponents(string: "\(baseUrl)/zone/\(zone)")!
         components.queryItems = parameters
-        let request = self.network.getRequest(accessToken: token,
-                                 url: components.url!)
+        let request = self.getRequest(url: components.url!)
         self.network.processRequest(with: request, success: success, error: error)
     }
 
@@ -32,8 +30,7 @@ extension ConsumerSession {
                                       error : ExtoleApiErrorHandler) {
         var components = URLComponents(string: "\(baseUrl)/zone/\(zone)")!
         components.queryItems = parameters
-        let request = self.network.getRequest(accessToken: token,
-                                              url: components.url!)
+        let request = self.getRequest(url: components.url!)
         let dictHandler : ((_: Data) -> Void) = { (data: Data) in
             guard let jsonObject = try? JSONSerialization.jsonObject(with: data) else {
                 return error.decodingError(data: data)

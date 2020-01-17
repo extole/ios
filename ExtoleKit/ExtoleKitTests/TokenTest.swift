@@ -20,8 +20,8 @@ class TokenTest: XCTestCase {
     }
 
     func testInvalidToken() {
-        let invalidToken = ConsumerToken.init(access_token: "invalid")
-        let programSession = ConsumerSession.init(program: extoleAPI, token: invalidToken)
+        let invalidToken = ConsumerToken(access_token: "invalid")
+        let programSession = ConsumerSession(program: extoleAPI, token: invalidToken)
         let promise = expectation(description: "invalid token response")
         programSession.verifyToken(success: { token in
             XCTFail("unexpected success")

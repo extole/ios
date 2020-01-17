@@ -35,8 +35,7 @@ extension ConsumerSession {
                             success : @escaping (PollingIdResponse) -> Void,
                             error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
-        let request = network.postRequest(accessToken: token,
-                                  url: url,
+        let request = self.postRequest(url: url,
                                   data: share)
         network.processRequest(with: request, success: success, error: error)
     }
@@ -45,8 +44,7 @@ extension ConsumerSession {
                                 success : @escaping (CustomSharePollingResult) -> Void,
                                 error: @escaping(ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
-        let request = self.network.getRequest(accessToken: token,
-                                 url: url)
+        let request = self.getRequest(url: url)
         
         self.network.processRequest(with: request, success: success, error: error)
     }

@@ -39,32 +39,15 @@ import Foundation
         return try? decoder.decode(T.self, from: data)
     }
 
-    func getRequest(accessToken: ConsumerToken? = nil, url: URL) -> URLRequest {
-        let empty : String? = nil
-        return newJsonRequest(method: "GET", accessToken: accessToken, url: url, data: empty)
-    }
-
-    func postRequest<T : Encodable>(accessToken: ConsumerToken? = nil, url: URL, data: T) -> URLRequest {
-        return newJsonRequest(method: "POST", accessToken: accessToken, url: url, data: data)
-    }
-
-    func putRequest<T : Encodable>(accessToken: ConsumerToken? = nil, url: URL, data: T) -> URLRequest {
-        return newJsonRequest(method: "PUT", accessToken: accessToken, url: url, data: data)
-    }
-
-    func deleteRequest(accessToken: ConsumerToken? = nil, url: URL) -> URLRequest {
-        let empty : String? = nil
-        return newJsonRequest(method: "DELETE", accessToken: accessToken, url: url, data: empty)
-    }
-
-    private func newJsonRequest<T : Encodable>(method: String, accessToken: ConsumerToken? = nil, url: URL, data: T? = nil) -> URLRequest {
+    func newJsonRequest<T : Encodable>(method: String, url: URL, headers: [String: String],  data: T? = nil) -> URLRequest {
         var request = URLRequest(url: url)
         extoleDebug(format: "url %{public}@", arg: url.absoluteString)
         extoleDebug(format: "method %{public}@", arg: method)
         request.httpMethod = method
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
         ExtoleHeaders.all.forEach { (key, value) in
+            extoleDebug(format: "adding header %{private}@", arg: key)
             request.addValue(value, forHTTPHeaderField: key)
         }
     
@@ -72,9 +55,9 @@ import Foundation
             request.httpBody = encoded
             extoleDebug(format: "body %{public}@", arg: (String(data: encoded, encoding: .utf8)))
         }
-        if let existingToken = accessToken {
-            extoleDebug(format: "using accessToken %{private}@", arg: existingToken.access_token)
-            request.addValue(existingToken.access_token, forHTTPHeaderField: "Authorization")
+        headers.forEach { (key, value) in
+            extoleDebug(format: "adding header %{private}@", arg: key)
+            request.addValue(value, forHTTPHeaderField: key)
         }
         return request
     }

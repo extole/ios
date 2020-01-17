@@ -38,16 +38,14 @@ extension ConsumerSession {
     public func getShareables(success: @escaping ([MyShareable]) -> Void,
                               error: @escaping (ExtoleError?) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
-        let request = self.network.getRequest(accessToken: token,
-                                 url: url)
+        let request = self.getRequest(url: url)
         self.network.processRequest(with: request, success: success, error: error)
     }
     
     @objc public func getShareable(code: String, success: @escaping (MyShareable) -> Void,
                               error errorCallback: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/shareables/\(code)")!
-        let request = self.network.getRequest(accessToken: token,
-                                              url: url)
+        let request = self.getRequest(url: url)
         self.network.processRequest(with: request, success: success, error: { (error:ExtoleError) in
             errorCallback(error)
         })
@@ -58,9 +56,7 @@ extension ConsumerSession {
                                 success: @escaping () -> Void,
                                 error : @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables/\(code)")!
-        let request = self.network.putRequest(accessToken: token,
-                                  url: url,
-                                  data: shareable)
+        let request = self.putRequest(url: url, data: shareable)
         self.network.processNoContentRequest(with: request, success: success, error: error)
     }
 
@@ -68,9 +64,7 @@ extension ConsumerSession {
                                 success: @escaping (PollingIdResponse) -> Void,
                                 error: @escaping (ExtoleError) -> Void)  {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables")!
-        let request = self.network.postRequest(accessToken: token,
-                                 url: url,
-                                 data: shareable)
+        let request = self.postRequest(url: url, data: shareable)
         self.network.processRequest(with: request, success: success, error: error)
     }
 
@@ -79,8 +73,7 @@ extension ConsumerSession {
                               error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/me/shareables/status/\(pollingResponse.polling_id)")!
 
-        let request = self.network.getRequest(accessToken: token,
-                                 url: url)
+        let request = self.getRequest(url: url)
         self.network.processRequest(with: request, success: success, error: error)
     }
 }

@@ -26,8 +26,7 @@ extension ConsumerSession {
                               success: @escaping () -> Void,
                               error : @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = self.network.postRequest(accessToken: token,
-                                 url: url,
+        let request = self.postRequest(url: url,
                                  data: profile)
         self.network.processNoContentRequest(with: request, success: success, error: error)
     }
@@ -35,8 +34,7 @@ extension ConsumerSession {
     public func getProfile(success: @escaping (MyProfile) -> Void,
                            error: @escaping (ExtoleError) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = self.network.getRequest(accessToken: token,
-                                              url: url)
+        let request = self.getRequest(url: url)
         self.network.processRequest(with: request, success: success, error: error)
         
     }

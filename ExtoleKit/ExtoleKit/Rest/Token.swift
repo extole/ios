@@ -27,10 +27,10 @@ public struct CreateTokenRequest: Codable {
 
 extension Program {
     
-    public func createSession(success : @escaping (_: ProgramSession) -> Void,
+    public func createSession(tokenRequest: CreateTokenRequest?, success : @escaping (_: ProgramSession) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         
-        let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: CreateTokenRequest())
+        let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: tokenRequest)
 
         self.network.processRequest(with: request, success: {token in
             success(ProgramSession(program: self, token: token))

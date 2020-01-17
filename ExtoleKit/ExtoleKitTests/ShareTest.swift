@@ -6,13 +6,13 @@ import XCTest
 
 class ShareTest: XCTestCase {
 
-    let program = ProgramURL(baseUrl: URL.init(string: "https://ios-santa.extole.io")!)
+    let program = ExtoleAPI(programURL: URL.init(string: "https://ios-santa.extole.io")!)
     var programSession: ConsumerSession!
     var advocateCode: String?
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
-        program.getToken(success: { token in
+        program.createToken(success: { token in
             XCTAssert(!token.access_token.isEmpty)
             self.programSession = ConsumerSession.init(program: self.program, token: token)
             promise.fulfill()

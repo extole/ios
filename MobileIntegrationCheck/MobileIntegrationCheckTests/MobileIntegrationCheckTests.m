@@ -135,5 +135,44 @@ NSURLSession *urlSession = NULL;
     NSLog(@"data = %@", ctaData[@"me"][@"link"]);
 }
 
+- (void)testSignalShare {
+    XCTestExpectation *eventExpectation = [self expectationWithDescription:@"signal share"];
+    
+    NSArray *dataValues = [NSArray arrayWithObjects: @"mobile,refer-a-friend", @"april", @"friend@example.com", @"false", nil];
+    NSArray *dataKeys = [NSArray arrayWithObjects:@"labels", @"share.advocate_code", @"share.recipient", @"share.perform", nil];
+    NSDictionary *dataDict = [NSDictionary dictionaryWithObjects:dataValues forKeys:dataKeys];
+    
+    NSArray *shareValues = [NSArray arrayWithObjects: @"extole.share", dataDict, nil];
+    NSArray *shareKeys = [NSArray arrayWithObjects:@"event_name", @"data", nil];
+    
+    NSDictionary *shareDict = [NSDictionary dictionaryWithObjects:shareValues forKeys:shareKeys];
+    
+    NSError *jsonError = NULL;
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:shareDict options:(0) error:&jsonError];
+    
+    NSURL *eventsUrl = [NSURL URLWithString:[domain stringByAppendingString:@"/api/v6/events"]];
+    NSMutableURLRequest *rq = [NSMutableURLRequest requestWithURL:eventsUrl];
+    
+    [rq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [rq setHTTPMethod:@"POST"];
+    [rq setHTTPBody:jsonData];
+    
+    __block NSString* eventId;
+    
+    NSURLSessionDataTask *shareTask = [urlSession dataTaskWithRequest:rq
+                                                  completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+      NSError *jsonError = NULL;
+      NSMutableDictionary *ctaResponse = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&jsonError];
+      eventId = ctaResponse[@"event_id"];
+      XCTAssertNotNil(eventId);
+      NSLog(@"event_id = %@", eventId);
+      [eventExpectation fulfill];
+                                                  }];
+    
+    [shareTask resume];
+    [self waitForExpectationsWithTimeout:20.0 handler:nil];
+}
+
 
 @end

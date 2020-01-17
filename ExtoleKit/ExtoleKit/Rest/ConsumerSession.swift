@@ -3,7 +3,7 @@
 import Foundation
 
 @objc public final class ConsumerSession: NSObject{
-    let program: ProgramURL
+    let program: ExtoleAPI
     let token: ConsumerToken
     var baseUrl: URL {
         get {
@@ -22,7 +22,7 @@ import Foundation
         }
     }
     
-    init(program: ProgramURL, token: ConsumerToken) {
+    init(program: ExtoleAPI, token: ConsumerToken) {
         self.program = program
         self.token = token
     }

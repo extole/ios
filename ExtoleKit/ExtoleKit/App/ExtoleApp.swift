@@ -17,7 +17,7 @@ import Foundation
     /// stores key-value pairs for Extole
     public let settings = UserDefaults(suiteName: "extoleKit")!
     /// program url
-    private let programUrl: ProgramURL
+    private let programUrl: ExtoleAPI
     
     /// manages active Extole session
     lazy private var sessionManager = SessionManager.init(program: programUrl, delegate: self)
@@ -26,7 +26,7 @@ import Foundation
     private var session: ConsumerSession?
 
     /// Initializes ExtoleApp
-    @objc public init(with programUrl: ProgramURL, delegate: ExtoleAppDelegate?) {
+    @objc public init(with programUrl: ExtoleAPI, delegate: ExtoleAppDelegate?) {
         self.programUrl = programUrl
         self.delegate = delegate
     }

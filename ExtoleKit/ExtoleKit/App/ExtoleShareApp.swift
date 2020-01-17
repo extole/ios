@@ -35,7 +35,7 @@ public final class ExtoleShareApp : NSObject {
         self.label = label
         super.init()
         
-        self.extoleApp = ExtoleApp(with: ProgramURL(baseUrl: programUrl, network: network), delegate: self)
+        self.extoleApp = ExtoleApp(with: ExtoleAPI(programURL: programUrl, network: network), delegate: self)
         self.delegate = delegate
         
         shareableLoader = ShareableLoader(delegate: self)
@@ -71,7 +71,7 @@ public final class ExtoleShareApp : NSObject {
     /// reloads share experince, within the same consumer session
     public func reload(complete: @escaping () -> Void) {
         if let session = session {
-            session.getToken(success: { token in
+            session.verifyToken(success: { token in
                 self.preloader?.load(session: session, complete: {
                     complete()
                 })

@@ -21,17 +21,18 @@ public struct ConsumerToken : Codable {
     let capabilities: [String]? = nil
 }
 
-extension ProgramURL {
-    public func getToken(success : @escaping (_: ConsumerToken) -> Void,
+extension ExtoleAPI {
+    public func createToken(success : @escaping (_: ConsumerToken) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         let request = self.network.getRequest(url: tokenUrl(baseUrl: baseUrl))
 
         self.network.processRequest(with: request, success: success, error: error)
     }
 }
+
 extension ConsumerSession {
     
-    public func getToken(success : @escaping (_: ConsumerToken) -> Void,
+    public func verifyToken(success : @escaping (_: ConsumerToken) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         let url = URL.init(string: token.access_token, relativeTo: tokenUrl(baseUrl: baseUrl))!
         let request = self.network.getRequest(url: url)

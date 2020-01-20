@@ -6,11 +6,11 @@ import XCTest
 
 class AuthenticationTest: XCTestCase {
 
-    let program = ExtoleAPI(programDomain: "ios-santa.extole.io")
+    let extoleApi = ExtoleAPI(programDomain: "ios-santa.extole.io")
     
     func testCreateSession() {
         let promise = expectation(description: "create token response")
-        program.createSession(success: { session in
+        extoleApi.createSession(success: { session in
             XCTAssert(session.token.access_token.count > 0)
             promise.fulfill()
         }, error: { error in
@@ -21,7 +21,7 @@ class AuthenticationTest: XCTestCase {
 
     func testInvalidToken() {
         let promise = expectation(description: "invalid token response")
-        program.resumeSession(accessToken: "invalid", success: { session in
+        extoleApi.resumeSession(accessToken: "invalid", success: { session in
             XCTFail("unexpected success")
         }, error: { verifyTokenError in
             print(verifyTokenError)
@@ -34,8 +34,8 @@ class AuthenticationTest: XCTestCase {
     func testDeleteToken() {
         let createSession = expectation(description: "get token response")
 
-        var session: ProgramSession!
-        program.createSession(success: { newSession in
+        var session: ExtoleSession!
+        extoleApi.createSession(success: { newSession in
             XCTAssert(!newSession.token.access_token.isEmpty)
             session = newSession
             createSession.fulfill()

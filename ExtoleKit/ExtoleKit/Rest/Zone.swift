@@ -2,7 +2,7 @@
 
 import Foundation
 
-extension ProgramSession {
+extension ExtoleSession {
     
     public func signal(zone: String,
                         parameters: [URLQueryItem]? = nil,

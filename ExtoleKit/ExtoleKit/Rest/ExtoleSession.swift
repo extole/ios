@@ -2,7 +2,7 @@
 
 import Foundation
 
-@objc public final class ProgramSession: NSObject{
+@objc public final class ExtoleSession: NSObject{
     let program: ExtoleAPI
     let token: ConsumerToken
     var baseUrl: URL {

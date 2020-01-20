@@ -7,14 +7,14 @@ import XCTest
 class ShareTest: XCTestCase {
 
     let program = ExtoleAPI(programDomain: "ios-santa.extole.io")
-    var programSession: ProgramSession!
+    var programSession: ExtoleSession!
     var advocateCode: String?
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
         program.createToken(success: { token in
             XCTAssert(!token.access_token.isEmpty)
-            self.programSession = ProgramSession.init(program: self.program, token: token)
+            self.programSession = ExtoleSession.init(program: self.program, token: token)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

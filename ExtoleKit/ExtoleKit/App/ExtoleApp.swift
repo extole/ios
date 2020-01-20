@@ -7,7 +7,7 @@ import Foundation
     /// ExtoleApp is in invalid state
     func extoleAppInvalid()
     /// ExtoleApp is ready
-    func extoleAppReady(session: ProgramSession)
+    func extoleAppReady(session: ExtoleSession)
 }
 
 /// High level API for Extole
@@ -23,7 +23,7 @@ import Foundation
     lazy private var sessionManager = SessionManager.init(program: programUrl, delegate: self)
     /// handles events for ExtoleApp
     private weak var delegate: ExtoleAppDelegate?
-    private var session: ProgramSession?
+    private var session: ExtoleSession?
 
     /// Initializes ExtoleApp
     @objc public init(with programUrl: ExtoleAPI, delegate: ExtoleAppDelegate?) {
@@ -96,7 +96,7 @@ extension ExtoleApp : SessionManagerDelegate{
         self.sessionManager.newSession()
     }
     
-    public func onNewSession(session: ProgramSession) {
+    public func onNewSession(session: ExtoleSession) {
         self.session = session
         errorCount = 0
         self.savedToken = session.accessToken

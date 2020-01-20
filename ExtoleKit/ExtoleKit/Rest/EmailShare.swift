@@ -26,7 +26,7 @@ import Foundation
     let share_id : String?
 }
 
-extension ProgramSession {
+extension ExtoleSession {
     
     public func emailShare(share: EmailShare,
                            success : @escaping (PollingIdResponse?) -> Void,

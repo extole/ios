@@ -29,7 +29,7 @@ import Foundation
     let share_id : String?
 }
 
-extension ProgramSession {
+extension ExtoleSession {
 
     public func customShare(share: CustomShare,
                             success : @escaping (PollingIdResponse) -> Void,

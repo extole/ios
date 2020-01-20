@@ -6,7 +6,7 @@ import Foundation
 public protocol SessionManagerDelegate : class {
     func onSessionInvalid()
     func onSessionDeleted()
-    func onNewSession(session: ProgramSession)
+    func onNewSession(session: ExtoleSession)
     func onSessionServerError(error: ExtoleError)
 }
 
@@ -14,7 +14,7 @@ public protocol SessionManagerDelegate : class {
 public final class SessionManager {
     let program: ExtoleAPI
     weak var delegate: SessionManagerDelegate?
-    private var session: ProgramSession? = nil
+    private var session: ExtoleSession? = nil
 
     public init(program: ExtoleAPI, delegate: SessionManagerDelegate) {
         self.program = program
@@ -37,7 +37,7 @@ public final class SessionManager {
 
     public func resumeSession(existingToken: String) {
         let consumerToken = ConsumerToken.init(access_token: existingToken)
-        self.session = ProgramSession.init(program: self.program,
+        self.session = ExtoleSession.init(program: self.program,
                                             token: consumerToken)
         self.session!.verify(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken)
@@ -73,7 +73,7 @@ public final class SessionManager {
     }
     
     private func onVerifiedToken(verifiedToken: ConsumerToken) {
-        self.session = ProgramSession.init(program: program, token: verifiedToken)
+        self.session = ExtoleSession.init(program: program, token: verifiedToken)
         self.delegate?.onNewSession(session: self.session!)
     }
 }

@@ -44,7 +44,7 @@ class ExtoleSanta {
         }
     }
     
-    var session : ProgramSession? {
+    var session : ExtoleSession? {
         get {
             return shareApp.session
         }

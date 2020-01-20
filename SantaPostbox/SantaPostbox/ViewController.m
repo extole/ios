@@ -9,7 +9,7 @@
 @property UILabel *label;
 @property UITextField* code;
 @property UIButton* load;
-@property ProgramSession* extoleSession;
+@property ExtoleSession* extoleSession;
 @property UILabel *wishItem;
 @end
 
@@ -91,7 +91,7 @@
     _extoleSession = nil;
 }
 
-- (void)extoleAppReadyWithSession:(ProgramSession * _Nonnull)session {
+- (void)extoleAppReadyWithSession:(ExtoleSession * _Nonnull)session {
     _extoleSession = session;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self->_label setText:(session.accessToken)];

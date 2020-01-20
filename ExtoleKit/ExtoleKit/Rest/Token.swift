@@ -27,24 +27,24 @@ public struct CreateTokenRequest: Codable {
 
 extension ExtoleAPI {
     
-    public func createSession(tokenRequest: CreateTokenRequest? = nil, success : @escaping (_: ProgramSession) -> Void,
+    public func createSession(tokenRequest: CreateTokenRequest? = nil, success : @escaping (_: ExtoleSession) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         
         let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: tokenRequest)
 
         self.network.processRequest(with: request, success: {token in
-            success(ProgramSession(program: self, token: token))
+            success(ExtoleSession(program: self, token: token))
         }, error: error)
     }
     
     public func resumeSession(accessToken: String,
-                              success : @escaping (_: ProgramSession) -> Void,
+                              success : @escaping (_: ExtoleSession) -> Void,
                               error: @escaping (_: ExtoleError) -> Void) {
         let url = URL.init(string: accessToken, relativeTo: tokenV4Url(baseUrl: baseUrl))!
         let empty : String? = nil
         let request = self.network.newJsonRequest(method: "GET", url: url, headers: [:], data: empty)
         self.network.processRequest(with: request, success: { token in
-            success(ProgramSession(program: self, token: token))
+            success(ExtoleSession(program: self, token: token))
         }, error: error)
     }
     
@@ -57,7 +57,7 @@ extension ExtoleAPI {
     }
 }
 
-extension ProgramSession {
+extension ExtoleSession {
     
     public func verify(success : @escaping (_: ConsumerToken) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {

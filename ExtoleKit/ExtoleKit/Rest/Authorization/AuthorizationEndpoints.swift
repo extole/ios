@@ -2,13 +2,15 @@
 
 import Foundation
 
-extension ExtoleAPI.Authorization {
-    public static func v5TokenUrl(baseUrl: URL) -> URL {
-      return URL.init(string: "/api/v5/token/", relativeTo: baseUrl)!
-    }
-    public static func v4TokenUrl(baseUrl: URL) -> URL {
-      return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
-    }
+extension ExtoleAPI {
+    public enum Authorization {
+        public static func v5TokenUrl(baseUrl: URL) -> URL {
+          return URL.init(string: "/api/v5/token/", relativeTo: baseUrl)!
+        }
+        public static func v4TokenUrl(baseUrl: URL) -> URL {
+          return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
+        }
+   }
 }
 
 extension ExtoleAPI.Error {

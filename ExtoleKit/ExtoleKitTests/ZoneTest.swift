@@ -25,6 +25,22 @@ class ZoneTest: XCTestCase {
         let shareMessage: String
     }
     
+    func testRenderZone() {
+        struct TestResponse: Codable {
+            let event_id: String
+        }
+        let promise = expectation(description: "render zone")
+        extoleSession.renderZone(eventName: "settings",
+                                 data:[:],
+                                 success: { (response: TestResponse) in
+           XCTAssertNotNil(response.event_id)
+           promise.fulfill()
+        }, error: { error in
+           XCTFail(String(reflecting: error))
+        })
+        waitForExpectations(timeout: 5, handler: nil)
+   }
+    
     func testFetchSettings() {
         let promise = expectation(description: "fetch object")
         extoleSession.fetchObject(zone: "settings",

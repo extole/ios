@@ -8,8 +8,8 @@ import Foundation
     private let shareApp: ExtoleShareApp
     private let appDelegate = SimpleShareAppDelegate()
     
-    @objc public init(programUrl: URL, programLabel: String) {
-        self.shareApp = ExtoleShareApp.init(programUrl: programUrl, programLabel: programLabel, delegate: appDelegate)
+    @objc public init(programDomain: String, programLabel: String) {
+        self.shareApp = ExtoleShareApp.init(programDomain: programDomain, programLabel: programLabel, delegate: appDelegate)
     }
     
     @objc public init(shareApp:  ExtoleShareApp) {

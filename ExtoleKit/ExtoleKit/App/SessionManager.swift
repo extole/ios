@@ -12,11 +12,11 @@ public protocol SessionManagerDelegate : class {
 
 /// Manages Extole consumer session
 public final class SessionManager {
-    let program: Program
+    let program: ExtoleAPI
     weak var delegate: SessionManagerDelegate?
     private var session: ProgramSession? = nil
 
-    public init(program: Program, delegate: SessionManagerDelegate) {
+    public init(program: ExtoleAPI, delegate: SessionManagerDelegate) {
         self.program = program
         self.delegate = delegate
     }

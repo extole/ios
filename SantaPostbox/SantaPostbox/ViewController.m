@@ -81,7 +81,7 @@
     NSURL *programUrl = [[NSURL alloc] initWithString:(@"https://ios-santa.extole.io")];
     CustomNetwork* executor = [[CustomNetwork alloc] init];
     Network* network = [[Network alloc] initWithExecutor:executor];
-    Program *program = [[RequestContext alloc] initWithBaseUrl:programUrl network:network];
+    ExtoleAPI *program = [[RequestContext alloc] initWithBaseUrl:programUrl network:network];
     _app = [[ExtoleApp alloc] initWith:program delegate:self];
     [_app activate];
 }

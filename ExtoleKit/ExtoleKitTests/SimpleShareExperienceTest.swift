@@ -11,7 +11,7 @@ class SimpleShareExperienceTest: XCTestCase {
 
     func testSignalShare() {
         let promise = expectation(description: "invalid share response")
-        let shareApp = ExtoleShareExperince(programUrl: URL.init(string: "https://ios-santa.extole.io")!, programLabel: "refer-a-friend")
+        let shareApp = ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "refer-a-friend")
         shareApp.reset()
         let share = CustomShare(channel:"test")
         shareApp.notify(share: share, success: { (CustomSharePollingResult) in
@@ -24,7 +24,7 @@ class SimpleShareExperienceTest: XCTestCase {
     
     func testFailedShare() {
         let promise = expectation(description: "invalid share response")
-        let shareApp = ExtoleShareExperince(programUrl: URL.init(string: "https://ios-santa-missing.extole.io")!, programLabel: "missing")
+        let shareApp = ExtoleShareExperince(programDomain: "ios-santa-missing.extole.io", programLabel: "missing")
         shareApp.reset()
         
         shareApp.notify(share: CustomShare(channel:"test"), success: { (CustomSharePollingResult) in
@@ -38,7 +38,7 @@ class SimpleShareExperienceTest: XCTestCase {
     
     func testFetchSettings() {
         let promise = expectation(description: "settings response")
-        let shareApp = ExtoleShareExperince(programUrl: URL.init(string: "https://ios-santa.extole.io")!, programLabel: "missing")
+        let shareApp = ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "missing")
         shareApp.reset()
         
         shareApp.fetchObject(zone: "settings", success: { (settings: Settings) in
@@ -51,7 +51,7 @@ class SimpleShareExperienceTest: XCTestCase {
     
     func testSignal() {
         let promise = expectation(description: "conversion response")
-        let shareApp = ExtoleShareExperince(programUrl: URL.init(string: "https://ios-santa.extole.io")!, programLabel: "missing")
+        let shareApp = ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "missing")
         shareApp.reset()
         let parameters : [URLQueryItem] = [
             URLQueryItem(name: "cart_value", value: "12.31")
@@ -66,7 +66,7 @@ class SimpleShareExperienceTest: XCTestCase {
     
     func testUpdateProfile() {
         let updateProfile = expectation(description: "update profile")
-        let shareApp = ExtoleShareExperince(programUrl: URL.init(string: "https://ios-santa.extole.io")!, programLabel: "missing")
+        let shareApp = ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "missing")
         shareApp.reset()
         let profile = MyProfile(first_name: "test profile")
         

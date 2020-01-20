@@ -25,9 +25,9 @@ public struct CreateTokenRequest: Codable {
     let email: String? = nil
 }
 
-extension Program {
+extension ExtoleAPI {
     
-    public func createSession(tokenRequest: CreateTokenRequest?, success : @escaping (_: ProgramSession) -> Void,
+    public func createSession(tokenRequest: CreateTokenRequest? = nil, success : @escaping (_: ProgramSession) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         
         let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: tokenRequest)

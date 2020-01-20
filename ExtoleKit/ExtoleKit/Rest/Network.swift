@@ -26,13 +26,35 @@ public protocol ExtoleApiErrorHandler {
     func genericError(errorData: ExtoleAPI.Error)
 }
 
-public class Network : NSObject {
+public class Network {
     
     let executor : NetworkExecutor
     
     public init(executor: NetworkExecutor = DefaultNetworkExecutor.init()) {
         self.executor = executor
     }
+    
+    func version(for bundle: Bundle) -> String {
+        return bundle.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String ?? "unknown"
+    }
+
+    func gitRevision(for bundle: Bundle) -> String {
+        return bundle.object(forInfoDictionaryKey: "gitRevision") as? String ?? "unknown"
+    }
+
+    func getHeaders() -> [String: String] {
+        return [
+            "X-Extole-App": "Mobile SDK",
+            "X-Extole-App-flavour": "iOS-Swift",
+            "X-Extole-Sdk-version": version(for: Bundle(for: ExtoleAPI.self)),
+            "X-Extole-Sdk-gitRevision": gitRevision(for: Bundle(for: ExtoleAPI.self)),
+            
+            "X-Extole-App-version": version(for: Bundle.main),
+            "X-Extole-App-appId": Bundle.main.bundleIdentifier ?? "unknown",
+            "X-Extole-DeviceId": UIDevice.current.identifierForVendor?.uuidString ?? "unknown",
+        ]
+    }
+    
     
     func tryDecode<T: Codable>(data: Data) -> T? {
         let decoder = JSONDecoder.init()
@@ -46,7 +68,7 @@ public class Network : NSObject {
         request.httpMethod = method
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        ExtoleHeaders.all.forEach { (key, value) in
+        self.getHeaders().forEach { (key, value) in
             extoleDebug(format: "adding header %{private}@", arg: key)
             request.addValue(value, forHTTPHeaderField: key)
         }

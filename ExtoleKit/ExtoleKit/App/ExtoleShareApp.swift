@@ -27,7 +27,7 @@ public final class ExtoleShareApp : NSObject {
     public private(set) var shareableLoader: ShareableLoader!
 
     /// Creates new Extole share experince
-    @objc public init(programDomain: String,
+    public init(programDomain: String,
                 programLabel label: String,
                 delegate: ExtoleShareAppDelegate?,
                 extraLoaders: [Loader] = [],

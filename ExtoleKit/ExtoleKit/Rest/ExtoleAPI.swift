@@ -2,10 +2,10 @@
 
 import Foundation
 
-@objc public final class ExtoleAPI : NSObject {
+public final class ExtoleAPI {
     let baseUrl: URL
     let network : Network
-    @objc public init(programDomain: String, network: Network = Network.init()) {
+    public init(programDomain: String, network: Network = Network.init()) {
         self.baseUrl = URL.init(string: "https://" + programDomain)!
         self.network = network
     }

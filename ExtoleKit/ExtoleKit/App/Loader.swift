@@ -3,7 +3,7 @@
 import Foundation
 
 /// Loads content for consumer session
-@objc public protocol Loader{
+public protocol Loader{
     func load(session: ExtoleAPI.Session, complete: @escaping () -> Void)
 }
 

@@ -3,7 +3,7 @@
 import Foundation
 
 /// Handles events from ExtoleApp
-@objc public protocol ExtoleAppDelegate : class {
+public protocol ExtoleAppDelegate : class {
     /// ExtoleApp is in invalid state
     func extoleAppInvalid()
     /// ExtoleApp is ready
@@ -11,7 +11,7 @@ import Foundation
 }
 
 /// High level API for Extole
-@objc public final class ExtoleApp: NSObject {
+public final class ExtoleApp: NSObject {
     let errorRecoveryQueue = DispatchQueue(label: "ExtoleApp.errorRecovery")
     var errorCount = 0
     /// stores key-value pairs for Extole
@@ -26,19 +26,19 @@ import Foundation
     private var session: ExtoleAPI.Session?
 
     /// Initializes ExtoleApp
-    @objc public init(with programUrl: ExtoleAPI, delegate: ExtoleAppDelegate?) {
+    public init(with programUrl: ExtoleAPI, delegate: ExtoleAppDelegate?) {
         self.programUrl = programUrl
         self.delegate = delegate
     }
     
     /// cleans saved data, invalidates delegate
-    @objc public func reset() {
+    public func reset() {
         self.savedToken = nil
         self.sessionManager.logout()
     }
 
     /// Resumes saved session, or creates new one
-    @objc public func activate() {
+    public func activate() {
         if let existingToken = self.savedToken {
             self.sessionManager.resumeSession(existingToken: existingToken)
         } else {

@@ -19,18 +19,18 @@ import Foundation
     
 }
 
-@objc public protocol ExtoleApiErrorHandler {
-    @objc func serverError(error: Error)
-    @objc func decodingError(data: Data)
-    @objc func noContent()
-    @objc func genericError(errorData: ExtoleError)
+public protocol ExtoleApiErrorHandler {
+    func serverError(error: Error)
+    func decodingError(data: Data)
+    func noContent()
+    func genericError(errorData: ExtoleAPI.Error)
 }
 
-@objc public class Network : NSObject {
+public class Network : NSObject {
     
     let executor : NetworkExecutor
     
-    @objc public init(executor: NetworkExecutor = DefaultNetworkExecutor.init()) {
+    public init(executor: NetworkExecutor = DefaultNetworkExecutor.init()) {
         self.executor = executor
     }
     
@@ -63,7 +63,7 @@ import Foundation
     }
 
     final func dataHandler<T : Codable>(success: @escaping (_: T) -> Void,
-                                        error: @escaping(ExtoleError) -> Void)
+                                        error: @escaping(ExtoleAPI.Error) -> Void)
         -> ((_ : Data?) -> Void)  {
             return { data in
                 if let data = data {
@@ -71,7 +71,7 @@ import Foundation
                     if let token = decoded {
                         success(token)
                     } else {
-                        let errorValue = ExtoleError.init(code: "ExtoleKit-decoding")
+                        let errorValue = ExtoleAPI.Error(code: "ExtoleKit-decoding")
                         error(errorValue)
                     }
                 }
@@ -79,34 +79,34 @@ import Foundation
     }
 
     class DefaultExtoleApiErrorHandler : ExtoleApiErrorHandler {
-        private let error:((_: ExtoleError) -> Void)
-        init(error: @escaping(_: ExtoleError) -> Void) {
+        private let error:((_: ExtoleAPI.Error) -> Void)
+        init(error: @escaping(_: ExtoleAPI.Error) -> Void) {
             self.error = error
         }
         func serverError(error: Error) {
-            self.error(ExtoleError.init(code: "ExtoleKit-server"))
+            self.error(ExtoleAPI.Error.init(code: "ExtoleKit-server"))
         }
         
         func decodingError(data: Data) {
-             self.error(ExtoleError.init(code: "ExtoleKit-decoding"))
+             self.error(ExtoleAPI.Error.init(code: "ExtoleKit-decoding"))
         }
         
         func noContent() {
-             self.error(ExtoleError.init(code: "ExtoleKit-nocontent"))
+             self.error(ExtoleAPI.Error.init(code: "ExtoleKit-nocontent"))
         }
         
-        func genericError(errorData: ExtoleError) {
+        func genericError(errorData: ExtoleAPI.Error) {
             error(errorData)
         }
         
         
     }
-    final func errorHandler(error: @escaping(_: ExtoleError) -> Void)
+    final func errorHandler(error: @escaping(_: ExtoleAPI.Error) -> Void)
         -> ExtoleApiErrorHandler  {
             return DefaultExtoleApiErrorHandler(error: error)
     }
 
-    @objc func processRequest(with request: URLRequest,
+    func processRequest(with request: URLRequest,
                         dataHandler:  @escaping (_: Data) -> Void,
                         errorHandler: ExtoleApiErrorHandler) {
         executor.dataTask(with: request) { data, response, error in
@@ -117,9 +117,10 @@ import Foundation
             guard let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode) else {
                     if let responseData = data {
-                        let decodedError: ExtoleError? = self.tryDecode(data: responseData)
-                        if let decodedError = decodedError {
-                            errorHandler.genericError(errorData: decodedError)
+                        let serverError: ExtoleAPI.ServerError? = self.tryDecode(data: responseData)
+                        if let serverError = serverError {
+                            let error = ExtoleAPI.Error(code: serverError.code, message: serverError.message, httpCode: serverError.http_status_code)
+                            errorHandler.genericError(errorData: error)
                         } else {
                             errorHandler.decodingError(data: responseData)
                         }
@@ -140,7 +141,7 @@ import Foundation
 
     func processRequest<T: Codable>(with request: URLRequest,
                                     success : @escaping (_: T) -> Void,
-                                    error: @escaping (_: ExtoleError) -> Void) {
+                                    error: @escaping (_: ExtoleAPI.Error) -> Void) {
         processRequest(with: request,
                        dataHandler :dataHandler(success: success, error: error),
                        errorHandler:errorHandler(error: error))
@@ -148,7 +149,7 @@ import Foundation
 
     func processNoContentRequest(with request: URLRequest,
                                              success : @escaping () -> Void,
-                                             error: @escaping (_: ExtoleError) -> Void) {
+                                             error: @escaping (_: ExtoleAPI.Error) -> Void) {
         processRequest(with: request,
                        dataHandler :{ _ in success()},
                        errorHandler:errorHandler(error: error))

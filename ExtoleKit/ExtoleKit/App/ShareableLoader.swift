@@ -16,7 +16,7 @@ public final class ShareableLoader : Loader {
         self.delegate = delegate
     }
     
-    public func load(session: ExtoleSession, complete: @escaping () -> Void) {
+    public func load(session: ExtoleAPI.Session, complete: @escaping () -> Void) {
         session.getShareables(success: { shareables in
             self.shareables = shareables
             self.delegate?.success(shareables: shareables, complete: complete)

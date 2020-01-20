@@ -6,15 +6,15 @@ import Foundation
 public protocol SessionManagerDelegate : class {
     func onSessionInvalid()
     func onSessionDeleted()
-    func onNewSession(session: ExtoleSession)
-    func onSessionServerError(error: ExtoleError)
+    func onNewSession(session: ExtoleAPI.Session)
+    func onSessionServerError(error: ExtoleAPI.Error)
 }
 
 /// Manages Extole consumer session
 public final class SessionManager {
     let program: ExtoleAPI
     weak var delegate: SessionManagerDelegate?
-    private var session: ExtoleSession? = nil
+    private var session: ExtoleAPI.Session? = nil
 
     public init(program: ExtoleAPI, delegate: SessionManagerDelegate) {
         self.program = program
@@ -36,8 +36,8 @@ public final class SessionManager {
     }
 
     public func resumeSession(existingToken: String) {
-        let consumerToken = ExtoleAPI.Authorization.ConsumerToken.init(access_token: existingToken)
-        self.session = ExtoleSession.init(program: self.program,
+        let consumerToken = ExtoleAPI.Token.ConsumerToken.init(access_token: existingToken)
+        self.session = ExtoleAPI.Session.init(program: self.program,
                                             token: consumerToken)
         self.session!.verify(success: { verifiedToken in
             self.onVerifiedToken(verifiedToken: verifiedToken)
@@ -72,8 +72,8 @@ public final class SessionManager {
         
     }
     
-    private func onVerifiedToken(verifiedToken: ExtoleAPI.Authorization.ConsumerToken) {
-        self.session = ExtoleSession.init(program: program, token: verifiedToken)
+    private func onVerifiedToken(verifiedToken: ExtoleAPI.Token.ConsumerToken) {
+        self.session = ExtoleAPI.Session.init(program: program, token: verifiedToken)
         self.delegate?.onNewSession(session: self.session!)
     }
 }

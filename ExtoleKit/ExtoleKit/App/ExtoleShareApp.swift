@@ -22,7 +22,7 @@ public final class ExtoleShareApp : NSObject {
     /// Composite preloader to load profile, shareables, and settings at once
     private var preloader: CompositeLoader!
     /// Active consumer session
-    @objc public private(set) var session: ExtoleSession?
+    @objc public private(set) var session: ExtoleAPI.Session?
     /// Loads consumer shareables
     public private(set) var shareableLoader: ShareableLoader!
 
@@ -85,7 +85,7 @@ public final class ExtoleShareApp : NSObject {
     /// Sends custom share event to Extole
     public func notify(share: CustomShare,
                         success: @escaping (CustomSharePollingResult)->Void,
-                        error: @escaping(ExtoleError) -> Void) {
+                        error: @escaping(ExtoleAPI.Error) -> Void) {
         extoleInfo(format: "shared via custom channel %s", arg: share.channel)
         
         if let session = session, let shareableCode = selectedShareable?.code {
@@ -95,14 +95,14 @@ public final class ExtoleShareApp : NSObject {
                                         success: success, error: error)
             }, error: error)
         } else {
-            error(ExtoleError.init(code: "not_ready"))
+            error(ExtoleAPI.Error.init(code: "not_ready"))
         }
     }
 
     /// Sends a share to given email, using Extole email service
     public func send(share: EmailShare,
                       success: @escaping (EmailSharePollingResult)->Void,
-                      error: @escaping(ExtoleError) -> Void) {
+                      error: @escaping(ExtoleAPI.Error) -> Void) {
         extoleInfo(format: "sharing to email %s", arg: share.recipient_email)
         if let session = session, let shareableCode = selectedShareable?.code {
             share.advocate_code = shareableCode
@@ -155,7 +155,7 @@ extension ExtoleShareApp : ExtoleAppDelegate {
         
     }
 
-    public func extoleAppReady(session: ExtoleSession) {
+    public func extoleAppReady(session: ExtoleAPI.Session) {
         self.session = session
         preloader.load(session: session) {
             self.delegate?.extoleShareAppReady(shareApp: self)

@@ -11,7 +11,7 @@ public final class ZoneLoader<T: Codable> : Loader {
         self.zoneName = zoneName
     }
     
-    public func load(session: ExtoleSession, complete: @escaping () -> Void) {
+    public func load(session: ExtoleAPI.Session, complete: @escaping () -> Void) {
         session.fetchObject(zone: zoneName, success: { (zoneData:T?) in
             self.zoneData = zoneData
             complete()

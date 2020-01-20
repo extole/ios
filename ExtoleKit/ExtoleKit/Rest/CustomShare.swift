@@ -29,11 +29,11 @@ import Foundation
     let share_id : String?
 }
 
-extension ExtoleSession {
+extension ExtoleAPI.Session {
 
     public func customShare(share: CustomShare,
                             success : @escaping (PollingIdResponse) -> Void,
-                            error: @escaping (ExtoleError) -> Void) {
+                            error: @escaping (ExtoleAPI.Error) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share")!
         let request = self.postRequest(url: url,
                                   data: share)
@@ -42,7 +42,7 @@ extension ExtoleSession {
     
     public func getCustomShareStatus(pollingResponse: PollingIdResponse,
                                 success : @escaping (CustomSharePollingResult) -> Void,
-                                error: @escaping(ExtoleError) -> Void) {
+                                error: @escaping(ExtoleAPI.Error) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/custom/share/status/\(pollingResponse.polling_id)")!
         let request = self.getRequest(url: url)
         
@@ -51,7 +51,7 @@ extension ExtoleSession {
     
     public func pollCustomShare(pollingResponse: PollingIdResponse,
                                      success : @escaping (CustomSharePollingResult) -> Void,
-                                     error: @escaping(ExtoleError) -> Void) {
+                                     error: @escaping(ExtoleAPI.Error) -> Void) {
         func poll(retries: UInt) {
             getCustomShareStatus(pollingResponse: pollingResponse,
                                  success: { pollingResult in
@@ -61,7 +61,7 @@ extension ExtoleSession {
                                         sleep(1)
                                         poll(retries: retries - 1)
                                     } else {
-                                        error(ExtoleError.init(code: "polling_timeout"))
+                                        error(ExtoleAPI.Error.init(code: "polling_timeout"))
                                     }
             }, error: { pollingError in
                 error(pollingError)

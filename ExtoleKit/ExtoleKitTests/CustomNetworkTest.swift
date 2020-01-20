@@ -8,7 +8,7 @@ class CustomNetworkTest : XCTestCase {
     
     class CustomExecutor : NetworkExecutor {
         func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
-            let token = Authorization.ConsumerToken(access_token: "custom_executor")
+            let token = ExtoleAPI.Token.ConsumerToken(access_token: "custom_executor")
             let response = HTTPURLResponse.init(url: request.url!,
                                                 statusCode: 200,
                                                 httpVersion: "HTTP/1.1",
@@ -21,9 +21,9 @@ class CustomNetworkTest : XCTestCase {
     class CustomNetwork: Network {
         override func processRequest<T>(with request: URLRequest,
                                            success: @escaping (T) -> Void,
-                                           error: @escaping (ExtoleError) -> Void)
+                                           error: @escaping (ExtoleAPI.Error) -> Void)
             where T : Decodable, T : Encodable {
-                let token = Authorization.ConsumerToken(access_token: "custom")
+                let token = ExtoleAPI.Token.ConsumerToken(access_token: "custom")
                 success(token as! T)
         }
     }

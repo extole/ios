@@ -4,6 +4,8 @@ import XCTest
 
 @testable import ExtoleKit
 
+import class ExtoleKit.Network;
+
 class AuthenticationTest: XCTestCase {
 
     let extoleApi = ExtoleAPI(programDomain: "ios-santa.extole.io")
@@ -26,6 +28,8 @@ class AuthenticationTest: XCTestCase {
         }, error: { verifyTokenError in
             print(verifyTokenError)
             XCTAssertEqual("invalid_access_token", verifyTokenError.code)
+            XCTAssertEqual(403, verifyTokenError.httpCode ?? -1)
+            XCTAssertEqual("The access_token provided with this request is invalid.", verifyTokenError.message)
             promise.fulfill()
         })
         waitForExpectations(timeout: 5, handler: nil)
@@ -34,7 +38,7 @@ class AuthenticationTest: XCTestCase {
     func testDeleteToken() {
         let createSession = expectation(description: "get token response")
 
-        var session: ExtoleSession!
+        var session: ExtoleAPI.Session!
         extoleApi.createSession(success: { newSession in
             XCTAssert(!newSession.token.access_token.isEmpty)
             session = newSession

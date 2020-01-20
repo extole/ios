@@ -7,7 +7,7 @@ import XCTest
 class ProfileTest: XCTestCase {
 
     let extoleApi = ExtoleAPI(programDomain: "ios-santa.extole.io")
-    var extoleSession : ExtoleSession!
+    var extoleSession : ExtoleAPI.Session!
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")

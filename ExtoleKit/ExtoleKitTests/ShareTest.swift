@@ -7,7 +7,7 @@ import XCTest
 class ShareTest: XCTestCase {
 
     let extoleAPI = ExtoleAPI(programDomain: "ios-santa.extole.io")
-    var extoleSession: ExtoleSession!
+    var extoleSession: ExtoleAPI.Session!
     var advocateCode: String?
     
     override func setUp() {

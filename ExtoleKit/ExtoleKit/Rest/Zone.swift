@@ -2,12 +2,12 @@
 
 import Foundation
 
-extension ExtoleSession {
+extension ExtoleAPI.Session {
     
     public func signal(zone: String,
                         parameters: [URLQueryItem]? = nil,
                         success:@escaping () -> Void,
-                        error : @escaping (ExtoleError) -> Void) {
+                        error : @escaping (ExtoleAPI.Error) -> Void) {
         var components = URLComponents(string: "\(baseUrl)/zone/\(zone)")!
         components.queryItems = parameters
         let request = self.getRequest(url: components.url!)
@@ -17,14 +17,14 @@ extension ExtoleSession {
     public func fetchObject<T: Codable>(zone: String,
                             parameters: [URLQueryItem]? = nil,
                             success:@escaping (T) -> Void,
-                            error : @escaping (ExtoleError) -> Void) {
+                            error : @escaping (ExtoleAPI.Error) -> Void) {
         var components = URLComponents(string: "\(baseUrl)/zone/\(zone)")!
         components.queryItems = parameters
         let request = self.getRequest(url: components.url!)
         self.network.processRequest(with: request, success: success, error: error)
     }
 
-    @objc public func fetchDictionary(zone: String,
+    public func fetchDictionary(zone: String,
                                       parameters: [URLQueryItem]?,
                                       success: @escaping (_: NSDictionary) -> Void,
                                       error : ExtoleApiErrorHandler) {

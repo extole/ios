@@ -39,55 +39,55 @@ import Foundation
     public func fetchObject<T: Codable>(zone: String,
                                         parameters: [URLQueryItem]? = nil,
                                         success:@escaping (T) -> Void,
-                                        error : @escaping (ExtoleError) -> Void) {
+                                        error : @escaping (ExtoleAPI.Error) -> Void) {
         self.async { (shareApp) in
             if let shareApp = shareApp {
                 shareApp.session?.fetchObject(zone: zone, parameters: parameters, success: success, error: error)
             } else {
-                error(ExtoleError.init(code: "reset"))
+                error(ExtoleAPI.Error(code: "reset"))
             }
         }
     }
 
     
-    @objc public func notify(share: CustomShare,
+    public func notify(share: CustomShare,
                        success: @escaping (CustomSharePollingResult)->Void,
-                       error: @escaping(ExtoleError) -> Void) {
+                       error: @escaping(ExtoleAPI.Error) -> Void) {
         self.async { (shareApp) in
             if let shareApp = shareApp {
                 shareApp.notify(share: share, success: success, error: error)
             } else {
-                error(ExtoleError.init(code: "reset"))
+                error(ExtoleAPI.Error(code: "reset"))
             }
         }
     }
     
-    @objc public func signal(zone: String,
+    public func signal(zone: String,
                              parameters: [URLQueryItem]? = nil,
                              success:@escaping () -> Void,
-                             error : @escaping (ExtoleError) -> Void) {
+                             error : @escaping (ExtoleAPI.Error) -> Void) {
         self.async { (shareApp) in
             if let shareApp = shareApp {
                 shareApp.session?.signal(zone: zone, parameters: parameters, success: success, error: error)
             } else {
-                error(ExtoleError.init(code: "reset"))
+                error(ExtoleAPI.Error(code: "reset"))
             }
         }
     }
 
-    @objc public func update(profile: MyProfile,
+    public func update(profile: MyProfile,
                              success: @escaping () -> Void = {},
-                             error: @escaping (ExtoleError) -> Void = { _ in }) {
+                             error: @escaping (ExtoleAPI.Error) -> Void = { _ in }) {
         self.async { (shareApp) in
             if let shareApp = shareApp {
                 shareApp.session?.updateProfile(profile: profile, success: success, error: error)
             } else {
-                error(ExtoleError.init(code: "reset"))
+                error(ExtoleAPI.Error.init(code: "reset"))
             }
         }
     }
     
-    @objc public func fetchDictionary(zone: String,
+    public func fetchDictionary(zone: String,
                                       parameters: [URLQueryItem]?,
                                       success: @escaping (_: NSDictionary) -> Void,
                                       error : ExtoleApiErrorHandler) {
@@ -95,7 +95,7 @@ import Foundation
             if let shareApp = shareApp {
                 shareApp.session?.fetchDictionary(zone: zone, parameters: parameters, success: success, error: error)
             } else {
-                error.genericError(errorData: ExtoleError.init(code: "reset"))
+                error.genericError(errorData: ExtoleAPI.Error.init(code: "reset"))
             }
         }
     }

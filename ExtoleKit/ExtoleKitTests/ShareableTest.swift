@@ -7,7 +7,7 @@ import XCTest
 class ShareableTest: XCTestCase {
 
     let program = ExtoleAPI(programDomain: "ios-santa.extole.io")
-    var programSession: ExtoleSession!
+    var programSession: ExtoleAPI.Session!
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")

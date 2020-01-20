@@ -9,7 +9,7 @@ public final class ProfileLoader : Loader{
     public init() {
         
     }
-    public func load(session: ExtoleSession, complete: @escaping () -> Void) {
+    public func load(session: ExtoleAPI.Session, complete: @escaping () -> Void) {
         session.getProfile(success: { profile in
             self.profile = profile
             complete()

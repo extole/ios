@@ -5,9 +5,6 @@
       location = "group:WebSanta/WebSanta.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:SantaPostbox/SantaPostbox.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:ExtoleSanta/ExtoleSanta.xcodeproj">
    </FileRef>
    <FileRef

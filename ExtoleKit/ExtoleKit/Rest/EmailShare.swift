@@ -26,11 +26,11 @@ import Foundation
     let share_id : String?
 }
 
-extension ExtoleSession {
+extension ExtoleAPI.Session {
     
     public func emailShare(share: EmailShare,
                            success : @escaping (PollingIdResponse?) -> Void,
-                           error: @escaping (ExtoleError) -> Void) {
+                           error: @escaping (ExtoleAPI.Error) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share")!
         let request = self.postRequest(url: url, data: share)
         network.processRequest(with: request, success: success, error: error)
@@ -38,7 +38,7 @@ extension ExtoleSession {
     
     public func getEmailShareStatus(pollingResponse: PollingIdResponse,
                                     success : @escaping (EmailSharePollingResult) -> Void,
-                                    error: @escaping (ExtoleError) -> Void) {
+                                    error: @escaping (ExtoleAPI.Error) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v5/email/share/status/\(pollingResponse.polling_id)")!
         let request = self.getRequest(url: url)
         self.network.processRequest(with: request, success: success, error: error)
@@ -46,7 +46,7 @@ extension ExtoleSession {
 
     public func pollEmailShare(pollingResponse: PollingIdResponse,
                                 success : @escaping (EmailSharePollingResult) -> Void,
-                                error: @escaping (ExtoleError) -> Void) {
+                                error: @escaping (ExtoleAPI.Error) -> Void) {
         func poll(retries: UInt = 10) {
             getEmailShareStatus(pollingResponse: pollingResponse, success: { pollingResult in
                 if pollingResult.status == "SUCCEEDED" {
@@ -55,7 +55,7 @@ extension ExtoleSession {
                     sleep(1)
                     poll(retries: retries - 1)
                 } else {
-                    error(ExtoleError.init(code: "polling_timout"))
+                    error(ExtoleAPI.Error.init(code: "polling_timout"))
                 }
             }, error : { pollingError in
                 error(pollingError)

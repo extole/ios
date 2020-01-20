@@ -20,11 +20,11 @@ public struct SuccessResponse : Codable {
     let status: String
 }
 
-extension ExtoleSession {
+extension ExtoleAPI.Session {
     
     public func updateProfile(profile: MyProfile,
                               success: @escaping () -> Void,
-                              error : @escaping (ExtoleError) -> Void) {
+                              error : @escaping (ExtoleAPI.Error) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
         let request = self.postRequest(url: url,
                                  data: profile)
@@ -32,7 +32,7 @@ extension ExtoleSession {
     }
 
     public func getProfile(success: @escaping (MyProfile) -> Void,
-                           error: @escaping (ExtoleError) -> Void) {
+                           error: @escaping (ExtoleAPI.Error) -> Void) {
         let url = URL(string: "\(baseUrl)/api/v4/me")!
         let request = self.getRequest(url: url)
         self.network.processRequest(with: request, success: success, error: error)

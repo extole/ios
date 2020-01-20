@@ -3,7 +3,7 @@
 import Foundation
 
 extension ExtoleAPI {
-    public class Token {
+    public enum Token {
        public struct CreateTokenRequest: Codable {
            let email: String? = nil
        }

@@ -6,14 +6,13 @@ import XCTest
 
 class ZoneTest: XCTestCase {
 
-    let program = ExtoleAPI(programDomain: "ios-santa.extole.io")
-    var programSession: ExtoleSession!
+    let extoleAPI = ExtoleAPI(programDomain: "ios-santa.extole.io")
+    var extoleSession: ExtoleSession!
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
-        program.createToken(success: { token in
-            XCTAssert(!token.access_token.isEmpty)
-            self.programSession = ExtoleSession.init(program: self.program, token: token)
+        extoleAPI.createSession(success: { session in
+            self.extoleSession = session
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -28,7 +27,7 @@ class ZoneTest: XCTestCase {
     
     func testFetchSettings() {
         let promise = expectation(description: "fetch object")
-        programSession.fetchObject(zone: "settings",
+        extoleSession.fetchObject(zone: "settings",
                                    success: { (settings: Settings?) in
             XCTAssertEqual("Share message", settings?.shareMessage)
             promise.fulfill()

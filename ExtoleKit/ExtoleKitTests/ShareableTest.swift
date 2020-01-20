@@ -11,9 +11,8 @@ class ShareableTest: XCTestCase {
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
-        program.createToken(success: { token in
-            XCTAssert(!token.access_token.isEmpty)
-            self.programSession = ExtoleSession.init(program: self.program, token: token)
+        program.createSession(success: { session in
+            self.programSession = session
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

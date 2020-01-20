@@ -6,15 +6,14 @@ import XCTest
 
 class ShareTest: XCTestCase {
 
-    let program = ExtoleAPI(programDomain: "ios-santa.extole.io")
-    var programSession: ExtoleSession!
+    let extoleAPI = ExtoleAPI(programDomain: "ios-santa.extole.io")
+    var extoleSession: ExtoleSession!
     var advocateCode: String?
     
     override func setUp() {
         let promise = expectation(description: "invalid token response")
-        program.createToken(success: { token in
-            XCTAssert(!token.access_token.isEmpty)
-            self.programSession = ExtoleSession.init(program: self.program, token: token)
+        extoleAPI.createSession(success: { session in
+            self.extoleSession = session
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -25,7 +24,7 @@ class ShareTest: XCTestCase {
         let createShareablePromise = expectation(description: "create shareable response")
         let newShareable = MyShareable.init(label: "refer-a-friend")
         var shareableResult: PollingIdResponse!
-        programSession.createShareable(shareable: newShareable,
+        extoleSession.createShareable(shareable: newShareable,
                                        success: { result in
             shareableResult = result
             createShareablePromise.fulfill()
@@ -36,7 +35,7 @@ class ShareTest: XCTestCase {
         XCTAssertGreaterThan(shareableResult.polling_id, "111111")
         
         let pollShareablePromise = expectation(description: "poll shareable response")
-        programSession.pollShareable(pollingResponse: shareableResult!,
+        extoleSession.pollShareable(pollingResponse: shareableResult!,
                                      success: { result in
             self.advocateCode = result.code!
             pollShareablePromise.fulfill()
@@ -55,7 +54,7 @@ class ShareTest: XCTestCase {
         
         let shareExpectation = expectation(description: "share")
         var sharePollingId : PollingIdResponse!
-        programSession.customShare(share: customShare, success: { shareResponse in
+        extoleSession.customShare(share: customShare, success: { shareResponse in
             XCTAssertGreaterThan(shareResponse.polling_id, "1111")
             sharePollingId = shareResponse
             shareExpectation.fulfill()
@@ -66,7 +65,7 @@ class ShareTest: XCTestCase {
         wait(for: [shareExpectation], timeout: 10)
 
         let pollingExpectation = expectation(description: "share polling")
-        programSession.pollCustomShare(pollingResponse: sharePollingId, success: { customShareResult in
+        extoleSession.pollCustomShare(pollingResponse: sharePollingId, success: { customShareResult in
             XCTAssertNotNil(customShareResult.share_id)
             XCTAssertGreaterThan(customShareResult.share_id!, "1111")
             pollingExpectation.fulfill()

@@ -2,82 +2,28 @@
 
 import Foundation
 
-func tokenV4Url(baseUrl: URL) -> URL {
-    return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
-}
-func tokenV5Url(baseUrl: URL) -> URL {
-    return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
-}
+extension ExtoleAPI {
 
-public class Authorization {
-    public struct CreateTokenRequest: Codable {
-        let email: String? = nil
-    }
-}
-
-public struct ConsumerToken : Codable {
-    public var accessToken : String {
-        get {
-            return access_token
+    public class Authorization {
+       
+        
+        public struct CreateTokenRequest: Codable {
+            let email: String? = nil
+        }
+        
+        public struct ConsumerToken : Codable {
+            public var accessToken : String {
+                get {
+                    return access_token
+                }
+            }
+            let access_token: String
+            let expires_in: Int? = nil
+            let scopes: [String]? = nil
+            let capabilities: [String]? = nil
         }
     }
-    let access_token: String
-    let expires_in: Int? = nil
-    let scopes: [String]? = nil
-    let capabilities: [String]? = nil
 }
-
-extension ExtoleAPI {
-    
-    public func createSession(tokenRequest: Authorization.CreateTokenRequest? = nil, success : @escaping (_: ExtoleSession) -> Void,
-                         error: @escaping (_: ExtoleError) -> Void) {
-        
-        let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: tokenRequest)
-
-        self.network.processRequest(with: request, success: {token in
-            success(ExtoleSession(program: self, token: token))
-        }, error: error)
-    }
-    
-    public func resumeSession(accessToken: String,
-                              success : @escaping (_: ExtoleSession) -> Void,
-                              error: @escaping (_: ExtoleError) -> Void) {
-        let url = URL.init(string: accessToken, relativeTo: tokenV4Url(baseUrl: baseUrl))!
-        let empty : String? = nil
-        let request = self.network.newJsonRequest(method: "GET", url: url, headers: [:], data: empty)
-        self.network.processRequest(with: request, success: { token in
-            success(ExtoleSession(program: self, token: token))
-        }, error: error)
-    }
-    
-    public func createToken(success : @escaping (_: ConsumerToken) -> Void,
-                         error: @escaping (_: ExtoleError) -> Void) {
-        
-        let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: Authorization.CreateTokenRequest())
-
-        self.network.processRequest(with: request, success: success, error: error)
-    }
-}
-
-extension ExtoleSession {
-    
-    public func verify(success : @escaping (_: ConsumerToken) -> Void,
-                         error: @escaping (_: ExtoleError) -> Void) {
-      let url = URL.init(string: token.access_token, relativeTo: tokenV4Url(baseUrl: baseUrl))!
-      let request = self.getRequest(url: url)
-      self.network.processRequest(with: request, success: success, error: error)
-
-    }
-    
-    public func invalidate(success: @escaping ()->Void,
-                            error:  @escaping (_: ExtoleError) -> Void) {
-        let url = URL.init(string: token.access_token, relativeTo: tokenV4Url(baseUrl: baseUrl))!
-        let request = self.deleteRequest(url: url)
-        extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
-        self.network.processNoContentRequest(with: request, success: success, error: error)
-    }
-}
-
 
 extension ExtoleError {
     func isInvalidAccessToken() -> Bool {

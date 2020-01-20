@@ -8,7 +8,7 @@ class CustomNetworkTest : XCTestCase {
     
     class CustomExecutor : NetworkExecutor {
         func dataTask(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
-            let token = ConsumerToken(access_token: "custom_executor")
+            let token = Authorization.ConsumerToken(access_token: "custom_executor")
             let response = HTTPURLResponse.init(url: request.url!,
                                                 statusCode: 200,
                                                 httpVersion: "HTTP/1.1",
@@ -23,7 +23,7 @@ class CustomNetworkTest : XCTestCase {
                                            success: @escaping (T) -> Void,
                                            error: @escaping (ExtoleError) -> Void)
             where T : Decodable, T : Encodable {
-                let token = ConsumerToken(access_token: "custom")
+                let token = Authorization.ConsumerToken(access_token: "custom")
                 success(token as! T)
         }
     }
@@ -31,11 +31,11 @@ class CustomNetworkTest : XCTestCase {
     func testCustomToken() {
         let network = CustomNetwork()
         
-        let program = ExtoleAPI(programDomain: "virtual.extole.io",
+        let extoleApi = ExtoleAPI(programDomain: "virtual.extole.io",
                               network: network)
         let promise = expectation(description: "get token response")
-        program.createToken(success: { token in
-            XCTAssertEqual("custom", token.access_token)
+        extoleApi.createSession(success: { session in
+            XCTAssertEqual("custom", session.accessToken)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -46,10 +46,10 @@ class CustomNetworkTest : XCTestCase {
     func testDataToken() {
         let network = Network(executor: CustomExecutor())
         
-        let program = ExtoleAPI(programDomain: "virtual.extole.io", network: network)
+        let extoleApi = ExtoleAPI(programDomain: "virtual.extole.io", network: network)
         let promise = expectation(description: "get token response")
-        program.createToken(success: { token in
-            XCTAssertEqual("custom_executor", token.access_token)
+        extoleApi.createSession(success: { session in
+            XCTAssertEqual("custom_executor", session.accessToken)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))

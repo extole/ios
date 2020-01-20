@@ -9,6 +9,12 @@ func tokenV5Url(baseUrl: URL) -> URL {
     return URL.init(string: "/api/v4/token/", relativeTo: baseUrl)!
 }
 
+public class Authorization {
+    public struct CreateTokenRequest: Codable {
+        let email: String? = nil
+    }
+}
+
 public struct ConsumerToken : Codable {
     public var accessToken : String {
         get {
@@ -21,13 +27,9 @@ public struct ConsumerToken : Codable {
     let capabilities: [String]? = nil
 }
 
-public struct CreateTokenRequest: Codable {
-    let email: String? = nil
-}
-
 extension ExtoleAPI {
     
-    public func createSession(tokenRequest: CreateTokenRequest? = nil, success : @escaping (_: ExtoleSession) -> Void,
+    public func createSession(tokenRequest: Authorization.CreateTokenRequest? = nil, success : @escaping (_: ExtoleSession) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         
         let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: tokenRequest)
@@ -51,7 +53,7 @@ extension ExtoleAPI {
     public func createToken(success : @escaping (_: ConsumerToken) -> Void,
                          error: @escaping (_: ExtoleError) -> Void) {
         
-        let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: CreateTokenRequest())
+        let request = self.network.newJsonRequest(method: "POST", url: tokenV5Url(baseUrl: baseUrl), headers: [:], data: Authorization.CreateTokenRequest())
 
         self.network.processRequest(with: request, success: success, error: error)
     }

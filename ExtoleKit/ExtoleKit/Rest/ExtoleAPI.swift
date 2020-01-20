@@ -10,10 +10,10 @@ public final class ExtoleAPI {
         self.network = network
     }
 
-    public func createSession(tokenRequest: Token.CreateTokenRequest? = nil,
+    public func createSession(tokenRequest: Authorization.CreateTokenRequest? = nil,
                               success : @escaping (_: ExtoleAPI.Session) -> Void,
                               error: @escaping (_: ExtoleAPI.Error) -> Void) {
-        let request = self.network.newJsonRequest(method: "POST", url: ExtoleAPI.Session.v5TokenUrl(baseUrl: baseUrl), headers: [:], data: tokenRequest)
+        let request = self.network.newJsonRequest(method: "POST", url: ExtoleAPI.Authorization.v5TokenUrl(baseUrl: baseUrl), headers: [:], data: tokenRequest)
 
         self.network.processRequest(with: request, success: {token in
             success(ExtoleAPI.Session(program: self, token: token))
@@ -23,7 +23,7 @@ public final class ExtoleAPI {
    public func resumeSession(accessToken: String,
                              success : @escaping (_: ExtoleAPI.Session) -> Void,
                              error: @escaping (_: ExtoleAPI.Error) -> Void) {
-        let url = URL.init(string: accessToken, relativeTo: ExtoleAPI.Session.v4TokenUrl(baseUrl: baseUrl))!
+        let url = URL.init(string: accessToken, relativeTo: ExtoleAPI.Authorization.v4TokenUrl(baseUrl: baseUrl))!
         let empty : String? = nil
         let request = self.network.newJsonRequest(method: "GET", url: url, headers: [:], data: empty)
         self.network.processRequest(with: request, success: { token in

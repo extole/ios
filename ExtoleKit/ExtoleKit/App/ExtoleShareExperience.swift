@@ -2,17 +2,17 @@
 
 import Foundation
 
-@objc public class ExtoleShareExperince: NSObject {
+public class ExtoleShareExperince: NSObject {
 
     private var activated = false
     private let shareApp: ExtoleShareApp
     private let appDelegate = SimpleShareAppDelegate()
     
-    @objc public init(programDomain: String, programLabel: String) {
+    public init(programDomain: String, programLabel: String) {
         self.shareApp = ExtoleShareApp.init(programDomain: programDomain, programLabel: programLabel, delegate: appDelegate)
     }
     
-    @objc public init(shareApp:  ExtoleShareApp) {
+    public init(shareApp:  ExtoleShareApp) {
         self.shareApp = shareApp
     }
     
@@ -22,7 +22,7 @@ import Foundation
     }
 
     ///
-    @objc public func async(command: @escaping (ExtoleShareApp?) -> Void ) {
+    public func async(command: @escaping (ExtoleShareApp?) -> Void ) {
         if !activated {
             shareApp.activate()
             activated = true

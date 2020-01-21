@@ -13,7 +13,7 @@ class AuthenticationTest: XCTestCase {
     func testCreateSession() {
         let promise = expectation(description: "create token response")
         extoleApi.createSession(success: { session in
-            XCTAssert(session.token.access_token.count > 0)
+            XCTAssert(session.accessToken.count > 0)
             promise.fulfill()
         }, error: { error in
             XCTFail(String(reflecting: error))
@@ -27,7 +27,7 @@ class AuthenticationTest: XCTestCase {
            extoleApi.createSession(
             tokenRequest: tokenRequest,
             success: { session in
-               XCTAssert(session.token.access_token.count > 0)
+               XCTAssert(session.accessToken.count > 0)
                promise.fulfill()
            }, error: { error in
                XCTFail(String(reflecting: error))
@@ -70,7 +70,7 @@ class AuthenticationTest: XCTestCase {
 
         var session: ExtoleAPI.Session!
         extoleApi.createSession(success: { newSession in
-            XCTAssert(!newSession.token.access_token.isEmpty)
+            XCTAssert(!newSession.accessToken.isEmpty)
             session = newSession
             createSession.fulfill()
         }, error: { error in

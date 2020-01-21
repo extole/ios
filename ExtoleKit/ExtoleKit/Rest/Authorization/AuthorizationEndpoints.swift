@@ -31,8 +31,8 @@ extension ExtoleAPI {
     }
 
     func resumeSession(accessToken: String,
-                              success : @escaping (_: ExtoleAPI.Session) -> Void,
-                              error: @escaping (_: ExtoleAPI.Error) -> Void) {
+                       success : @escaping (_: ExtoleAPI.Session) -> Void,
+                       error: @escaping (_: ExtoleAPI.Error) -> Void) {
          let empty : String? = nil
          let authorizationHeader = [ "Authorization": accessToken]
          let request = self.network.newJsonRequest(method: "GET", url: v5TokenUrl, headers: authorizationHeader, data: empty)

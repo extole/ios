@@ -158,6 +158,7 @@
 		49C8978D23D5F99C0077B6FC /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
+				496E2F3D23D5E5BE008F1962 /* Session.swift */,
 				49C8978E23D5F9BE0077B6FC /* AuthorizationEndpoints.swift */,
 				49C8979423D5FB4A0077B6FC /* TokenResponse.swift */,
 				49C8979223D5FA730077B6FC /* CreateTokenRequest.swift */,
@@ -219,7 +220,6 @@
 				4925B8AB220DAED800D9CD4A /* ExtoleAPI.swift */,
 				496E2F3F23D5E5D9008F1962 /* Error.swift */,
 				4925B8A5220DAED800D9CD4A /* Network.swift */,
-				496E2F3D23D5E5BE008F1962 /* Session.swift */,
 			);
 			path = Rest;
 			sourceTree = "<group>";

@@ -3,7 +3,7 @@
 import Foundation
 
 /// Handles events for ExtoleShareApp
-@objc public protocol ExtoleShareAppDelegate : class {
+public protocol ExtoleShareAppDelegate : class {
     /// signals ExtoleShareApp is busy
     func extoleShareAppInvalid()
     /// signals ExtoleShareApp is ready
@@ -11,7 +11,7 @@ import Foundation
 }
 
 /// High level API for Extole Share Experience
-public final class ExtoleShareApp : NSObject {
+public final class ExtoleShareApp {
 
     /// Underlying Extole app
     private var extoleApp: ExtoleApp!
@@ -22,7 +22,7 @@ public final class ExtoleShareApp : NSObject {
     /// Composite preloader to load profile, shareables, and settings at once
     private var preloader: CompositeLoader!
     /// Active consumer session
-    @objc public private(set) var session: ExtoleAPI.Session?
+    public private(set) var session: ExtoleAPI.Session?
     /// Loads consumer shareables
     public private(set) var shareableLoader: ShareableLoader!
 
@@ -33,7 +33,6 @@ public final class ExtoleShareApp : NSObject {
                 extraLoaders: [Loader] = [],
                 network: Network = Network()) {
         self.label = label
-        super.init()
         
         self.extoleApp = ExtoleApp(with: ExtoleAPI(programDomain: programDomain, network: network), delegate: self)
         self.delegate = delegate

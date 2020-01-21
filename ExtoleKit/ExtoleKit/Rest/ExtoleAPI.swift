@@ -10,22 +10,28 @@ public final class ExtoleAPI {
         self.network = network
     }
 
-    public func createSession(tokenRequest: Authorization.CreateTokenRequest? = nil,
+    public func createSession(accessToken: String? = nil,
+                              tokenRequest: Authorization.CreateTokenRequest? = nil,
                               success : @escaping (_: ExtoleAPI.Session) -> Void,
                               error: @escaping (_: ExtoleAPI.Error) -> Void) {
-        let request = self.network.newJsonRequest(method: "POST", url: ExtoleAPI.Authorization.v5TokenUrl(baseUrl: baseUrl), headers: [:], data: tokenRequest)
+        if let existingAccessToken = accessToken {
+            resumeSession(accessToken: existingAccessToken, success: success, error: error)
+        } else {
+            let request = self.network.newJsonRequest(method: "POST", url: ExtoleAPI.Authorization.v5TokenUrl(baseUrl: baseUrl), headers: [:], data: tokenRequest)
 
-        self.network.processRequest(with: request, success: {token in
-            success(ExtoleAPI.Session(program: self, token: token))
-        }, error: error)
+            self.network.processRequest(with: request, success: {token in
+                success(ExtoleAPI.Session(program: self, token: token))
+            }, error: error)
+        }
    }
 
-   public func resumeSession(accessToken: String,
+   func resumeSession(accessToken: String,
                              success : @escaping (_: ExtoleAPI.Session) -> Void,
                              error: @escaping (_: ExtoleAPI.Error) -> Void) {
-        let url = URL.init(string: accessToken, relativeTo: ExtoleAPI.Authorization.v4TokenUrl(baseUrl: baseUrl))!
+        let url = ExtoleAPI.Authorization.v5TokenUrl(baseUrl: baseUrl)
         let empty : String? = nil
-        let request = self.network.newJsonRequest(method: "GET", url: url, headers: [:], data: empty)
+        let authorizationHeader = [ "Authorization": accessToken]
+        let request = self.network.newJsonRequest(method: "GET", url: url, headers: authorizationHeader, data: empty)
         self.network.processRequest(with: request, success: { token in
             success(ExtoleAPI.Session(program: self, token: token))
         }, error: error)

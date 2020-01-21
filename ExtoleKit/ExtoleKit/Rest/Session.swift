@@ -54,14 +54,14 @@ extension ExtoleAPI {
 
         public func verify(success : @escaping (_: ExtoleAPI.Authorization.TokenResponse) -> Void,
                            error: @escaping (_: ExtoleAPI.Error) -> Void) {
-            let url = URL.init(string: token.access_token, relativeTo: ExtoleAPI.Authorization.v4TokenUrl(baseUrl: baseUrl))!
+            let url = ExtoleAPI.Authorization.v5TokenUrl(baseUrl: baseUrl)
             let request = self.getRequest(url: url)
             self.network.processRequest(with: request, success: success, error: error)
         }
 
         public func invalidate(success: @escaping ()->Void,
                                error:  @escaping (_: ExtoleAPI.Error) -> Void) {
-            let url = URL.init(string: token.access_token, relativeTo: ExtoleAPI.Authorization.v4TokenUrl(baseUrl: baseUrl))!
+            let url = ExtoleAPI.Authorization.v5TokenUrl(baseUrl: baseUrl)
             let request = self.deleteRequest(url: url)
             extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
             self.network.processNoContentRequest(with: request, success: success, error: error)

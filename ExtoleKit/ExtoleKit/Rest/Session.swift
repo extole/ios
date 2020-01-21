@@ -4,16 +4,16 @@ import Foundation
 
 extension ExtoleAPI {
     @objc public final class Session: NSObject{
-        let program: ExtoleAPI
+        let extoleAPI: ExtoleAPI
         let token: ExtoleAPI.Authorization.TokenResponse
         var baseUrl: URL {
             get {
-                return program.baseUrl
+                return extoleAPI.baseUrl
             }
         }
         var network: Network {
             get {
-                return program.network
+                return extoleAPI.network
             }
         }
         
@@ -47,24 +47,11 @@ extension ExtoleAPI {
             }
         }
         
-        init(program: ExtoleAPI, token: ExtoleAPI.Authorization.TokenResponse) {
-            self.program = program
+        init(extoleAPI: ExtoleAPI, token: ExtoleAPI.Authorization.TokenResponse) {
+            self.extoleAPI = extoleAPI
             self.token = token
         }
 
-        public func verify(success : @escaping (_: ExtoleAPI.Authorization.TokenResponse) -> Void,
-                           error: @escaping (_: ExtoleAPI.Error) -> Void) {
-            let url = v5TokenUrl(baseUrl: baseUrl)
-            let request = self.getRequest(url: url)
-            self.network.processRequest(with: request, success: success, error: error)
-        }
-
-        public func invalidate(success: @escaping ()->Void,
-                               error:  @escaping (_: ExtoleAPI.Error) -> Void) {
-            let url = v5TokenUrl(baseUrl: baseUrl)
-            let request = self.deleteRequest(url: url)
-            extoleDebug(format: "deleteToken : %{public}@", arg: url.absoluteString)
-            self.network.processNoContentRequest(with: request, success: success, error: error)
-        }
+        
     }
 }

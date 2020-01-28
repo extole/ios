@@ -56,7 +56,7 @@ public class Network {
     }
     
     
-    func tryDecode<T: Codable>(data: Data) -> T? {
+    func tryDecode<T: Decodable>(data: Data) -> T? {
         let decoder = JSONDecoder.init()
         return try? decoder.decode(T.self, from: data)
     }
@@ -84,7 +84,7 @@ public class Network {
         return request
     }
 
-    final func dataHandler<T : Codable>(success: @escaping (_: T) -> Void,
+    final func dataHandler<T : Decodable>(success: @escaping (_: T) -> Void,
                                         error: @escaping(ExtoleAPI.Error) -> Void)
         -> ((_ : Data?) -> Void)  {
             return { data in
@@ -144,6 +144,8 @@ public class Network {
                             let error = ExtoleAPI.Error(code: serverError.code, message: serverError.message, httpCode: serverError.http_status_code)
                             errorHandler.genericError(errorData: error)
                         } else {
+                            let responseDataString = String(data: responseData, encoding: .utf8)!
+                            extoleInfo(format: "decodingError : %{public}@", arg: responseDataString)
                             errorHandler.decodingError(data: responseData)
                         }
                     } else {
@@ -161,7 +163,7 @@ public class Network {
         }
     }
 
-    func processRequest<T: Codable>(with request: URLRequest,
+    func processRequest<T: Decodable>(with request: URLRequest,
                                     success : @escaping (_: T) -> Void,
                                     error: @escaping (_: ExtoleAPI.Error) -> Void) {
         processRequest(with: request,

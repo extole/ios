@@ -34,8 +34,12 @@ extension ExtoleAPI {
             return network.newJsonRequest(method: "GET", url: url, headers: authorizationHeader, data: empty)
         }
 
-        func postRequest<T : Encodable>(url: URL, data: T) -> URLRequest {
-            return network.newJsonRequest(method: "POST", url: url, headers: authorizationHeader, data: data)
+        func postRequest<T : Encodable>(url: URL, data: T, headers: [String: String]? = nil) -> URLRequest {
+            let postHeaders = headers ?? self.authorizationHeader
+            return network.newJsonRequest(method: "POST",
+                                          url: url,
+                                          headers: postHeaders,
+                                          data: data)
         }
 
         func putRequest<T : Encodable>(url: URL, data: T) -> URLRequest {

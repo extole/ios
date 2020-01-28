@@ -41,16 +41,59 @@ class ZoneTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
    }
     
-    func testFetchSettings() {
-        let promise = expectation(description: "fetch object")
-        extoleSession.fetchObject(zone: "settings",
-                                   success: { (settings: Settings?) in
-            XCTAssertEqual("Share message", settings?.shareMessage)
+    struct MobileMenu: Codable {
+        let event_id: String
+        let data: [String: String]
+    }
+
+    func testFetchMobileMenu() {
+        let promise = expectation(description: "fetch mobile_menu")
+        let mobileSharingUrl = "https://ios-santa.extole.io/" +
+            "zone/mobile_sharing?via_zone=mobile_menu"
+        extoleSession.renderZone(eventName: "mobile_menu",
+                                   success: { (menu: MobileMenu) in
+        XCTAssertEqual(mobileSharingUrl, menu.data["mobile_sharing_url"])
             promise.fulfill()
         }, error: { error in
-            XCTFail(String(reflecting: error))
+            XCTFail(error.code)
         })
         waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    struct MobileSharing: Codable {
+        struct Data: Codable{
+            let me: [String: String]
+        }
+        let event_id: String
+        let data: Data
+    }
+    
+    func testFetchMobileSharing() {
+       let promise = expectation(description: "fetch mobile_menu")
+       extoleSession.renderZone(eventName: "mobile_sharing",
+                                  success: { (menu: MobileSharing) in
+            XCTAssertNotNil(menu.data.me["share_code"])
+            promise.fulfill()
+       }, error: { error in
+           XCTFail(error.code)
+       })
+       waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testMobileSharingFlat() {
+       let promise = expectation(description: "fetch mobile_menu")
+        let programUrl = "https://ios-santa.extole.io/"
+       extoleSession.renderZone(eventName: "mobile_sharing",
+                                success: { (zoneResponse: ExtoleAPI.Zones.ZoneResponse) in
+            XCTAssertNotNil(zoneResponse.event_id)
+            let shareCode = zoneResponse.data["me.share_code"];
+            XCTAssertNotNil(shareCode)
+            XCTAssertEqual(programUrl + shareCode!, zoneResponse.data["me.link"] ?? "")
+            promise.fulfill()
+       }, error: { error in
+           XCTFail(error.code)
+       })
+       waitForExpectations(timeout: 5, handler: nil)
     }
 
 }

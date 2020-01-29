@@ -41,7 +41,6 @@ func decodeSingle(container: SingleValueDecodingContainer) -> String? {
 }
 
 extension ExtoleAPI.Zones {
-    
     public struct FlatJson: Decodable {
         var value : String? = nil
         var nested: [String: FlatJson] = [:]

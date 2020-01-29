@@ -7,84 +7,84 @@ import XCTest
 class ZoneResponseTest: XCTestCase {
 
     func testDecodeString() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{\"str\": \"val\"}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("val", emptyResponse.data["str"])
+        let stringData: Data = "{\"event_id\":\"123\", \"data\":{\"str\": \"val\"}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: stringData)
+        XCTAssertEqual("val", zoneResponse.data["str"])
     }
     
     func testDecodeNumber() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{\"number\": 1.5}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("1.5", emptyResponse.data["number"])
+        let numberData: Data = "{\"event_id\":\"123\", \"data\":{\"number\": 1.5}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: numberData)
+        XCTAssertEqual("1.5", zoneResponse.data["number"])
     }
     
     func testDecodeInt() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{\"int\": 1}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("1", emptyResponse.data["int"])
+        let intData: Data = "{\"event_id\":\"123\", \"data\":{\"int\": 1}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: intData)
+        XCTAssertEqual("1", zoneResponse.data["int"])
     }
     
     func testDecodeArray() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\": [1,2,3,11]}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("4", emptyResponse.data[""])
-        XCTAssertEqual("11", emptyResponse.data["3"])
+        let arrayData: Data = "{\"event_id\":\"123\", \"data\": [1,2,3,11]}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: arrayData)
+        XCTAssertEqual("4", zoneResponse.data[""])
+        XCTAssertEqual("11", zoneResponse.data["3"])
     }
     
     func testDecodeArrayAttribute() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{\"arr\": [1,2,3,11]}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("4", emptyResponse.data["arr"])
+        let arrayData: Data = "{\"event_id\":\"123\", \"data\":{\"arr\": [1,2,3,11]}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: arrayData)
+        XCTAssertEqual("4", zoneResponse.data["arr"])
     }
     
     func testDecodeArrayItem() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{\"arr\": [1,2,3,11]}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("1", emptyResponse.data["arr.0"])
-        XCTAssertEqual("2", emptyResponse.data["arr.1"])
-        XCTAssertEqual("3", emptyResponse.data["arr.2"])
-        XCTAssertEqual("11", emptyResponse.data["arr.3"])
+        let arrayData: Data = "{\"event_id\":\"123\", \"data\":{\"arr\": [1,2,3,11]}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: arrayData)
+        XCTAssertEqual("1", zoneResponse.data["arr.0"])
+        XCTAssertEqual("2", zoneResponse.data["arr.1"])
+        XCTAssertEqual("3", zoneResponse.data["arr.2"])
+        XCTAssertEqual("11", zoneResponse.data["arr.3"])
     }
     
     func testDecodeArrayObject() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{\"arr\": [{\"a\":1}]}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("1", emptyResponse.data["arr.0.a"])
+        let arrayData: Data = "{\"event_id\":\"123\", \"data\":{\"arr\": [{\"a\":1}]}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: arrayData)
+        XCTAssertEqual("1", zoneResponse.data["arr.0.a"])
     }
     
     func testDecodeBool() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{\"result\": true}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("true", emptyResponse.data["result"])
+        let boolData: Data = "{\"event_id\":\"123\", \"data\":{\"result\": true}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: boolData)
+        XCTAssertEqual("true", zoneResponse.data["result"])
     }
     
     func testDecodeObject() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{\"obj\": {\"att\" : true}}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("true", emptyResponse.data["obj.att"])
+        let objectData: Data = "{\"event_id\":\"123\", \"data\":{\"obj\": {\"att\" : true}}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: objectData)
+        XCTAssertEqual("true", zoneResponse.data["obj.att"])
     }
     
     func testDecodeNested() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":[[[{\"obj\": {\"att\" : true}}]]]}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertEqual("true", emptyResponse.data["0.0.0.obj.att"])
+        let nestedData: Data = "{\"event_id\":\"123\", \"data\":[[[{\"obj\": {\"att\" : true}}]]]}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: nestedData)
+        XCTAssertEqual("true", zoneResponse.data["0.0.0.obj.att"])
     }
     
     func testDecodeEmpty() {
-        let empty: Data = "{\"event_id\":\"123\", \"data\":{}}".data(using: .utf8)!
-        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
-                                                      from: empty)
-        XCTAssertNil(emptyResponse.data["empty"])
+        let emptyData: Data = "{\"event_id\":\"123\", \"data\":{}}".data(using: .utf8)!
+        let zoneResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: emptyData)
+        XCTAssertNil(zoneResponse.data["empty"])
     }
 
 }

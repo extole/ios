@@ -29,6 +29,7 @@
 		4974F028221C5C2F009C9931 /* ExtoleShareApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4974F027221C5C2F009C9931 /* ExtoleShareApp.swift */; };
 		4994A4652214498D00EF8666 /* ShareableLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4994A4642214498D00EF8666 /* ShareableLoader.swift */; };
 		49A10E7D223677F2001C7901 /* SimpleShareExperienceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A10E7C223677F2001C7901 /* SimpleShareExperienceTest.swift */; };
+		49C0DD0A23E19E2B00B9A831 /* ZoneResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C0DD0923E19E2B00B9A831 /* ZoneResponseTest.swift */; };
 		49C8978F23D5F9BE0077B6FC /* AuthorizationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C8978E23D5F9BE0077B6FC /* AuthorizationEndpoints.swift */; };
 		49C8979323D5FA730077B6FC /* CreateTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C8979223D5FA730077B6FC /* CreateTokenRequest.swift */; };
 		49C8979523D5FB4A0077B6FC /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C8979423D5FB4A0077B6FC /* TokenResponse.swift */; };
@@ -78,6 +79,7 @@
 		4974F027221C5C2F009C9931 /* ExtoleShareApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtoleShareApp.swift; sourceTree = "<group>"; };
 		4994A4642214498D00EF8666 /* ShareableLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareableLoader.swift; sourceTree = "<group>"; };
 		49A10E7C223677F2001C7901 /* SimpleShareExperienceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleShareExperienceTest.swift; sourceTree = "<group>"; };
+		49C0DD0923E19E2B00B9A831 /* ZoneResponseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneResponseTest.swift; sourceTree = "<group>"; };
 		49C8978E23D5F9BE0077B6FC /* AuthorizationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationEndpoints.swift; sourceTree = "<group>"; };
 		49C8979223D5FA730077B6FC /* CreateTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTokenRequest.swift; sourceTree = "<group>"; };
 		49C8979423D5FB4A0077B6FC /* TokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				4925B857220DABE000D9CD4A /* Info.plist */,
 				49250766221B003800EFBF1E /* CustomNetworkTest.swift */,
 				49A10E7C223677F2001C7901 /* SimpleShareExperienceTest.swift */,
+				49C0DD0923E19E2B00B9A831 /* ZoneResponseTest.swift */,
 			);
 			path = ExtoleKitTests;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */,
 				496E2F3823D5C562008F1962 /* AuthorizationTest.swift in Sources */,
 				4925B8CF220DB66F00D9CD4A /* ZoneTest.swift in Sources */,
+				49C0DD0A23E19E2B00B9A831 /* ZoneResponseTest.swift in Sources */,
 				4925B8CE220DB66F00D9CD4A /* ShareableTest.swift in Sources */,
 				49A10E7D223677F2001C7901 /* SimpleShareExperienceTest.swift in Sources */,
 				49250767221B003800EFBF1E /* CustomNetworkTest.swift in Sources */,

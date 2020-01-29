@@ -82,13 +82,14 @@ class ZoneTest: XCTestCase {
     
     func testMobileSharingFlat() {
        let promise = expectation(description: "fetch mobile_menu")
-        let programUrl = "https://ios-santa.extole.io/"
+       let programUrl = "https://ios-santa.extole.io/"
        extoleSession.renderZone(eventName: "mobile_sharing",
                                 success: { (zoneResponse: ExtoleAPI.Zones.ZoneResponse) in
             XCTAssertNotNil(zoneResponse.event_id)
+            XCTAssertEqual("mobile_sharing", zoneResponse.data["bundle_name"])
             let shareCode = zoneResponse.data["me.share_code"];
             XCTAssertNotNil(shareCode)
-            XCTAssertEqual(programUrl + shareCode!, zoneResponse.data["me.link"] ?? "")
+            XCTAssertEqual(programUrl + (shareCode ?? ""), zoneResponse.data["me.link"] ?? "")
             promise.fulfill()
        }, error: { error in
            XCTFail(error.code)

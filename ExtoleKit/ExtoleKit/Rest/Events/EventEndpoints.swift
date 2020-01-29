@@ -20,7 +20,7 @@ extension ExtoleAPI.Session {
             "Accept": "application/json",
             "Authorization": "Bearer " + self.accessToken
         ]
-        let renderZoneRequest = ExtoleAPI.Zones.RenderZoneRequest(event_name: eventName, data: data)
+        let renderZoneRequest = ExtoleAPI.Events.SubmitEventRequest(event_name: eventName, data: data)
         let urlRequest = self.postRequest(url: zoneUrl, data: renderZoneRequest,
                                           headers: headers)
 

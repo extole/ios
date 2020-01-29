@@ -37,12 +37,12 @@ public class ExtoleShareExperince: NSObject {
     }
     
     public func fetchObject<T: Codable>(zone: String,
-                                        parameters: [URLQueryItem]? = nil,
+                                        data: [String: String] = [:],
                                         success:@escaping (T) -> Void,
                                         error : @escaping (ExtoleAPI.Error) -> Void) {
         self.async { (shareApp) in
             if let shareApp = shareApp {
-                shareApp.session?.fetchObject(zone: zone, parameters: parameters, success: success, error: error)
+                shareApp.session?.renderZone(eventName: zone, data: data, success: success, error: error)
             } else {
                 error(ExtoleAPI.Error(code: "reset"))
             }
@@ -63,12 +63,12 @@ public class ExtoleShareExperince: NSObject {
     }
     
     public func signal(zone: String,
-                             parameters: [URLQueryItem]? = nil,
-                             success:@escaping () -> Void,
-                             error : @escaping (ExtoleAPI.Error) -> Void) {
+                       data: [String :String]  = [:],
+                       success:@escaping (ExtoleAPI.Events.SubmitEventResponse) -> Void,
+                       error : @escaping (ExtoleAPI.Error) -> Void) {
         self.async { (shareApp) in
             if let shareApp = shareApp {
-                shareApp.session?.signal(zone: zone, parameters: parameters, success: success, error: error)
+                shareApp.session?.submitEvent(eventName: zone, data: data, success: success, error: error)
             } else {
                 error(ExtoleAPI.Error(code: "reset"))
             }
@@ -86,20 +86,6 @@ public class ExtoleShareExperince: NSObject {
             }
         }
     }
-    
-    public func fetchDictionary(zone: String,
-                                      parameters: [URLQueryItem]?,
-                                      success: @escaping (_: NSDictionary) -> Void,
-                                      error : ExtoleApiErrorHandler) {
-        self.async { (shareApp) in
-            if let shareApp = shareApp {
-                shareApp.session?.fetchDictionary(zone: zone, parameters: parameters, success: success, error: error)
-            } else {
-                error.genericError(errorData: ExtoleAPI.Error.init(code: "reset"))
-            }
-        }
-    }
-
 
     var isValid: Bool {
         get {

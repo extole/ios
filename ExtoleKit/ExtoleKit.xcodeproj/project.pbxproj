@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		490E2C6623E1DDED007D5222 /* EventEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490E2C6523E1DDED007D5222 /* EventEndpoints.swift */; };
 		490E2C6823E1DED0007D5222 /* SubmitEventResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490E2C6723E1DED0007D5222 /* SubmitEventResponse.swift */; };
+		490E2C6A23E1E16C007D5222 /* SubmitZoneRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490E2C6923E1E16C007D5222 /* SubmitZoneRequest.swift */; };
 		49250767221B003800EFBF1E /* CustomNetworkTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49250766221B003800EFBF1E /* CustomNetworkTest.swift */; };
 		4925B851220DABE000D9CD4A /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B847220DABE000D9CD4A /* ExtoleKit.framework */; };
 		4925B858220DABE000D9CD4A /* ExtoleKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4925B84A220DABE000D9CD4A /* ExtoleKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4925B8AF220DAED800D9CD4A /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A5220DAED800D9CD4A /* Network.swift */; };
-		4925B8B0220DAED800D9CD4A /* Zone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A6220DAED800D9CD4A /* Zone.swift */; };
 		4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A7220DAED800D9CD4A /* Shareable.swift */; };
 		4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A9220DAED800D9CD4A /* Profile.swift */; };
 		4925B8B5220DAED800D9CD4A /* ExtoleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AB220DAED800D9CD4A /* ExtoleAPI.swift */; };
@@ -58,6 +58,7 @@
 /* Begin PBXFileReference section */
 		490E2C6523E1DDED007D5222 /* EventEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventEndpoints.swift; sourceTree = "<group>"; };
 		490E2C6723E1DED0007D5222 /* SubmitEventResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitEventResponse.swift; sourceTree = "<group>"; };
+		490E2C6923E1E16C007D5222 /* SubmitZoneRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitZoneRequest.swift; sourceTree = "<group>"; };
 		49250766221B003800EFBF1E /* CustomNetworkTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNetworkTest.swift; sourceTree = "<group>"; };
 		4925B847220DABE000D9CD4A /* ExtoleKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ExtoleKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4925B84A220DABE000D9CD4A /* ExtoleKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtoleKit.h; sourceTree = "<group>"; };
@@ -65,7 +66,6 @@
 		4925B850220DABE000D9CD4A /* ExtoleKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExtoleKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4925B857220DABE000D9CD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4925B8A5220DAED800D9CD4A /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
-		4925B8A6220DAED800D9CD4A /* Zone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Zone.swift; sourceTree = "<group>"; };
 		4925B8A7220DAED800D9CD4A /* Shareable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shareable.swift; sourceTree = "<group>"; };
 		4925B8A9220DAED800D9CD4A /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		4925B8AB220DAED800D9CD4A /* ExtoleAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtoleAPI.swift; sourceTree = "<group>"; };
@@ -176,7 +176,6 @@
 		49C8979623D6048F0077B6FC /* Zones */ = {
 			isa = PBXGroup;
 			children = (
-				4925B8A6220DAED800D9CD4A /* Zone.swift */,
 				49C8979B23D6069F0077B6FC /* ZoneResponse.swift */,
 				49C8979E23D607B70077B6FC /* RenderZoneRequest.swift */,
 				49C897A023D6080D0077B6FC /* ZoneEndpoints.swift */,
@@ -189,6 +188,7 @@
 			children = (
 				490E2C6523E1DDED007D5222 /* EventEndpoints.swift */,
 				490E2C6723E1DED0007D5222 /* SubmitEventResponse.swift */,
+				490E2C6923E1E16C007D5222 /* SubmitZoneRequest.swift */,
 			);
 			path = Events;
 			sourceTree = "<group>";
@@ -366,8 +366,8 @@
 				490E2C6623E1DDED007D5222 /* EventEndpoints.swift in Sources */,
 				4974F020221C0A8B009C9931 /* ZoneLoader.swift in Sources */,
 				49C897A123D6080D0077B6FC /* ZoneEndpoints.swift in Sources */,
-				4925B8B0220DAED800D9CD4A /* Zone.swift in Sources */,
 				49C8979523D5FB4A0077B6FC /* TokenResponse.swift in Sources */,
+				490E2C6A23E1E16C007D5222 /* SubmitZoneRequest.swift in Sources */,
 				49C8979F23D607B70077B6FC /* RenderZoneRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

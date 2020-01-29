@@ -12,7 +12,7 @@ public final class ZoneLoader<T: Codable> : Loader {
     }
     
     public func load(session: ExtoleAPI.Session, complete: @escaping () -> Void) {
-        session.fetchObject(zone: zoneName, success: { (zoneData:T?) in
+        session.renderZone(eventName: zoneName, success: { (zoneData:T?) in
             self.zoneData = zoneData
             complete()
         }) { error in

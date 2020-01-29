@@ -96,5 +96,4 @@ class ZoneTest: XCTestCase {
        })
        waitForExpectations(timeout: 5, handler: nil)
     }
-
 }

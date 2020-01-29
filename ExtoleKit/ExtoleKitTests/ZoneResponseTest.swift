@@ -28,6 +28,14 @@ class ZoneResponseTest: XCTestCase {
     }
     
     func testDecodeArray() {
+        let empty: Data = "{\"event_id\":\"123\", \"data\": [1,2,3,11]}".data(using: .utf8)!
+        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: empty)
+        XCTAssertEqual("4", emptyResponse.data[""])
+        XCTAssertEqual("11", emptyResponse.data["3"])
+    }
+    
+    func testDecodeArrayAttribute() {
         let empty: Data = "{\"event_id\":\"123\", \"data\":{\"arr\": [1,2,3,11]}}".data(using: .utf8)!
         let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
                                                       from: empty)
@@ -63,6 +71,13 @@ class ZoneResponseTest: XCTestCase {
         let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
                                                       from: empty)
         XCTAssertEqual("true", emptyResponse.data["obj.att"])
+    }
+    
+    func testDecodeNested() {
+        let empty: Data = "{\"event_id\":\"123\", \"data\":[[[{\"obj\": {\"att\" : true}}]]]}".data(using: .utf8)!
+        let emptyResponse = try! JSONDecoder().decode(ExtoleAPI.Zones.ZoneResponse.self,
+                                                      from: empty)
+        XCTAssertEqual("true", emptyResponse.data["0.0.0.obj.att"])
     }
     
     func testDecodeEmpty() {

@@ -31,11 +31,4 @@ extension ExtoleAPI.Session {
         self.network.processNoContentRequest(with: request, success: success, error: error)
     }
 
-    public func getProfile(success: @escaping (MyProfile) -> Void,
-                           error: @escaping (ExtoleAPI.Error) -> Void) {
-        let url = URL(string: "\(baseUrl)/api/v4/me")!
-        let request = self.getRequest(url: url)
-        self.network.processRequest(with: request, success: success, error: error)
-        
-    }
 }

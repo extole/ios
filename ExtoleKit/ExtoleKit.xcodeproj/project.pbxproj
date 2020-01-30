@@ -27,6 +27,10 @@
 		494F55F423E2F71900ED0F34 /* PublicPersonResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55F323E2F71900ED0F34 /* PublicPersonResponse.swift */; };
 		494F55F623E2F93100ED0F34 /* MeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55F523E2F93100ED0F34 /* MeTest.swift */; };
 		494F55F823E2FAED00ED0F34 /* EventsEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55F723E2FAED00ED0F34 /* EventsEndpoint.swift */; };
+		494F55FA23E3003000ED0F34 /* FriendProfileResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55F923E3003000ED0F34 /* FriendProfileResponse.swift */; };
+		494F55FC23E3039A00ED0F34 /* MyProfileResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55FB23E3039A00ED0F34 /* MyProfileResponse.swift */; };
+		494F55FE23E3063100ED0F34 /* PersonProfileUpdateRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55FD23E3063100ED0F34 /* PersonProfileUpdateRequest.swift */; };
+		494F560023E30A2C00ED0F34 /* SuccessResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55FF23E30A2C00ED0F34 /* SuccessResponse.swift */; };
 		496E2F3823D5C562008F1962 /* AuthorizationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E2F3723D5C561008F1962 /* AuthorizationTest.swift */; };
 		496E2F3E23D5E5BE008F1962 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E2F3D23D5E5BE008F1962 /* Session.swift */; };
 		496E2F4023D5E5D9008F1962 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E2F3F23D5E5D9008F1962 /* Error.swift */; };
@@ -84,6 +88,10 @@
 		494F55F323E2F71900ED0F34 /* PublicPersonResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicPersonResponse.swift; sourceTree = "<group>"; };
 		494F55F523E2F93100ED0F34 /* MeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeTest.swift; sourceTree = "<group>"; };
 		494F55F723E2FAED00ED0F34 /* EventsEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsEndpoint.swift; sourceTree = "<group>"; };
+		494F55F923E3003000ED0F34 /* FriendProfileResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendProfileResponse.swift; sourceTree = "<group>"; };
+		494F55FB23E3039A00ED0F34 /* MyProfileResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileResponse.swift; sourceTree = "<group>"; };
+		494F55FD23E3063100ED0F34 /* PersonProfileUpdateRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonProfileUpdateRequest.swift; sourceTree = "<group>"; };
+		494F55FF23E30A2C00ED0F34 /* SuccessResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessResponse.swift; sourceTree = "<group>"; };
 		496E2F3723D5C561008F1962 /* AuthorizationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationTest.swift; sourceTree = "<group>"; };
 		496E2F3D23D5E5BE008F1962 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		496E2F3F23D5E5D9008F1962 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
@@ -215,6 +223,10 @@
 				494F55ED23E2F5BA00ED0F34 /* MeEndpoints.swift */,
 				494F55EF23E2F68D00ED0F34 /* ShareResponse.swift */,
 				494F55F323E2F71900ED0F34 /* PublicPersonResponse.swift */,
+				494F55F923E3003000ED0F34 /* FriendProfileResponse.swift */,
+				494F55FB23E3039A00ED0F34 /* MyProfileResponse.swift */,
+				494F55FD23E3063100ED0F34 /* PersonProfileUpdateRequest.swift */,
+				494F55FF23E30A2C00ED0F34 /* SuccessResponse.swift */,
 			);
 			path = Me;
 			sourceTree = "<group>";
@@ -310,11 +322,11 @@
 				TargetAttributes = {
 					4925B846220DABE000D9CD4A = {
 						CreatedOnToolsVersion = 10.1;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1120;
 					};
 					4925B84F220DABE000D9CD4A = {
 						CreatedOnToolsVersion = 10.1;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1120;
 					};
 				};
 			};
@@ -324,6 +336,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 4925B83D220DABE000D9CD4A;
 			productRefGroup = 4925B848220DABE000D9CD4A /* Products */;
@@ -361,6 +374,7 @@
 				49C8978F23D5F9BE0077B6FC /* AuthorizationEndpoints.swift in Sources */,
 				496E2F3E23D5E5BE008F1962 /* Session.swift in Sources */,
 				4925B8B5220DAED800D9CD4A /* ExtoleAPI.swift in Sources */,
+				494F55FC23E3039A00ED0F34 /* MyProfileResponse.swift in Sources */,
 				490E2C6823E1DED0007D5222 /* SubmitEventResponse.swift in Sources */,
 				49C8979323D5FA730077B6FC /* CreateTokenRequest.swift in Sources */,
 				49F221A4221440DC0052670D /* ProfileLoader.swift in Sources */,
@@ -372,6 +386,7 @@
 				4974F026221C4480009C9931 /* ExtoleApp.swift in Sources */,
 				496E2F4023D5E5D9008F1962 /* Error.swift in Sources */,
 				4974F028221C5C2F009C9931 /* ExtoleShareApp.swift in Sources */,
+				494F55FA23E3003000ED0F34 /* FriendProfileResponse.swift in Sources */,
 				4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */,
 				49F221A222142C660052670D /* SessionManager.swift in Sources */,
 				49C8979C23D6069F0077B6FC /* ZoneResponse.swift in Sources */,
@@ -386,6 +401,8 @@
 				49C897A123D6080D0077B6FC /* ZoneEndpoints.swift in Sources */,
 				49C8979523D5FB4A0077B6FC /* TokenResponse.swift in Sources */,
 				490E2C6A23E1E16C007D5222 /* SubmitZoneRequest.swift in Sources */,
+				494F55FE23E3063100ED0F34 /* PersonProfileUpdateRequest.swift in Sources */,
+				494F560023E30A2C00ED0F34 /* SuccessResponse.swift in Sources */,
 				49C8979F23D607B70077B6FC /* RenderZoneRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -565,7 +582,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -592,7 +609,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.extole.ExtoleKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -613,7 +630,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.extole.ExtoleKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -633,7 +650,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.extole.ExtoleKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -4,7 +4,7 @@ import Foundation
 
 /// Loads consumer profile
 public final class ProfileLoader : Loader{
-    public private(set) var profile: MyProfile? = nil
+    public private(set) var profile: ExtoleAPI.Me.MyProfileResponse? = nil
     
     public init() {
         

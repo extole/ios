@@ -29,6 +29,9 @@
 		494F55FC23E3039A00ED0F34 /* MyProfileResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55FB23E3039A00ED0F34 /* MyProfileResponse.swift */; };
 		494F55FE23E3063100ED0F34 /* PersonProfileUpdateRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55FD23E3063100ED0F34 /* PersonProfileUpdateRequest.swift */; };
 		494F560023E30A2C00ED0F34 /* SuccessResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55FF23E30A2C00ED0F34 /* SuccessResponse.swift */; };
+		494F560423E3171400ED0F34 /* EmailShareEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F560323E3171400ED0F34 /* EmailShareEndpoints.swift */; };
+		494F560623E317B700ED0F34 /* EmailShareResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F560523E317B700ED0F34 /* EmailShareResponse.swift */; };
+		494F560823E3187D00ED0F34 /* EmailShareRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F560723E3187D00ED0F34 /* EmailShareRequest.swift */; };
 		496E2F3823D5C562008F1962 /* AuthorizationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E2F3723D5C561008F1962 /* AuthorizationTest.swift */; };
 		496E2F3E23D5E5BE008F1962 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E2F3D23D5E5BE008F1962 /* Session.swift */; };
 		496E2F4023D5E5D9008F1962 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E2F3F23D5E5D9008F1962 /* Error.swift */; };
@@ -88,6 +91,9 @@
 		494F55FB23E3039A00ED0F34 /* MyProfileResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileResponse.swift; sourceTree = "<group>"; };
 		494F55FD23E3063100ED0F34 /* PersonProfileUpdateRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonProfileUpdateRequest.swift; sourceTree = "<group>"; };
 		494F55FF23E30A2C00ED0F34 /* SuccessResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessResponse.swift; sourceTree = "<group>"; };
+		494F560323E3171400ED0F34 /* EmailShareEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailShareEndpoints.swift; sourceTree = "<group>"; };
+		494F560523E317B700ED0F34 /* EmailShareResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailShareResponse.swift; sourceTree = "<group>"; };
+		494F560723E3187D00ED0F34 /* EmailShareRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailShareRequest.swift; sourceTree = "<group>"; };
 		496E2F3723D5C561008F1962 /* AuthorizationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationTest.swift; sourceTree = "<group>"; };
 		496E2F3D23D5E5BE008F1962 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		496E2F3F23D5E5D9008F1962 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
@@ -177,6 +183,18 @@
 			path = ExtoleKitTests;
 			sourceTree = "<group>";
 		};
+		494F560223E3167200ED0F34 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				49FBE84122130FAC006AEFEB /* CustomShare.swift */,
+				49FBE84322130FDB006AEFEB /* EmailShare.swift */,
+				494F560323E3171400ED0F34 /* EmailShareEndpoints.swift */,
+				494F560523E317B700ED0F34 /* EmailShareResponse.swift */,
+				494F560723E3187D00ED0F34 /* EmailShareRequest.swift */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
 		49C8978D23D5F99C0077B6FC /* Authorization */ = {
 			isa = PBXGroup;
 			children = (
@@ -211,8 +229,6 @@
 		49C8979823D605B00077B6FC /* Me */ = {
 			isa = PBXGroup;
 			children = (
-				49FBE84322130FDB006AEFEB /* EmailShare.swift */,
-				49FBE84122130FAC006AEFEB /* CustomShare.swift */,
 				4925B8A7220DAED800D9CD4A /* Shareable.swift */,
 				494F55ED23E2F5BA00ED0F34 /* MeEndpoints.swift */,
 				494F55EF23E2F68D00ED0F34 /* ShareResponse.swift */,
@@ -243,6 +259,7 @@
 		49F221A5221440E40052670D /* Rest */ = {
 			isa = PBXGroup;
 			children = (
+				494F560223E3167200ED0F34 /* Share */,
 				49C8979823D605B00077B6FC /* Me */,
 				49C8979723D6058A0077B6FC /* Events */,
 				49C8979623D6048F0077B6FC /* Zones */,
@@ -374,10 +391,12 @@
 				49F221A4221440DC0052670D /* ProfileLoader.swift in Sources */,
 				4925B8AF220DAED800D9CD4A /* Network.swift in Sources */,
 				4994A4652214498D00EF8666 /* ShareableLoader.swift in Sources */,
+				494F560623E317B700ED0F34 /* EmailShareResponse.swift in Sources */,
 				49FBE84422130FDB006AEFEB /* EmailShare.swift in Sources */,
 				494F55EE23E2F5BA00ED0F34 /* MeEndpoints.swift in Sources */,
 				4925B8B6220DAED800D9CD4A /* Log.swift in Sources */,
 				4974F026221C4480009C9931 /* ExtoleApp.swift in Sources */,
+				494F560823E3187D00ED0F34 /* EmailShareRequest.swift in Sources */,
 				496E2F4023D5E5D9008F1962 /* Error.swift in Sources */,
 				4974F028221C5C2F009C9931 /* ExtoleShareApp.swift in Sources */,
 				494F55FA23E3003000ED0F34 /* FriendProfileResponse.swift in Sources */,
@@ -388,6 +407,7 @@
 				49FBE84222130FAC006AEFEB /* CustomShare.swift in Sources */,
 				494F55F023E2F68D00ED0F34 /* ShareResponse.swift in Sources */,
 				49C8A9962236A264009DF9DC /* ExtoleShareExperience.swift in Sources */,
+				494F560423E3171400ED0F34 /* EmailShareEndpoints.swift in Sources */,
 				494F55F423E2F71900ED0F34 /* PublicPersonResponse.swift in Sources */,
 				490E2C6623E1DDED007D5222 /* EventEndpoints.swift in Sources */,
 				4974F020221C0A8B009C9931 /* ZoneLoader.swift in Sources */,

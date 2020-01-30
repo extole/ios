@@ -15,13 +15,13 @@ extension ExtoleAPI.Session {
                     data: [String:String] = [:],
                     success: @escaping(_: ExtoleAPI.Events.SubmitEventResponse) -> Void,
                     error: @escaping (_: ExtoleAPI.Error) -> Void) {
-        let zoneUrl = ExtoleAPI.Zones.zonesUrl(baseUrl: self.baseUrl)
+        let eventUrl = ExtoleAPI.Events.eventsUrl(baseUrl: self.baseUrl)
         let headers = [
             "Accept": "application/json",
             "Authorization": "Bearer " + self.accessToken
         ]
         let renderZoneRequest = ExtoleAPI.Events.SubmitEventRequest(event_name: eventName, data: data)
-        let urlRequest = self.postRequest(url: zoneUrl, data: renderZoneRequest,
+        let urlRequest = self.postRequest(url: eventUrl, data: renderZoneRequest,
                                           headers: headers)
 
         self.network.processRequest(with: urlRequest, success: success, error: error)

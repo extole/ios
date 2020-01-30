@@ -53,10 +53,11 @@ class SimpleShareExperienceTest: XCTestCase {
         let promise = expectation(description: "conversion response")
         let shareApp = ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "missing")
         shareApp.reset()
-        let parameters : [URLQueryItem] = [
-            URLQueryItem(name: "cart_value", value: "12.31")
+        let parameters : [String: String] = [
+            "cart_value": "12.31"
         ]
-        shareApp.signal(zone: "conversion", parameters: parameters, success: {
+        shareApp.signal(zone: "conversion", data: parameters, success: { response in
+            XCTAssertNotNil(response.event_id)
             promise.fulfill()
         }, error: { (error) in
             XCTFail("unexpected error " + error.code)

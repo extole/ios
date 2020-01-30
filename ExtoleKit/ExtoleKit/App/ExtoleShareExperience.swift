@@ -48,19 +48,6 @@ public class ExtoleShareExperince: NSObject {
             }
         }
     }
-
-    
-    public func notify(share: CustomShare,
-                       success: @escaping (CustomSharePollingResult)->Void,
-                       error: @escaping(ExtoleAPI.Error) -> Void) {
-        self.async { (shareApp) in
-            if let shareApp = shareApp {
-                shareApp.notify(share: share, success: success, error: error)
-            } else {
-                error(ExtoleAPI.Error(code: "reset"))
-            }
-        }
-    }
     
     public func signal(zone: String,
                        data: [String :String]  = [:],
@@ -87,7 +74,7 @@ public class ExtoleShareExperince: NSObject {
                 shareApp.session?.updateProfile(email: email,
                                                 first_name: first_name,
                                                 last_name: last_name,
-                                                profile_picture_url: profile_picture_url,
+                                                profile_picture_url:    profile_picture_url,
                                                 partner_user_id: partner_user_id,
                                                 success:  success,
                                                 error: error)

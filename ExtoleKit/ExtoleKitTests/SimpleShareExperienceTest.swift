@@ -9,33 +9,6 @@ class SimpleShareExperienceTest: XCTestCase {
         let shareMessage: String
     }
 
-    func testSignalShare() {
-        let promise = expectation(description: "invalid share response")
-        let shareApp = ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "refer-a-friend")
-        shareApp.reset()
-        let share = CustomShare(channel:"test")
-        shareApp.notify(share: share, success: { (CustomSharePollingResult) in
-            promise.fulfill();
-        }, error :{ (error) in
-            XCTFail(String(reflecting: error))
-        })
-        waitForExpectations(timeout: 5, handler: nil)
-    }
-    
-    func testFailedShare() {
-        let promise = expectation(description: "invalid share response")
-        let shareApp = ExtoleShareExperince(programDomain: "ios-santa-missing.extole.io", programLabel: "missing")
-        shareApp.reset()
-        
-        shareApp.notify(share: CustomShare(channel:"test"), success: { (CustomSharePollingResult) in
-            XCTFail("unexpected success")
-        }) { (error) in
-            XCTAssertEqual("reset", error.code)
-            promise.fulfill()
-        }
-        waitForExpectations(timeout: 5, handler: nil)
-    }
-    
     func testFetchSettings() {
         let promise = expectation(description: "settings response")
         let shareApp = ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "missing")

@@ -20,60 +20,33 @@ class ShareTest: XCTestCase {
         })
         
         waitForExpectations(timeout: 5, handler: nil)
-        
-        let createShareablePromise = expectation(description: "create shareable response")
-        let newShareable = MyShareable.init(label: "refer-a-friend")
-        var shareableResult: PollingIdResponse!
-        extoleSession.createShareable(shareable: newShareable,
-                                       success: { result in
-            shareableResult = result
-            createShareablePromise.fulfill()
-        }, error: { error in
-            XCTAssertNil(error)
-        })
-        waitForExpectations(timeout: 5, handler: nil)
-        XCTAssertGreaterThan(shareableResult.polling_id, "111111")
-        
-        let pollShareablePromise = expectation(description: "poll shareable response")
-        extoleSession.pollShareable(pollingResponse: shareableResult!,
-                                     success: { result in
-            self.advocateCode = result.code!
-            pollShareablePromise.fulfill()
-        }, error: { error in
-            XCTAssertNil(error)
-        })
-        waitForExpectations(timeout: 5, handler: nil)
     }
     
-    func testCustomShare() {
-        let customShare = CustomShare(advocate_code: advocateCode!,
-                                      channel: "test",
-                                      message: "testmessage",
-                                      recipient_email: "rtibin@extole.com",
-                                      data: [:])
+    func testEmailShare() {
+        let sharePromise = expectation(description: "share")
+        let friend = "ios-friend.k1uu7gsb@mailosaur.io"
+        extoleSession!.emailShare(
+            recipient: friend,
+            message: "test message",
+            subject: "ios-test",
+            data: [ "source": "ShareTest"],
+            success: { emailResponse in
+            XCTAssertNotNil(emailResponse.polling_id)
+            sharePromise.fulfill()
+        }, error: { e in
+            XCTFail(e.code)
+        })
         
-        let shareExpectation = expectation(description: "share")
-        var sharePollingId : PollingIdResponse!
-        extoleSession.customShare(share: customShare, success: { shareResponse in
-            XCTAssertGreaterThan(shareResponse.polling_id, "1111")
-            sharePollingId = shareResponse
-            shareExpectation.fulfill()
-        }, error: { error in
-            XCTFail(String(reflecting: error))
+        sleep(5)
+        wait(for: [sharePromise], timeout: 5)
+        
+        let shareVerify = expectation(description: "share")
+        extoleSession.getShares(success: { shares in
+            XCTAssertEqual(1, shares.count)
+            shareVerify.fulfill()
+        }, error: { e in
+            XCTFail(e.code)
         })
-
-        wait(for: [shareExpectation], timeout: 10)
-
-        let pollingExpectation = expectation(description: "share polling")
-        extoleSession.pollCustomShare(pollingResponse: sharePollingId, success: { customShareResult in
-            XCTAssertNotNil(customShareResult.share_id)
-            XCTAssertGreaterThan(customShareResult.share_id!, "1111")
-            pollingExpectation.fulfill()
-        }, error: { error in
-            XCTFail(String(reflecting: error))
-        })
-        wait(for: [pollingExpectation], timeout: 10)
-
+        wait(for: [shareVerify], timeout: 5)
     }
-
 }

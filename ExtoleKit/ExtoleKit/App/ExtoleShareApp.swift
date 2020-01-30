@@ -23,8 +23,6 @@ public final class ExtoleShareApp {
     private var preloader: CompositeLoader!
     /// Active consumer session
     public private(set) var session: ExtoleAPI.Session?
-    /// Loads consumer shareables
-    public private(set) var shareableLoader: ShareableLoader!
 
     /// Creates new Extole share experince
     public init(programDomain: String,
@@ -37,10 +35,7 @@ public final class ExtoleShareApp {
         self.extoleApp = ExtoleApp(with: ExtoleAPI(programDomain: programDomain, network: network), delegate: self)
         self.delegate = delegate
         
-        shareableLoader = ShareableLoader(delegate: self)
-        
         var loaders = [Loader]()
-        loaders.append(shareableLoader)
         loaders.append(contentsOf: extraLoaders)
         
         self.preloader = CompositeLoader(loaders: loaders)
@@ -78,71 +73,6 @@ public final class ExtoleShareApp {
                 complete()
                 self.extoleApp.onSessionServerError(error: error)
             }
-        }
-    }
-
-    /// Sends custom share event to Extole
-    public func notify(share: CustomShare,
-                        success: @escaping (CustomSharePollingResult)->Void,
-                        error: @escaping(ExtoleAPI.Error) -> Void) {
-        extoleInfo(format: "shared via custom channel %s", arg: share.channel)
-        
-        if let session = session, let shareableCode = selectedShareable?.code {
-            share.advocate_code = shareableCode
-            session.customShare(share: share, success: { pollingResponse in
-                session.pollCustomShare(pollingResponse: pollingResponse,
-                                        success: success, error: error)
-            }, error: error)
-        } else {
-            error(ExtoleAPI.Error.init(code: "not_ready"))
-        }
-    }
-
-    /// Sends a share to given email, using Extole email service
-    public func send(share: EmailShare,
-                      success: @escaping (EmailSharePollingResult)->Void,
-                      error: @escaping(ExtoleAPI.Error) -> Void) {
-        extoleInfo(format: "sharing to email %s", arg: share.recipient_email)
-        if let session = session, let shareableCode = selectedShareable?.code {
-            share.advocate_code = shareableCode
-            session.emailShare(share: share, success: { pollingResponse in
-                session.pollEmailShare(pollingResponse: pollingResponse!,success:success, error: error)
-            }, error: error)
-        }
-    }
-    
-   
-    
-    /// Shareable used for current consumer session
-    public var selectedShareable: MyShareable? {
-        get {
-            return shareableLoader?.shareables?.filter({ shareable in
-                shareable.code == self.savedShareableCode
-            }).first
-        }
-    }
-}
-
-extension ExtoleShareApp : ShareableLoaderDelegate {
-    public func success(shareables: [MyShareable],  complete: @escaping () -> Void) {
-        if let shareable = self.selectedShareable {
-            extoleInfo(format: "re-using previosly selected shareable %s", arg: shareable.code)
-            complete()
-        } else {
-            self.savedShareableCode = nil
-            let uniqueKey = NSUUID().uuidString
-            let newShareable = MyShareable.init(label: self.label, key: uniqueKey)
-            self.session?.createShareable(shareable: newShareable, success: { pollingId in
-                self.session?.pollShareable(pollingResponse: pollingId,
-                                            success: { shareableResult in
-                                                self.savedShareableCode = shareableResult.code
-                                                self.shareableLoader?.load(session: self.session!, complete: complete)
-                }, error: {_ in
-                    
-                })
-            }, error : { _ in
-                
-            })
         }
     }
 }

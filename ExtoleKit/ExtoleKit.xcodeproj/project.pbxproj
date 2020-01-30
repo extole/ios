@@ -15,12 +15,10 @@
 		4925B858220DABE000D9CD4A /* ExtoleKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4925B84A220DABE000D9CD4A /* ExtoleKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4925B8AF220DAED800D9CD4A /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A5220DAED800D9CD4A /* Network.swift */; };
 		4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A7220DAED800D9CD4A /* Shareable.swift */; };
-		4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8A9220DAED800D9CD4A /* Profile.swift */; };
 		4925B8B5220DAED800D9CD4A /* ExtoleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AB220DAED800D9CD4A /* ExtoleAPI.swift */; };
 		4925B8B6220DAED800D9CD4A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8AC220DAED800D9CD4A /* Log.swift */; };
 		4925B8CE220DB66F00D9CD4A /* ShareableTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8C9220DB66F00D9CD4A /* ShareableTest.swift */; };
 		4925B8CF220DB66F00D9CD4A /* ZoneTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */; };
-		4925B8D0220DB66F00D9CD4A /* ProfileTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */; };
 		4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B8CD220DB66F00D9CD4A /* ShareTest.swift */; };
 		494F55EE23E2F5BA00ED0F34 /* MeEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55ED23E2F5BA00ED0F34 /* MeEndpoints.swift */; };
 		494F55F023E2F68D00ED0F34 /* ShareResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494F55EF23E2F68D00ED0F34 /* ShareResponse.swift */; };
@@ -76,12 +74,10 @@
 		4925B857220DABE000D9CD4A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4925B8A5220DAED800D9CD4A /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		4925B8A7220DAED800D9CD4A /* Shareable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shareable.swift; sourceTree = "<group>"; };
-		4925B8A9220DAED800D9CD4A /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		4925B8AB220DAED800D9CD4A /* ExtoleAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtoleAPI.swift; sourceTree = "<group>"; };
 		4925B8AC220DAED800D9CD4A /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		4925B8C9220DB66F00D9CD4A /* ShareableTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareableTest.swift; sourceTree = "<group>"; };
 		4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoneTest.swift; sourceTree = "<group>"; };
-		4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileTest.swift; sourceTree = "<group>"; };
 		4925B8CD220DB66F00D9CD4A /* ShareTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareTest.swift; sourceTree = "<group>"; };
 		494F55ED23E2F5BA00ED0F34 /* MeEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeEndpoints.swift; sourceTree = "<group>"; };
 		494F55EF23E2F68D00ED0F34 /* ShareResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareResponse.swift; sourceTree = "<group>"; };
@@ -168,7 +164,6 @@
 			isa = PBXGroup;
 			children = (
 				496E2F3723D5C561008F1962 /* AuthorizationTest.swift */,
-				4925B8CB220DB66F00D9CD4A /* ProfileTest.swift */,
 				4925B8C9220DB66F00D9CD4A /* ShareableTest.swift */,
 				4925B8CD220DB66F00D9CD4A /* ShareTest.swift */,
 				4925B8CA220DB66F00D9CD4A /* ZoneTest.swift */,
@@ -218,7 +213,6 @@
 			children = (
 				49FBE84322130FDB006AEFEB /* EmailShare.swift */,
 				49FBE84122130FAC006AEFEB /* CustomShare.swift */,
-				4925B8A9220DAED800D9CD4A /* Profile.swift */,
 				4925B8A7220DAED800D9CD4A /* Shareable.swift */,
 				494F55ED23E2F5BA00ED0F34 /* MeEndpoints.swift */,
 				494F55EF23E2F68D00ED0F34 /* ShareResponse.swift */,
@@ -387,7 +381,6 @@
 				496E2F4023D5E5D9008F1962 /* Error.swift in Sources */,
 				4974F028221C5C2F009C9931 /* ExtoleShareApp.swift in Sources */,
 				494F55FA23E3003000ED0F34 /* FriendProfileResponse.swift in Sources */,
-				4925B8B3220DAED800D9CD4A /* Profile.swift in Sources */,
 				49F221A222142C660052670D /* SessionManager.swift in Sources */,
 				49C8979C23D6069F0077B6FC /* ZoneResponse.swift in Sources */,
 				4925B8B1220DAED800D9CD4A /* Shareable.swift in Sources */,
@@ -411,7 +404,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4925B8D0220DB66F00D9CD4A /* ProfileTest.swift in Sources */,
 				4925B8D2220DB66F00D9CD4A /* ShareTest.swift in Sources */,
 				496E2F3823D5C562008F1962 /* AuthorizationTest.swift in Sources */,
 				4925B8CF220DB66F00D9CD4A /* ZoneTest.swift in Sources */,

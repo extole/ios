@@ -43,36 +43,51 @@ class MeTest: XCTestCase {
          waitForExpectations(timeout: 5, handler: nil)
     }
     
-    public func testGetProfile() {
-        let promise = expectation(description: "get profile")
-        extoleSession.getProfile(success: { profile in
-            XCTAssertNotNil(profile.id)
-            promise.fulfill()
-        }, error: { error in
-            XCTFail(error.code)
+    func testIdentify() {
+        let identify = expectation(description: "identify response")
+        extoleSession.updateProfile(email: "testidentify@extole.com", success: {
+            identify.fulfill()
+        }, error : { error in
+            XCTFail(String(reflecting: error))
         })
-         waitForExpectations(timeout: 5, handler: nil)
-    }
+        
+        wait(for: [identify], timeout: 10)
+        
+        let verifyIdentity = expectation(description: "verifyIdentity response")
+        self.extoleSession.getProfile(success: { profile in
+            XCTAssertEqual("testidentify@extole.com", profile.email)
+            verifyIdentity.fulfill()
+        }, error: { error in
+            XCTFail(String(reflecting: error))
+        })
     
-    public func testUpdateProfile() {
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+
+    func testUpdateProfile() {
         let updatePromise = expectation(description: "update profile")
-        extoleSession.updateProfile(first_name: "john",
-            success: { status in
-                XCTAssertEqual("success", status.status)
-            updatePromise.fulfill()
-        }, error: { error in
-            XCTFail(error.code)
+        extoleSession.updateProfile(first_name: "First",
+                                    last_name: "Last",
+                                    partner_user_id: "user-id"
+            , success: {
+                updatePromise.fulfill()
+            }, error : { error in
+                XCTFail(String(reflecting: error))
         })
+    
         wait(for: [updatePromise], timeout: 5)
         
-        let getPromise = expectation(description: "get profile")
+        let verifyUpdate = expectation(description: "verifyIdentity response")
         extoleSession.getProfile(success: { profile in
-            XCTAssertNotNil(profile.id)
-            XCTAssertEqual("john", profile.first_name)
-            getPromise.fulfill()
+            XCTAssertEqual("user-id", profile.partner_user_id)
+            XCTAssertEqual("First", profile.first_name)
+            XCTAssertEqual("Last", profile.last_name)
+            verifyUpdate.fulfill()
         }, error: { error in
-            XCTFail(error.code)
+            XCTFail(String(reflecting: error))
         })
-        wait(for: [getPromise], timeout: 5)
+        
+        waitForExpectations(timeout: 10, handler: nil)
     }
+    
 }

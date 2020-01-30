@@ -47,7 +47,7 @@ extension ExtoleAPI.Session {
                     last_name: String? = nil,
                     profile_picture_url: String? = nil,
                     partner_user_id: String? = nil,
-                    success: @escaping(_: ExtoleAPI.Me.SuccessResponse) -> Void,
+                    success: @escaping() -> Void,
                     error: @escaping (_: ExtoleAPI.Error) -> Void) {
         let profileUrl = ExtoleAPI.Me.meUrl(baseUrl: self.baseUrl)
         
@@ -55,6 +55,8 @@ extension ExtoleAPI.Session {
         
         let urlRequest = self.postRequest(url: profileUrl, data: updateRequest)
         
-        self.network.processRequest(with: urlRequest, success: success, error: error)
+        self.network.processRequest(with: urlRequest, success: { (status : ExtoleAPI.Me.SuccessResponse ) in
+            success()
+        }, error: error)
     }
 }

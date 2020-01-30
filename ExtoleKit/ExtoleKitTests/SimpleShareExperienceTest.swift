@@ -69,9 +69,8 @@ class SimpleShareExperienceTest: XCTestCase {
         let updateProfile = expectation(description: "update profile")
         let shareApp = ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "missing")
         shareApp.reset()
-        let profile = MyProfile(first_name: "test profile")
         
-        shareApp.update(profile: profile, success: {
+        shareApp.update(first_name: "test profile", success: {
             updateProfile.fulfill()
         }, error: { (error) in
             XCTFail("unexpected error " + error.code)

@@ -75,12 +75,22 @@ public class ExtoleShareExperince: NSObject {
         }
     }
 
-    public func update(profile: MyProfile,
+    public func update(email: String? = nil,
+                        first_name: String? = nil,
+                        last_name: String? = nil,
+                        profile_picture_url: String? = nil,
+                        partner_user_id: String? = nil,
                              success: @escaping () -> Void = {},
                              error: @escaping (ExtoleAPI.Error) -> Void = { _ in }) {
         self.async { (shareApp) in
             if let shareApp = shareApp {
-                shareApp.session?.updateProfile(profile: profile, success: success, error: error)
+                shareApp.session?.updateProfile(email: email,
+                                                first_name: first_name,
+                                                last_name: last_name,
+                                                profile_picture_url: profile_picture_url,
+                                                partner_user_id: partner_user_id,
+                                                success:  success,
+                                                error: error)
             } else {
                 error(ExtoleAPI.Error.init(code: "reset"))
             }

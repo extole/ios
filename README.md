@@ -25,6 +25,7 @@ $ ./runTests.sh
 
 ## Structure
 
+* [ExtoleAPI](ExtoleAPI) - low level library to access consumer-api
 * [ExtoleSanta](ExtoleSanta/ExtoleSanta) - sample application
 * [ExtoleKit](ExtoleKit/ExtoleKit) - library that should be distributed with your application
 * [WebStanta](WebSanta/WebSanta) - WebView share experience experience

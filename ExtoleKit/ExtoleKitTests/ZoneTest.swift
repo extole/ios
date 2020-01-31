@@ -60,25 +60,7 @@ class ZoneTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
     
-    struct MobileSharing: Codable {
-        struct Data: Codable{
-            let me: [String: String]
-        }
-        let event_id: String
-        let data: Data
-    }
     
-    func testFetchMobileSharing() {
-       let promise = expectation(description: "fetch mobile_menu")
-       extoleSession.renderZone(eventName: "mobile_sharing",
-                                  success: { (menu: MobileSharing) in
-            XCTAssertNotNil(menu.data.me["share_code"])
-            promise.fulfill()
-       }, error: { error in
-           XCTFail(error.code)
-       })
-       waitForExpectations(timeout: 5, handler: nil)
-    }
     
     func testMobileSharingFlat() {
        let promise = expectation(description: "fetch mobile_menu")

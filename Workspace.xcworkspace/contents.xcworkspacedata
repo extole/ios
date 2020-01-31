@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:ExtoleApp">
+   </FileRef>
+   <FileRef
       location = "group:ExtoleAPI">
    </FileRef>
    <FileRef

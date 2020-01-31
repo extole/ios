@@ -33,7 +33,7 @@ extension ExtoleAPI.Session {
         self.network.processRequest(with: urlRequest, success: success, error: error)
     }
     
-    func getProfile(success: @escaping(_: ExtoleAPI.Me.MyProfileResponse) -> Void,
+    public func getProfile(success: @escaping(_: ExtoleAPI.Me.MyProfileResponse) -> Void,
                     error: @escaping (_: ExtoleAPI.Error) -> Void) {
         let profileUrl = ExtoleAPI.Me.meUrl(baseUrl: self.baseUrl)
         let urlRequest = self.getRequest(url: profileUrl)

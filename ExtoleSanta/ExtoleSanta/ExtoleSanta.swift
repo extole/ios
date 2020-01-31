@@ -1,7 +1,8 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
-import ExtoleKit
+import ExtoleAPI
+import ExtoleApp
 
 protocol ExtoleSantaDelegate: class {
     func santaIsBusy()

@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49111A1F23E4412200163011 /* ExtoleAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 49111A1E23E4412200163011 /* ExtoleAPI */; };
+		49111A2123E4412A00163011 /* ExtoleApp in Frameworks */ = {isa = PBXBuildFile; productRef = 49111A2023E4412A00163011 /* ExtoleApp */; };
 		4925B86E220DAC4000D9CD4A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4925B86D220DAC4000D9CD4A /* AppDelegate.swift */; };
 		4925B873220DAC4000D9CD4A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4925B871220DAC4000D9CD4A /* Main.storyboard */; };
 		4925B875220DAC4100D9CD4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4925B874220DAC4100D9CD4A /* Assets.xcassets */; };
@@ -21,8 +23,6 @@
 		49AA225022244BBC00F20CDD /* ExtoleSantaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AA224F22244BBC00F20CDD /* ExtoleSantaUITests.swift */; };
 		49CA1878237AB322000DACB0 /* JsonDecoderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CA1877237AB322000DACB0 /* JsonDecoderTest.swift */; };
 		49E800F3221D8A17007281DE /* ExtoleSanta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E800F2221D8A17007281DE /* ExtoleSanta.swift */; };
-		49FBE83C2211BDE8006AEFEB /* ExtoleKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B88E220DAC5E00D9CD4A /* ExtoleKit.framework */; };
-		49FBE83D2211BDE8006AEFEB /* ExtoleKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4925B88E220DAC5E00D9CD4A /* ExtoleKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49FBE8402212FD4E006AEFEB /* ExtoleShareActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FBE83F2212FD4E006AEFEB /* ExtoleShareActivity.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,20 +42,6 @@
 			remoteInfo = ExtoleSanta;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		49FBE83E2211BDE8006AEFEB /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				49FBE83D2211BDE8006AEFEB /* ExtoleKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4925B86A220DAC4000D9CD4A /* ExtoleSanta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExtoleSanta.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,7 +74,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49FBE83C2211BDE8006AEFEB /* ExtoleKit.framework in Frameworks */,
+				49111A1F23E4412200163011 /* ExtoleAPI in Frameworks */,
+				49111A2123E4412A00163011 /* ExtoleApp in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,13 +175,16 @@
 				4925B866220DAC4000D9CD4A /* Sources */,
 				4925B867220DAC4000D9CD4A /* Frameworks */,
 				4925B868220DAC4000D9CD4A /* Resources */,
-				49FBE83E2211BDE8006AEFEB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = ExtoleSanta;
+			packageProductDependencies = (
+				49111A1E23E4412200163011 /* ExtoleAPI */,
+				49111A2023E4412A00163011 /* ExtoleApp */,
+			);
 			productName = ExtoleSanta;
 			productReference = 4925B86A220DAC4000D9CD4A /* ExtoleSanta.app */;
 			productType = "com.apple.product-type.application";
@@ -652,6 +642,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		49111A1E23E4412200163011 /* ExtoleAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ExtoleAPI;
+		};
+		49111A2023E4412A00163011 /* ExtoleApp */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ExtoleApp;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4925B862220DAC4000D9CD4A /* Project object */;
 }

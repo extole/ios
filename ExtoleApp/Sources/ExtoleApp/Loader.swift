@@ -1,6 +1,8 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
+import ExtoleAPI
+
 
 /// Loads content for consumer session
 public protocol Loader{

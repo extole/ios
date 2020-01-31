@@ -1,7 +1,7 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 import UIKit
-import ExtoleKit
+import ExtoleAPI
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

@@ -11,7 +11,7 @@ extension ExtoleAPI {
 }
 
 extension ExtoleAPI.Session {
-    func renderZone<T: Decodable>(eventName: String,
+    public func renderZone<T: Decodable>(eventName: String,
                     data: [String:String] = [:],
                     success: @escaping(_: T) -> Void,
                     error: @escaping (_: ExtoleAPI.Error) -> Void) {

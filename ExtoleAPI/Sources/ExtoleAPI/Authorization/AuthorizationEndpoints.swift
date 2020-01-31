@@ -58,16 +58,16 @@ extension ExtoleAPI.Session {
 }
 
 extension ExtoleAPI.Error {
-    func isInvalidAccessToken() -> Bool {
+    public func isInvalidAccessToken() -> Bool {
         return code == "invalid_access_token"
     }
-    func isMissingAccessToken() -> Bool {
+    public func isMissingAccessToken() -> Bool {
         return code == "missing_access_token"
     }
-    func isExpiredAccessToken() -> Bool {
+    public func isExpiredAccessToken() -> Bool {
         return code == "expired_access_token"
     }
-    func isInvalidProgramDomain() -> Bool {
+    public func isInvalidProgramDomain() -> Bool {
         return code == "invalid_program_domain"
     }
 }

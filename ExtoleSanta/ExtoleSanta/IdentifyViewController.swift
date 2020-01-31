@@ -2,7 +2,7 @@
 
 import Foundation
 import UIKit
-import ExtoleKit
+import ExtoleAPI
 
 class IdentifyViewController: UIViewController {
     

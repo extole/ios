@@ -1,6 +1,7 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
+import ExtoleAPI
 
 /// Loads consumer profile
 public final class ProfileLoader : Loader{

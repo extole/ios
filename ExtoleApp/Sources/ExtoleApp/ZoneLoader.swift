@@ -1,6 +1,7 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
+import ExtoleAPI
 
 /// Loads Extole zone as JSON
 public final class ZoneLoader<T: Codable> : Loader {

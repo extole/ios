@@ -2,7 +2,7 @@
 
 import Foundation
 import UIKit
-import ExtoleKit
+import ExtoleAPI
 
 let ExtoleShare = UIActivity.ActivityType.init("ExtoleShare")
 

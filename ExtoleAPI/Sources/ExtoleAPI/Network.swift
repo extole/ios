@@ -51,7 +51,7 @@ public class Network {
             
             "X-Extole-App-version": version(for: Bundle.main),
             "X-Extole-App-appId": Bundle.main.bundleIdentifier ?? "unknown",
-            "X-Extole-DeviceId": UIDevice.current.identifierForVendor?.uuidString ?? "unknown",
+            //"X-Extole-DeviceId": UIDevice.current.identifierForVendor?.uuidString ?? "unknown",
         ]
     }
     

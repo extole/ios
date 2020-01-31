@@ -2,7 +2,7 @@
 
 import Foundation
 import XCTest
-@testable import ExtoleKit
+@testable import ExtoleAPI
 
 class CustomNetworkTest : XCTestCase {
     

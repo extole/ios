@@ -2,7 +2,7 @@
 
 import XCTest
 
-@testable import ExtoleKit
+@testable import ExtoleAPI
 
 class ZoneTest: XCTestCase {
 

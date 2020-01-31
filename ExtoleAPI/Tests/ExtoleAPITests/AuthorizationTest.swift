@@ -2,9 +2,9 @@
 
 import XCTest
 
-@testable import ExtoleKit
+@testable import ExtoleAPI
 
-import class ExtoleKit.Network;
+import class ExtoleAPI.Network;
 
 class AuthenticationTest: XCTestCase {
 

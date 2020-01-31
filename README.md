@@ -16,18 +16,11 @@ Install XCode
 $ xcode-select -switch /Applications/Xcode.app/Contents/Developer/
 ```
 
-### Running the tests
-
-ExtoleKit includes a set of integration tests, execute following to ensure your environment is healthy.
-```
-$ ./runTests.sh
-```
-
 ## Structure
 
 * [ExtoleAPI](ExtoleAPI) - low level library to access consumer-api
+* [ExtoleApp](ExtoleApp) - high level api for share experience
 * [ExtoleSanta](ExtoleSanta/ExtoleSanta) - sample application
-* [ExtoleKit](ExtoleKit/ExtoleKit) - library that should be distributed with your application
 * [WebStanta](WebSanta/WebSanta) - WebView share experience experience
 * [SantaPostbox](SantaPostbox/SantaPostbox) - Objective-C sample application
 

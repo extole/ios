@@ -24,7 +24,7 @@ public final class SessionManager {
     
     public func reload() {
         self.session!.verify(success: { verifiedToken in
-            self.onVerifiedToken(verifiedToken: verifiedToken)
+            self.onSessionResume(session: self.session!)
         }, error: { verifyTokenError in
             if (verifyTokenError.isInvalidAccessToken() ||
                 verifyTokenError.isExpiredAccessToken() ||
@@ -37,11 +37,8 @@ public final class SessionManager {
     }
 
     public func resumeSession(existingToken: String) {
-        let consumerToken = ExtoleAPI.Authorization.TokenResponse.init(access_token: existingToken, expires_in: -1, scopes: [])
-        self.session = ExtoleAPI.Session.init(extoleAPI: self.program,
-                                            token: consumerToken)
-        self.session!.verify(success: { verifiedToken in
-            self.onVerifiedToken(verifiedToken: verifiedToken)
+        program.createSession(accessToken: existingToken, success: { session in
+            self.onSessionResume(session: session)
         }, error: { verifyTokenError in
             if (verifyTokenError.isInvalidAccessToken() ||
                 verifyTokenError.isExpiredAccessToken() ||
@@ -73,8 +70,8 @@ public final class SessionManager {
         
     }
     
-    private func onVerifiedToken(verifiedToken: ExtoleAPI.Authorization.TokenResponse) {
-        self.session = ExtoleAPI.Session.init(extoleAPI: program, token: verifiedToken)
+    private func onSessionResume(session: ExtoleAPI.Session) {
+        self.session = session
         self.delegate?.onNewSession(session: self.session!)
     }
 }

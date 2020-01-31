@@ -7,7 +7,7 @@ extension ExtoleAPI {
         let code: String
         let httpCode: Int?
         let message: String?
-        init(code: String, message: String? = nil, httpCode: Int? = nil) {
+        public init(code: String, message: String? = nil, httpCode: Int? = nil) {
             self.code = code;
             self.httpCode = httpCode;
             self.message = message

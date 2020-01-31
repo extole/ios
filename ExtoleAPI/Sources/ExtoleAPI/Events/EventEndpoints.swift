@@ -11,7 +11,7 @@ extension ExtoleAPI {
 }
 
 extension ExtoleAPI.Session {
-    func submitEvent(eventName: String,
+    public func submitEvent(eventName: String,
                     data: [String:String] = [:],
                     success: @escaping(_: ExtoleAPI.Events.SubmitEventResponse) -> Void,
                     error: @escaping (_: ExtoleAPI.Error) -> Void) {

@@ -1,6 +1,7 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 import Foundation
+import ExtoleAPI
 
 public class ExtoleShareExperince: NSObject {
 

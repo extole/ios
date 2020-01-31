@@ -41,7 +41,7 @@ extension ExtoleAPI.Session {
         self.network.processRequest(with: urlRequest, success: success, error: error)
     }
     
-    func updateProfile(
+    public func updateProfile(
                     email: String? = nil,
                     first_name: String? = nil,
                     last_name: String? = nil,

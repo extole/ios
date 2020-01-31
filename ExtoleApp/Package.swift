@@ -12,6 +12,7 @@ let package = Package(
             targets: ["ExtoleApp"]),
     ],
     dependencies: [
+        .package(path: "./../ExtoleAPI")
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
@@ -20,7 +21,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "ExtoleApp",
-            dependencies: []),
+            dependencies: ["ExtoleAPI"]),
         .testTarget(
             name: "ExtoleAppTests",
             dependencies: ["ExtoleApp"]),

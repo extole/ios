@@ -12,23 +12,23 @@ public protocol ExtoleAppDelegate : class {
 }
 
 /// High level API for Extole
-public final class ExtoleApp: NSObject {
+public final class ExtoleApp {
     let errorRecoveryQueue = DispatchQueue(label: "ExtoleApp.errorRecovery")
     var errorCount = 0
     /// stores key-value pairs for Extole
     public let settings = UserDefaults(suiteName: "extoleKit")!
     /// program url
-    private let programUrl: ExtoleAPI
+    private let extoleApi: ExtoleAPI
     
     /// manages active Extole session
-    lazy private var sessionManager = SessionManager.init(program: programUrl, delegate: self)
+    lazy private var sessionManager = SessionManager.init(extoleApi: extoleApi, delegate: self)
     /// handles events for ExtoleApp
     private weak var delegate: ExtoleAppDelegate?
     private var session: ExtoleAPI.Session?
 
     /// Initializes ExtoleApp
-    public init(with programUrl: ExtoleAPI, delegate: ExtoleAppDelegate?) {
-        self.programUrl = programUrl
+    public init(with extoleApi: ExtoleAPI, delegate: ExtoleAppDelegate?) {
+        self.extoleApi = extoleApi
         self.delegate = delegate
     }
     

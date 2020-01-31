@@ -14,7 +14,7 @@ class ShareExperienceTest: XCTestCase {
     }
     
     func testShareExperince() {
-        let shareExperince = ExtoleApp.ExtoleShareExperince(programDomain: "ios-santa.extole.io", programLabel: "refer-a-friend")
+        let shareExperince = ExtoleApp.ShareExperince(programDomain: "ios-santa.extole.io", programLabel: "refer-a-friend")
         shareExperince.reset()
         let shareId = String(mach_absolute_time())
         shareExperince.async { shareApp in
@@ -37,7 +37,7 @@ class ShareExperienceTest: XCTestCase {
         
         let submitShare = expectation(description: "submit shares")
         
-        shareExperince.share(shareData: shareData, success: { submit in
+        shareExperince.share(data: shareData, success: { submit in
             XCTAssertNotNil(submit.event_id)
             submitShare.fulfill();
         }, error: { e in

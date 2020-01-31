@@ -29,7 +29,7 @@ class ExtoleSanta {
     }
     weak var delegate : ExtoleSantaDelegate?
     
-    lazy var shareApp = ExtoleShareApp(programDomain: "ios-santa.extole.io",
+    lazy var shareApp = ExtoleApp.ShareApp(programDomain: "ios-santa.extole.io",
                                        programLabel: "refer-a-friend",
                                        delegate: self,
                                        extraLoaders: [profileLoader, settingsLoader])
@@ -53,14 +53,14 @@ class ExtoleSanta {
     
 }
 
-extension ExtoleSanta : ExtoleShareAppDelegate {
+extension ExtoleSanta : ExtoleApp.ShareApp.Delegate {
     func extoleShareAppInvalid() {
         DispatchQueue.main.async {
             self.delegate?.santaIsBusy()
         }
     }
     
-    func extoleShareAppReady(shareApp: ExtoleShareApp) {
+    func extoleShareAppReady(shareApp: ExtoleApp.ShareApp) {
         DispatchQueue.main.async {
              self.delegate?.santaIsReady()
         }

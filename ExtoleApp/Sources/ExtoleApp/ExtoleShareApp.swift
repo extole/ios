@@ -17,7 +17,7 @@ extension ExtoleApp {
 
 /// High level API for Extole Share Experience
 public final class ShareApp {
-    typealias Delegate = ShareAppAppDelegate
+    public typealias Delegate = ShareAppAppDelegate
     /// Underlying Extole app
     private var extoleApp: ExtoleApp!
     /// Share Experience event handler

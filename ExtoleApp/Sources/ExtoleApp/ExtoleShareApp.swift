@@ -3,21 +3,25 @@
 import Foundation
 import ExtoleAPI
 
+
 /// Handles events for ExtoleShareApp
-public protocol ExtoleShareAppDelegate : class {
+public protocol ShareAppAppDelegate : class {
     /// signals ExtoleShareApp is busy
     func extoleShareAppInvalid()
     /// signals ExtoleShareApp is ready
-    func extoleShareAppReady(shareApp: ExtoleShareApp)
+    func extoleShareAppReady(shareApp: ExtoleApp.ShareApp)
 }
 
-/// High level API for Extole Share Experience
-public final class ExtoleShareApp {
 
+extension ExtoleApp {
+
+/// High level API for Extole Share Experience
+public final class ShareApp {
+    typealias Delegate = ShareAppAppDelegate
     /// Underlying Extole app
     private var extoleApp: ExtoleApp!
     /// Share Experience event handler
-    private weak var delegate: ExtoleShareAppDelegate?
+    private weak var delegate: ShareAppAppDelegate?
     /// Extole program label
     private let label : String
     /// Composite preloader to load profile, shareables, and settings at once
@@ -36,7 +40,7 @@ public final class ExtoleShareApp {
     /// Creates new Extole share experince
     public init(programDomain: String,
                 programLabel label: String,
-                delegate: ExtoleShareAppDelegate?,
+                delegate: ShareAppAppDelegate?,
                 extraLoaders: [Loader] = [],
                 network: Network = Network()) {
         self.label = label
@@ -84,9 +88,10 @@ public final class ExtoleShareApp {
             }
         }
     }
+    }
 }
 
-extension ExtoleShareApp : ExtoleAppDelegate {
+extension ExtoleApp.ShareApp : ExtoleAppDelegate {
     public func extoleAppInvalid() {
         self.delegate?.extoleShareAppInvalid()
         session = nil
@@ -100,3 +105,5 @@ extension ExtoleShareApp : ExtoleAppDelegate {
         }
     }
 }
+
+

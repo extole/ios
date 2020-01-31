@@ -4,17 +4,18 @@ import Foundation
 import ExtoleAPI
 
 extension ExtoleApp {
-public class ExtoleShareExperince {
+    
+public class ShareExperince {
 
     private var activated = false
-    private let shareApp: ExtoleShareApp
-    private let appDelegate = SimpleShareAppDelegate()
+    private let shareApp: ExtoleApp.ShareApp
+    private let appDelegate = ShareExperinceAppDelegate()
     
     public init(programDomain: String, programLabel: String) {
-        self.shareApp = ExtoleShareApp.init(programDomain: programDomain, programLabel: programLabel, delegate: appDelegate)
+        self.shareApp = ExtoleApp.ShareApp.init(programDomain: programDomain, programLabel: programLabel, delegate: appDelegate)
     }
     
-    public init(shareApp:  ExtoleShareApp) {
+    public init(shareApp:  ExtoleApp.ShareApp) {
         self.shareApp = shareApp
     }
     
@@ -24,7 +25,7 @@ public class ExtoleShareExperince {
     }
 
     ///
-    public func async(command: @escaping (ExtoleShareApp?) -> Void ) {
+    public func async(command: @escaping (ExtoleApp.ShareApp?) -> Void ) {
         if !activated {
             shareApp.activate()
             activated = true
@@ -47,6 +48,27 @@ public class ExtoleShareExperince {
                 shareApp.session?.renderZone(eventName: zone, data: data, success: success, error: error)
             } else {
                 error(ExtoleAPI.Error(code: "reset"))
+            }
+        }
+    }
+    
+    public func share(data: [String:String],
+                      success: @escaping (ExtoleAPI.Events.SubmitEventResponse) -> Void,
+                      error: @escaping (ExtoleAPI.Error) -> Void) {
+        self.async { (shareApp) in
+            if let existingApp = shareApp {
+                var shareDataWithCode : [String: String] = [:];
+                if let shareCode = existingApp.mobileSharing?.data.me["share_code"] {
+                    shareDataWithCode["share.advocate_code"] = shareCode
+                }
+                shareDataWithCode.merge(data, uniquingKeysWith: { left, right in
+                    return left
+                })
+                    
+                existingApp.session?.submitEvent(eventName: "shared",
+                      data: shareDataWithCode,
+                      success: success,
+                      error: error)
             }
         }
     }
@@ -93,9 +115,9 @@ public class ExtoleShareExperince {
     }
 }
 
-class SimpleShareAppDelegate : ExtoleShareAppDelegate {
+    class ShareExperinceAppDelegate : ExtoleApp.ShareApp.Delegate {
 
-    var readyHandlers : [(ExtoleShareApp?) -> Void] = []
+    var readyHandlers : [(ExtoleApp.ShareApp?) -> Void] = []
     let serialQueue = DispatchQueue(label: "com.extole.ExtoleShareApp")
     var isReady = false
     
@@ -110,7 +132,7 @@ class SimpleShareAppDelegate : ExtoleShareAppDelegate {
         isReady = false;
     }
     
-    func extoleShareAppReady(shareApp: ExtoleShareApp) {
+    func extoleShareAppReady(shareApp: ExtoleApp.ShareApp) {
         isReady = true;
         self.serialQueue.async {
             let handlers = self.readyHandlers

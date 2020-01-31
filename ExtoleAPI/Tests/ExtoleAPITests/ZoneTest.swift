@@ -21,10 +21,6 @@ class ZoneTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
     
-    struct Settings : Codable {
-        let shareMessage: String
-    }
-    
     func testRenderZone() {
         struct TestResponse: Codable {
             let event_id: String

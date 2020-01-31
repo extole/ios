@@ -69,13 +69,15 @@ class ExtoleShareViewController: UIViewController {
     
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
+            /*
             let share = EmailShare(recipient_email: email, message: activity.shareItem.message)
-            santaApp.shareApp.send(share: share,
+            santaApp.shareApp(share: share,
                             success: { _ in
                 self.activity.activityDidFinish(true)
             }, error : { error in
                 self.showError(title: "Share Error", message: String(describing: error))
             })
+            */
             
         }
     }

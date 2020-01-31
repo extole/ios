@@ -138,6 +138,7 @@ class HomeViewController : UIViewController {
     }
     
     func addWishToShareable(item: String) {
+        /*
         var wishItems = santaApp.shareApp.selectedShareable?.data ?? [:]
         wishItems[item] = "please santa"
         let updateShareable = UpdateShareable.init(data: wishItems)
@@ -149,6 +150,7 @@ class HomeViewController : UIViewController {
                                                 } , error : { error in
                                                     self.showError(title: "UpdateError", message: String(describing: error))
         })
+        */
     }
 
     @objc func handleShare(_ sender: UIButton) {

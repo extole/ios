@@ -53,7 +53,7 @@ public final class SessionManager {
     public func newSession() {
         self.session = nil
         self.program.createSession(success: { session in
-            self.session = session
+            self.onSessionResume(session: session)
         }, error: { error in
             self.delegate?.onSessionServerError(error: error);
         })

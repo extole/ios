@@ -29,11 +29,11 @@ class ExtoleSanta {
     }
     weak var delegate : ExtoleSantaDelegate?
     
-    lazy var shareApp = ExtoleShareApp(programUrl: URL.init(string: "https://ios-santa.extole.io")!,
+    lazy var shareApp = ExtoleShareApp(programDomain: "ios-santa.extole.io",
                                        programLabel: "refer-a-friend",
                                        delegate: self,
                                        extraLoaders: [profileLoader, settingsLoader])
-    var profile: MyProfile? {
+    var profile: ExtoleAPI.Me.MyProfileResponse? {
         get {
             return profileLoader.profile
         }
@@ -45,7 +45,7 @@ class ExtoleSanta {
         }
     }
     
-    var session : ExtoleSession? {
+    var session : ExtoleAPI.Session? {
         get {
             return shareApp.session
         }

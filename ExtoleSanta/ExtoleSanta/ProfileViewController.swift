@@ -21,9 +21,8 @@ class ProfileViewController: UIViewController {
     var lastNameText: UITextField!
     
     @objc func doneClick(_ sender: UITextField) {
-        let updatedProfile = MyProfile.init(first_name: firstNameText.text,
-                                            last_name: lastNameText.text)
-        santaApp.session?.updateProfile(profile: updatedProfile, success: {
+        santaApp.session?.updateProfile(first_name: firstNameText.text,
+                                        last_name: lastNameText.text, success: {
             self.santaApp.shareApp.reload {
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)

@@ -21,8 +21,7 @@ class IdentifyViewController: UIViewController {
     
     @objc func done(_ sender: UIButton) {
         if let email = emailText.text {
-            let identify = MyProfile(email: email)
-            santaApp.session?.updateProfile(profile: identify, success: {
+            santaApp.session?.updateProfile(email: email, success: {
                 self.santaApp.shareApp.reload {
                     DispatchQueue.main.async {
                         self.navigationController?.popViewController(animated: true)

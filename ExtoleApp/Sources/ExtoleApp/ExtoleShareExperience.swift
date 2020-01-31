@@ -3,7 +3,8 @@
 import Foundation
 import ExtoleAPI
 
-public class ExtoleShareExperince: NSObject {
+extension ExtoleApp {
+public class ExtoleShareExperince {
 
     private var activated = false
     private let shareApp: ExtoleShareApp
@@ -119,4 +120,5 @@ class SimpleShareAppDelegate : ExtoleShareAppDelegate {
             }
         }
     }
+}
 }

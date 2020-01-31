@@ -3,17 +3,17 @@
 import Foundation
 extension ExtoleAPI.Me {
     public struct MyProfileResponse: Decodable {
-        let id: String
-        let email: String?
-        let first_name: String?
-        let last_name: String?
-        let profile_picture_url: String?
-        let partner_user_id: String?
-        let parameters: [String: String]
-        let cookie_consent: String?
-        let cookie_consent_type: String?
-        let processing_consent: String?;
-        let processing_consent_type: String?;
-        let locale: String?;
+        public let id: String
+        public let email: String?
+        public let first_name: String?
+        public let last_name: String?
+        public let profile_picture_url: String?
+        public let partner_user_id: String?
+        public let parameters: [String: String]
+        public let cookie_consent: String?
+        public let cookie_consent_type: String?
+        public let processing_consent: String?;
+        public let processing_consent_type: String?;
+        public let locale: String?;
     }
 }

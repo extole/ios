@@ -24,7 +24,15 @@ public final class ExtoleShareApp {
     private var preloader: CompositeLoader!
     /// Active consumer session
     public private(set) var session: ExtoleAPI.Session?
-
+    
+    public var mobileSharing: MobileSharing? {
+        get {
+            return mobileShareLoader.mobileSharing
+        }
+    }
+    
+    private let mobileShareLoader = MobileSharingLoader()
+    
     /// Creates new Extole share experince
     public init(programDomain: String,
                 programLabel label: String,
@@ -36,7 +44,7 @@ public final class ExtoleShareApp {
         self.extoleApp = ExtoleApp(with: ExtoleAPI(programDomain: programDomain, network: network), delegate: self)
         self.delegate = delegate
         
-        var loaders = [Loader]()
+        var loaders : [Loader] = [mobileShareLoader]
         loaders.append(contentsOf: extraLoaders)
         
         self.preloader = CompositeLoader(loaders: loaders)

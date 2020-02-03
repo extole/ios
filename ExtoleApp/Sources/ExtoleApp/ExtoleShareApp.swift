@@ -88,8 +88,7 @@ public final class ShareApp {
             }
         }
     }
-    }
-}
+}}
 
 extension ExtoleApp.ShareApp : ExtoleAppDelegate {
     public func extoleAppInvalid() {

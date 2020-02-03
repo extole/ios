@@ -48,5 +48,16 @@ class ShareTest: XCTestCase {
             XCTFail(e.code)
         })
         wait(for: [shareVerify], timeout: 5)
+        
+        let shareablesVerify = expectation(description: "shreables")
+        extoleSession.getShareables(success: { shareables in
+            XCTAssertEqual(1, shareables.count)
+            XCTAssertNotNil(shareables[0].code)
+            shareablesVerify.fulfill()
+        }, error: { e in
+             XCTFail(e.code)
+        })
+        
+        wait(for: [shareablesVerify], timeout: 5)
     }
 }

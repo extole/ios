@@ -54,7 +54,7 @@ class AuthenticationTest: XCTestCase {
 
     func testInvalidToken() {
         let promise = expectation(description: "invalid token response")
-        extoleApi.createSession(accessToken: "invalid", success: { session in
+        extoleApi.resumeSession(accessToken: "invalid", success: { session in
             XCTFail("unexpected success")
         }, error: { verifyTokenError in
             XCTAssertEqual("invalid_access_token", verifyTokenError.code)

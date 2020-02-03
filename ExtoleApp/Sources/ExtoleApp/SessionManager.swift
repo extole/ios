@@ -32,24 +32,11 @@ public final class SessionManager {
         self.extoleApi = extoleApi
         self.delegate = delegate
     }
-    
-    public func reload() {
-        self.session!.verify(success: { verifiedToken in
-            self.onSessionResume(session: self.session!)
-        }, error: { verifyTokenError in
-            if (verifyTokenError.isInvalidAccessToken() ||
-                verifyTokenError.isExpiredAccessToken() ||
-                verifyTokenError.isInvalidProgramDomain()) {
-                self.delegate?.onSessionInvalid()
-            } else {
-                self.delegate?.onSessionServerError(error: verifyTokenError)
-            }
-        })
-    }
 
-    public func resumeSession(existingToken: String) {
-        extoleApi.resumeSession(accessToken: existingToken, success: { session in
-            self.onSessionResume(session: session)
+    public func resume(accessToken: String) {
+        extoleApi.resumeSession(accessToken: accessToken, success: { session in
+            self.session = session
+            self.delegate?.onNewSession(session: session)
         }, error: { verifyTokenError in
             if (verifyTokenError.isInvalidAccessToken() ||
                 verifyTokenError.isExpiredAccessToken() ||
@@ -83,11 +70,6 @@ public final class SessionManager {
             self.tokenRequest = nil
             self.activate()
         }
-    }
-    
-    private func onSessionResume(session: ExtoleAPI.Session) {
-        self.session = session
-        self.delegate?.onNewSession(session: self.session!)
     }
 
 /// Async support

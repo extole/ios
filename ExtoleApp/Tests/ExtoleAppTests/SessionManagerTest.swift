@@ -20,7 +20,7 @@ class SessionManagerTest: XCTestCase {
     
     public func testPrefetch() {
         let prefrech = expectation(description: "prefetch")
-        sessionManager.prefetch { mobileSharing in
+        sessionManager.fetchMobileSharing { mobileSharing in
             XCTAssertNotNil(mobileSharing.data.me["share_code"])
             prefrech.fulfill()
         }
@@ -32,7 +32,7 @@ class SessionManagerTest: XCTestCase {
         
         let advocateEmail = "john@ios-stanta.extole.com"
         sessionManager.identify(email: advocateEmail)
-            .prefetch { mobileSharing in
+            .fetchMobileSharing { mobileSharing in
             XCTAssertEqual(advocateEmail, mobileSharing.data.me["email"])
             prefrech.fulfill()
         }
@@ -42,7 +42,7 @@ class SessionManagerTest: XCTestCase {
     public func testIdentifyInvalidatesSession() {
         let prefrech = expectation(description: "prefetch")
 
-        sessionManager.prefetch { mobileSharing in
+        sessionManager.fetchMobileSharing { mobileSharing in
             XCTAssertEqual("", mobileSharing.data.me["email"])
             prefrech.fulfill()
         }
@@ -50,7 +50,7 @@ class SessionManagerTest: XCTestCase {
         
         let advocateEmail = "john@ios-stanta.extole.com"
         let identifiedPrefetch = expectation(description: "prefetch identified")
-        sessionManager.identify(email: advocateEmail).prefetch { mobileSharing in
+        sessionManager.identify(email: advocateEmail).fetchMobileSharing { mobileSharing in
             XCTAssertEqual(advocateEmail, mobileSharing.data.me["email"])
             identifiedPrefetch.fulfill()
         }
@@ -60,7 +60,7 @@ class SessionManagerTest: XCTestCase {
     public func testAnonymousInvalidatesSession() {
         let advocateEmail = "john@ios-stanta.extole.com"
         let identifiedPrefetch = expectation(description: "prefetch identified")
-        sessionManager.identify(email: advocateEmail).prefetch { mobileSharing in
+        sessionManager.identify(email: advocateEmail).fetchMobileSharing { mobileSharing in
             XCTAssertEqual(advocateEmail, mobileSharing.data.me["email"])
             identifiedPrefetch.fulfill()
         }
@@ -69,7 +69,7 @@ class SessionManagerTest: XCTestCase {
         let prefrech = expectation(description: "prefetch")
 
         sessionManager.logout()
-        sessionManager.prefetch { mobileSharing in
+        sessionManager.fetchMobileSharing { mobileSharing in
            XCTAssertEqual("", mobileSharing.data.me["email"])
            prefrech.fulfill()
         }

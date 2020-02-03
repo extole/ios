@@ -4,13 +4,9 @@ import Foundation
 import ExtoleAPI
 
 extension SessionManager {
-    public func prefetch(success: @escaping (_ mobileSharing:  MobileSharing) -> Void) {
-        let loader = MobileSharingLoader()
+    public func fetchMobileSharing(success: @escaping (_ mobileSharing:  MobileSharing) -> Void) {
         self.async(command: { session in
-            loader.load(session: session, complete: {
-                if let sharingResponse = loader.mobileSharing {
-                  success(sharingResponse)
-                }
+            session.renderZone(eventName: "mobile_sharing", success: success, error : { e in
             })
         })
     }

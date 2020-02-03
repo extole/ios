@@ -95,7 +95,6 @@ extension ExtoleApp.ShareApp : ExtoleAppDelegate {
     public func extoleAppInvalid() {
         self.delegate?.extoleShareAppInvalid()
         session = nil
-        
     }
 
     public func extoleAppReady(session: ExtoleAPI.Session) {

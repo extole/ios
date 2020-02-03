@@ -25,6 +25,8 @@ public final class SessionManager {
     private var activiating: Bool = false
     private let accessToken: String? = nil
     private let serialQueue = DispatchQueue(label: "ExtoleAPI.SessionManager")
+    
+    private var tokenRequest: ExtoleAPI.Authorization.CreateTokenRequest? = nil
 
     public init(extoleApi: ExtoleAPI, delegate: SessionManagerDelegate?) {
         self.extoleApi = extoleApi
@@ -46,7 +48,7 @@ public final class SessionManager {
     }
 
     public func resumeSession(existingToken: String) {
-        extoleApi.createSession(accessToken: existingToken, success: { session in
+        extoleApi.resumeSession(accessToken: existingToken, success: { session in
             self.onSessionResume(session: session)
         }, error: { verifyTokenError in
             if (verifyTokenError.isInvalidAccessToken() ||
@@ -59,24 +61,28 @@ public final class SessionManager {
         })
     }
     
-    public func newSession() {
-        self.session = nil
-        self.extoleApi.createSession(success: { session in
-            self.onSessionResume(session: session)
-        }, error: { error in
-            self.delegate?.onSessionServerError(error: error);
-        })
+    public func identify(email: String? = nil, jwt: String? = nil) -> SessionManager {
+        self.serialQueue.sync {
+            self.session = nil
+            self.tokenRequest = ExtoleAPI.Authorization.CreateTokenRequest.init(email: email, jwt: jwt)
+            self.activate()
+        }
+        return self
     }
     
     public func logout() {
-        if let session = session {
-            session.invalidate(success: {
-                self.delegate?.onSessionDeleted()
-            }, error: { error in
-                self.delegate?.onSessionServerError(error: error);
-            })
+        self.serialQueue.sync {
+            if let existingSession = session {
+                existingSession.invalidate(success: {
+                    self.delegate?.onSessionDeleted()
+                }) { e in
+                    self.delegate?.onSessionServerError(error: e);
+                }
+            }
+            self.session = nil
+            self.tokenRequest = nil
+            self.activate()
         }
-        
     }
     
     private func onSessionResume(session: ExtoleAPI.Session) {
@@ -88,14 +94,15 @@ public final class SessionManager {
     private var asyncCommands : [(ExtoleAPI.Session) -> Void] = []
 
     public func async(command: @escaping (ExtoleAPI.Session) -> Void ) {
-       if let existingSession = self.session {
-           command(existingSession)
-       } else {
-           asyncCommands.append(command)
-            self.serialQueue.async {
-                self.activate()
+        self.serialQueue.sync {
+            if let existingSession = self.session {
+                command(existingSession)
+                return
+            } else {
+                asyncCommands.append(command)
             }
-       }
+            self.activate()
+        }
     }
     
     private func activate() {
@@ -103,7 +110,8 @@ public final class SessionManager {
             return
         }
         activiating = true
-        self.extoleApi.createSession(success: { session in
+        self.extoleApi.createSession(tokenRequest: self.tokenRequest,
+                                     success: { session in
             self.session = session
             self.activiating = false
             self.delegate?.onNewSession(session: session)

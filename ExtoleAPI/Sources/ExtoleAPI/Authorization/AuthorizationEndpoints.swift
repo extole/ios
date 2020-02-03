@@ -12,25 +12,21 @@ extension ExtoleAPI {
              return URL.init(string: "/api/v5/token/", relativeTo: baseUrl)!
         }
     }
-    public func createSession(accessToken: String? = nil,
-                               tokenRequest: Authorization.CreateTokenRequest? = nil,
+    public func createSession(tokenRequest: Authorization.CreateTokenRequest? = nil,
                                success : @escaping (_: ExtoleAPI.Session) -> Void,
                                error: @escaping (_: ExtoleAPI.Error) -> Void) {
-         if let existingAccessToken = accessToken {
-             resumeSession(accessToken: existingAccessToken, success: success, error: error)
-         } else {
-             let request = self.network.newJsonRequest(method: "POST",
+         let request = self.network.newJsonRequest(method: "POST",
                                                        url: v5TokenUrl,
                                                        headers: [:],
                                                        data: tokenRequest)
 
-             self.network.processRequest(with: request, success: {token in
-                 success(ExtoleAPI.Session(extoleAPI: self, token: token))
-             }, error: error)
-         }
+         self.network.processRequest(with: request, success: {token in
+             success(ExtoleAPI.Session(extoleAPI: self, token: token))
+         }, error: error)
+         
     }
 
-    func resumeSession(accessToken: String,
+    public func resumeSession(accessToken: String,
                        success : @escaping (_: ExtoleAPI.Session) -> Void,
                        error: @escaping (_: ExtoleAPI.Error) -> Void) {
          let empty : String? = nil

@@ -43,7 +43,7 @@ public final class ExtoleApp {
         if let existingToken = self.savedToken {
             self.sessionManager.resumeSession(existingToken: existingToken)
         } else {
-            self.sessionManager.newSession()
+            self.sessionManager.logout()
         }
     }
     
@@ -78,7 +78,7 @@ extension ExtoleApp : SessionManagerDelegate{
                 self.sessionManager.resumeSession(existingToken: existingToken)
             } else {
                 extoleInfo(format: "new session after error")
-                self.sessionManager.newSession()
+                self.sessionManager.logout()
             }
         }
     }
@@ -87,14 +87,14 @@ extension ExtoleApp : SessionManagerDelegate{
         self.session = nil
         delegate?.extoleAppInvalid()
         savedToken = nil
-        self.sessionManager.newSession()
+        self.sessionManager.logout()
     }
     
     public func onSessionDeleted() {
         self.session = nil
         delegate?.extoleAppInvalid()
         savedToken = nil
-        self.sessionManager.newSession()
+        self.sessionManager.logout()
     }
     
     public func onNewSession(session: ExtoleAPI.Session) {

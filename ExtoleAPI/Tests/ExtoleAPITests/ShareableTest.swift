@@ -30,21 +30,39 @@ class ShareableTest: XCTestCase {
             XCTAssertEqual(0, shareables.count)
             shareablesVerify.fulfill()
         }, error: { e in
-             XCTFail(e.code)
+            XCTFail(e.code)
         })
         
+        let preferredCode = String(format: "code-%lu", mach_absolute_time())
         wait(for: [shareablesVerify], timeout: 5)
         
         let createShareable = expectation(description: "shreables")
-        extoleSession.createShareable(preferred_code_prefixes: ["test"],
+        extoleSession.createShareable(preferred_code_prefixes: [preferredCode],
                                       success: { newShareable in
-            XCTAssertEqual("test", newShareable.code)
+            XCTAssertEqual(preferredCode, newShareable.code)
             createShareable.fulfill()
                                         
         }, error: { e in
             XCTFail(e.code)
         })
-        
         wait(for: [createShareable], timeout: 5)
+        
+        let lookupByCode = expectation(description: "lookup shareable by code")
+        extoleSession.getShareable(code: preferredCode, success: { byCode in
+            XCTAssertNotNil(byCode.link)
+            lookupByCode.fulfill()
+        }, error: { e in
+            XCTFail(e.code)
+        })
+        wait(for: [lookupByCode], timeout: 5)
+        
+        let shareablesList = expectation(description: "shreables")
+        extoleSession.getShareables(success: { shareables in
+           XCTAssertEqual(1, shareables.count)
+           shareablesList.fulfill()
+        }, error: { e in
+           XCTFail(e.code)
+        })
+        wait(for: [shareablesList], timeout: 5)
     }
 }

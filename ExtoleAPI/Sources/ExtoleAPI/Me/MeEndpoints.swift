@@ -16,7 +16,7 @@ func meSharesUrl(baseUrl: URL) -> URL {
 }
 
 func meShareablesUrl(baseUrl: URL) -> URL {
-   return URL.init(string: "/api/v4/me/shareables/", relativeTo: baseUrl)!
+   return URL.init(string: "/api/v6/me/shareables/", relativeTo: baseUrl)!
 }
 
 
@@ -43,7 +43,7 @@ extension ExtoleAPI.Session {
     
     public func getShareable(code: String, success: @escaping(_: ExtoleAPI.Me.MeShareableResponse) -> Void,
                     error: @escaping (_: ExtoleAPI.Error) -> Void) {
-        let shareableByCodeUrl = URL.init(string: "/api/v4/me/shareables/",
+        let shareableByCodeUrl = URL.init(string: code,
                                           relativeTo: meShareablesUrl(baseUrl: self.baseUrl))!
         
         let urlRequest = self.getRequest(url: shareableByCodeUrl)

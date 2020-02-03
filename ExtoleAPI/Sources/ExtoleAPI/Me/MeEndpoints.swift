@@ -19,6 +19,9 @@ func meShareablesUrl(baseUrl: URL) -> URL {
    return URL.init(string: "/api/v6/me/shareables/", relativeTo: baseUrl)!
 }
 
+func meRewardsUrl(baseUrl: URL) -> URL {
+   return URL.init(string: "/api/v4/me/rewards/", relativeTo: baseUrl)!
+}
 
 func meAssociatedFriendsUrl(baseUrl: URL) -> URL {
    return URL.init(string: "/api/v4/me/associated-friends/", relativeTo: baseUrl)!
@@ -78,6 +81,14 @@ extension ExtoleAPI.Session {
                     error: @escaping (_: ExtoleAPI.Error) -> Void) {
         let profileUrl = meUrl(baseUrl: self.baseUrl)
         let urlRequest = self.getRequest(url: profileUrl)
+
+        self.network.processRequest(with: urlRequest, success: success, error: error)
+    }
+    
+    public func getRewards(success: @escaping(_: ExtoleAPI.Me.RewardResponse) -> Void,
+                    error: @escaping (_: ExtoleAPI.Error) -> Void) {
+        let rewardsUrl = meRewardsUrl(baseUrl: self.baseUrl)
+        let urlRequest = self.getRequest(url: rewardsUrl)
 
         self.network.processRequest(with: urlRequest, success: success, error: error)
     }

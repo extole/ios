@@ -2,10 +2,12 @@
 
 import Foundation
 
-public struct MobileSharing: Codable {
-    struct Data: Codable{
-        let me: [String: String]
+extension ExtoleApp {
+    public class MobileSharing: Codable {
+        public class Data: Codable {
+          let me: [String: String]
+        }
+        let event_id: String
+        let data: Data
     }
-    let event_id: String
-    let data: Data
 }

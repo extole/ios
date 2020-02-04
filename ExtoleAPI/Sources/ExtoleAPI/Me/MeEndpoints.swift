@@ -11,6 +11,10 @@ func meUrl(baseUrl: URL) -> URL {
    return URL.init(string: "/api/v4/me/", relativeTo: baseUrl)!
 }
 
+func meParametersUrl(baseUrl: URL) -> URL {
+   return URL.init(string: "/api/v4/me/parameters/", relativeTo: baseUrl)!
+}
+
 func meSharesUrl(baseUrl: URL) -> URL {
    return URL.init(string: "/api/v4/me/shares/", relativeTo: baseUrl)!
 }
@@ -106,6 +110,38 @@ extension ExtoleAPI.Session {
         let updateRequest = ExtoleAPI.Me.PersonProfileUpdateRequest(email: email, first_name: first_name, last_name: last_name, profile_picture_url: profile_picture_url, partner_user_id: partner_user_id)
         
         let urlRequest = self.postRequest(url: profileUrl, data: updateRequest)
+        
+        self.network.processRequest(with: urlRequest, success: { (status : ExtoleAPI.Me.SuccessResponse ) in
+            success()
+        }, error: error)
+    }
+    
+    public func updatePublicProfileParameters(
+                    parameters: [String:String],
+                    success: @escaping() -> Void,
+                    error: @escaping (_: ExtoleAPI.Error) -> Void) {
+        let parametersUrl = meParametersUrl(baseUrl: self.baseUrl)
+        
+        let updateRequest = ExtoleAPI.Me.MeDataBulkUpdateRequest(type: "PUBLIC",
+                                                                 parameters: parameters)
+        
+        let urlRequest = self.postRequest(url: parametersUrl, data: updateRequest)
+        
+        self.network.processRequest(with: urlRequest, success: { (status : ExtoleAPI.Me.SuccessResponse ) in
+            success()
+        }, error: error)
+    }
+    
+    public func updatePrivateProfileParameters(
+                    parameters: [String:String],
+                    success: @escaping() -> Void,
+                    error: @escaping (_: ExtoleAPI.Error) -> Void) {
+        let parametersUrl = meParametersUrl(baseUrl: self.baseUrl)
+        
+        let updateRequest = ExtoleAPI.Me.MeDataBulkUpdateRequest(type: "PRIVATE",
+                                                                 parameters: parameters)
+        
+        let urlRequest = self.postRequest(url: parametersUrl, data: updateRequest)
         
         self.network.processRequest(with: urlRequest, success: { (status : ExtoleAPI.Me.SuccessResponse ) in
             success()

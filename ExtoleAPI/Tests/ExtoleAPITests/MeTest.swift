@@ -101,4 +101,56 @@ class MeTest: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
     }
     
+    func testUpdatePublicParameters() {
+        let updatePromise = expectation(description: "update profile")
+        let publicParameters: [String: String] = [
+            "favorite-color": "yellow"
+        ]
+        extoleSession.updatePublicProfileParameters(parameters: publicParameters
+            , success: {
+                updatePromise.fulfill()
+            }, error : { error in
+                XCTFail(error.code)
+        })
+    
+        wait(for: [updatePromise], timeout: 5)
+        
+        let verifyUpdate = expectation(description: "verifyIdentity response")
+        extoleSession.getProfile(success: { profile in
+            
+            XCTAssertEqual(publicParameters, profile.parameters)
+            verifyUpdate.fulfill()
+        }, error: { error in
+            XCTFail(String(reflecting: error))
+        })
+        
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testUpdatePrivateParameters() {
+        let updatePromise = expectation(description: "update profile")
+        let privateParameters: [String: String] = [
+            "ssn": "3231234"
+        ]
+        extoleSession.updatePrivateProfileParameters(parameters: privateParameters
+            , success: {
+                updatePromise.fulfill()
+            }, error : { error in
+                XCTFail(error.code)
+        })
+    
+        wait(for: [updatePromise], timeout: 5)
+        
+        let verifyUpdate = expectation(description: "verifyIdentity response")
+        extoleSession.getProfile(success: { profile in
+            
+            XCTAssertEqual(privateParameters, profile.parameters)
+            verifyUpdate.fulfill()
+        }, error: { error in
+            XCTFail(String(reflecting: error))
+        })
+        
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
 }

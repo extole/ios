@@ -38,6 +38,27 @@ class PersonTest: XCTestCase {
             XCTFail(e.code)
         })
         wait(for: [profileUpdated], timeout: 5)
+        
+        let publicParametersUpdated = expectation(description: "update public parameters")
+        mySession.updatePublicProfileParameters(parameters: [
+            "favorite-color": "blue"
+        ], success: {
+            publicParametersUpdated.fulfill()
+        }, error: { e in
+            XCTFail(e.code)
+        })
+        wait(for: [publicParametersUpdated], timeout: 5)
+        
+        let privateParametersUpdated = expectation(description: "update private parameters")
+        mySession.updatePrivateProfileParameters(parameters: [
+            "ssn": "234142012"
+        ], success: {
+            privateParametersUpdated.fulfill()
+        }, error: { e in
+            XCTFail(e.code)
+        })
+        wait(for: [privateParametersUpdated], timeout: 5)
+        
     }
     
     public func testGetPublicPerson() {
@@ -55,6 +76,7 @@ class PersonTest: XCTestCase {
         mySession.getPublicPerson(personId: myProfile.id,
                                   success: { person in
             XCTAssertEqual("John", person.first_name)
+            XCTAssertEqual(["favorite-color":"blue"], person.parameters)
             profileFetched.fulfill()
         }, error: { e in
             XCTFail(e.code)

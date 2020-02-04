@@ -20,7 +20,7 @@ class ShareExperienceTest: XCTestCase {
         shareExperince.async { shareApp in
             if let existingApp = shareApp {
                 XCTAssertNotNil(existingApp.mobileSharing)
-                let shareCode = existingApp.mobileSharing?.data.me["share_code"]
+                let shareCode = existingApp.mobileSharing?.me["share_code"]
                 XCTAssertNotNil(shareCode)
             } else {
                 XCTFail("empty app")

@@ -44,7 +44,7 @@ extension ExtoleAPI.Zones {
     public struct FlatJson: Decodable {
         var value : String? = nil
         var nested: [String: FlatJson] = [:]
-        subscript (name:String) -> String? {
+        public subscript (name:String) -> String? {
             if (name.isEmpty) {
                 return value
             }
@@ -57,7 +57,12 @@ extension ExtoleAPI.Zones {
             }
             return nil
         }
-        init(value: String) {
+        
+        public func nested(forKey: String) -> FlatJson {
+            return nested[forKey] ?? FlatJson.init(value: nil)
+        }
+        
+        init(value: String?) {
            self.value = value
         }
        

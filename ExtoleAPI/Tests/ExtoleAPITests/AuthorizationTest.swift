@@ -23,31 +23,32 @@ class AuthenticationTest: XCTestCase {
     
     func testCreateSessionWithEmail() {
        let promise = expectation(description: "create token response")
-       let tokenRequest = ExtoleAPI.Authorization.CreateTokenRequest.init(email: "test@gmail.com", jwt: nil, duration_seconds: nil)
-           extoleApi.createSession(
-            tokenRequest: tokenRequest,
-            success: { session in
-               XCTAssert(session.accessToken.count > 0)
-               promise.fulfill()
-           }, error: { error in
-               XCTFail(String(reflecting: error))
-           })
-           waitForExpectations(timeout: 5, handler: nil)
+       
+       extoleApi.createSession(
+        email: "test@gmail.com",
+        success: { session in
+           XCTAssert(session.accessToken.count > 0)
+           promise.fulfill()
+       }, error: { error in
+           XCTFail(String(reflecting: error))
+       })
+       waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testCreateInvalidJwt() {
         let promise = expectation(description: "create token response")
-        let tokenRequest = ExtoleAPI.Authorization.CreateTokenRequest.init(email: nil, jwt: "jwt", duration_seconds: nil)
-        extoleApi.createSession(
-         tokenRequest: tokenRequest,
-         success: { session in
-            promise.fulfill()
+        extoleApi.createSession(jwt: "jwt",
+                                success: { session in
             XCTFail("JWT expected to fail, received valid token instead")
-            
-        }, error: { error in
+            }, error: { e in
+                XCTAssertEqual(ExtoleAPI.Authorization.CreateSessionError.Code.jwt_error, e.code)
+            XCTAssertEqual(
+                ["reason":
+                    "MALFORMED",
+                 "description":
+                    "The token could not be verified, make sure it is in compliance with rfc7519 specification."
+            ], e.error.parameters)
             promise.fulfill()
-            XCTAssertEqual("jwt_error", error.code)
-            
         })
         waitForExpectations(timeout: 5, handler: nil)
     }
@@ -56,10 +57,11 @@ class AuthenticationTest: XCTestCase {
         let promise = expectation(description: "invalid token response")
         extoleApi.resumeSession(accessToken: "invalid", success: { session in
             XCTFail("unexpected success")
-        }, error: { verifyTokenError in
-            XCTAssertEqual("invalid_access_token", verifyTokenError.code)
-            XCTAssertEqual(403, verifyTokenError.httpCode ?? -1)
-            XCTAssertEqual("The access_token provided with this request is invalid.", verifyTokenError.message)
+        }, error: { e in
+            XCTAssertEqual(ExtoleAPI.Authorization.ResumeSessionError.Code.invalid_access_token,
+                e.code)
+            XCTAssertEqual(403, e.error.httpCode ?? -1)
+            XCTAssertEqual("The access_token provided with this request is invalid.", e.error.message)
             promise.fulfill()
         })
         waitForExpectations(timeout: 5, handler: nil)

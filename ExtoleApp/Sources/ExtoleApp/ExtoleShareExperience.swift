@@ -47,7 +47,7 @@ public class ShareExperince {
             if let shareApp = shareApp {
                 shareApp.session?.renderZone(eventName: zone, data: data, success: success, error: error)
             } else {
-                error(ExtoleAPI.Error(code: "reset"))
+                error(ExtoleAPI.Error(code: "reset", message: "Session Reset"))
             }
         }
     }
@@ -81,7 +81,7 @@ public class ShareExperince {
             if let shareApp = shareApp {
                 shareApp.session?.submitEvent(eventName: zone, data: data, success: success, error: error)
             } else {
-                error(ExtoleAPI.Error(code: "reset"))
+                error(ExtoleAPI.Error(code: "reset", message: "Session reset"))
             }
         }
     }
@@ -103,7 +103,7 @@ public class ShareExperince {
                                                 success:  success,
                                                 error: error)
             } else {
-                error(ExtoleAPI.Error.init(code: "reset"))
+                error(ExtoleAPI.Error.init(code: "reset", message: "Session reset"))
             }
         }
     }

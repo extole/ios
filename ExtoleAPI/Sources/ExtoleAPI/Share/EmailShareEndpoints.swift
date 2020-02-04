@@ -56,7 +56,7 @@ extension ExtoleAPI.Session {
                     sleep(1)
                     poll(retries: retries - 1)
                 } else {
-                    error(ExtoleAPI.Error.init(code: "polling_timout"))
+                    error(ExtoleAPI.Error.init(code: "polling_timout", message: "Email share timeout"))
                 }
             }, error : { pollingError in
                 error(pollingError)

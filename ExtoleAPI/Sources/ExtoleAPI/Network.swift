@@ -93,7 +93,7 @@ public class Network {
                     if let token = decoded {
                         success(token)
                     } else {
-                        let errorValue = ExtoleAPI.Error(code: "ExtoleKit-decoding")
+                        let errorValue = ExtoleAPI.Error(code: "decode_failed", message: "Failed to decode")
                         error(errorValue)
                     }
                 }
@@ -106,15 +106,15 @@ public class Network {
             self.error = error
         }
         func serverError(error: Error) {
-            self.error(ExtoleAPI.Error.init(code: "ExtoleKit-server"))
+            self.error(ExtoleAPI.Error.init(code: "server_error", message: "server error"))
         }
         
         func decodingError(data: Data) {
-             self.error(ExtoleAPI.Error.init(code: "ExtoleKit-decoding"))
+             self.error(ExtoleAPI.Error.init(code: "decode_error", message: "decode error"))
         }
         
         func noContent() {
-             self.error(ExtoleAPI.Error.init(code: "ExtoleKit-nocontent"))
+            self.error(ExtoleAPI.Error.init(code: "nocontent_error", message: "no content"))
         }
         
         func genericError(errorData: ExtoleAPI.Error) {
@@ -141,7 +141,7 @@ public class Network {
                     if let responseData = data {
                         let serverError: ExtoleAPI.ServerError? = self.tryDecode(data: responseData)
                         if let serverError = serverError {
-                            let error = ExtoleAPI.Error(code: serverError.code, message: serverError.message, httpCode: serverError.http_status_code)
+                            let error = ExtoleAPI.Error(code: serverError.code, message: serverError.message, httpCode: serverError.http_status_code, parameters: serverError.parameters)
                             errorHandler.genericError(errorData: error)
                         } else {
                             let responseDataString = String(data: responseData, encoding: .utf8)!

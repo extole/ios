@@ -68,7 +68,7 @@ class PersonTest: XCTestCase {
             mySession = session
             sessionCreated.fulfill()
         }, error: { e in
-            XCTFail(e.code)
+            XCTFail(e.error.code)
         })
         wait(for: [sessionCreated], timeout: 5)
         
@@ -76,7 +76,7 @@ class PersonTest: XCTestCase {
         mySession.getPublicPerson(personId: myProfile.id,
                                   success: { person in
             XCTAssertEqual("John", person.first_name)
-            XCTAssertEqual(["favorite-color":"blue"], person.parameters)
+            XCTAssertEqual(["favorite-color":"blue"], person.parameters	)
             profileFetched.fulfill()
         }, error: { e in
             XCTFail(e.code)
@@ -92,7 +92,7 @@ class PersonTest: XCTestCase {
             mySession = session
             sessionCreated.fulfill()
         }, error: { e in
-            XCTFail(e.code)
+            XCTFail(e.error.code)
         })
         wait(for: [sessionCreated], timeout: 5)
         

@@ -26,7 +26,8 @@ public final class SessionManager {
     private let accessToken: String? = nil
     private let serialQueue = DispatchQueue(label: "ExtoleAPI.SessionManager")
     
-    private var tokenRequest: ExtoleAPI.Authorization.CreateTokenRequest? = nil
+    private var email: String? = nil
+    private var jwt: String? = nil
 
     public init(extoleApi: ExtoleAPI, delegate: SessionManagerDelegate?) {
         self.extoleApi = extoleApi
@@ -37,13 +38,11 @@ public final class SessionManager {
         extoleApi.resumeSession(accessToken: accessToken, success: { session in
             self.session = session
             self.delegate?.onNewSession(session: session)
-        }, error: { verifyTokenError in
-            if (verifyTokenError.isInvalidAccessToken() ||
-                verifyTokenError.isExpiredAccessToken() ||
-                verifyTokenError.isInvalidProgramDomain()) {
+        }, error: { e in
+            if e.code != nil {
                 self.delegate?.onSessionInvalid()
             } else {
-                self.delegate?.onSessionServerError(error: verifyTokenError)
+                self.delegate?.onSessionServerError(error: e.error)
             }
         })
     }
@@ -51,7 +50,8 @@ public final class SessionManager {
     public func identify(email: String? = nil, jwt: String? = nil) -> SessionManager {
         self.serialQueue.sync {
             self.session = nil
-            self.tokenRequest = ExtoleAPI.Authorization.CreateTokenRequest.init(email: email, jwt: jwt)
+            self.email = email
+            self.jwt = jwt
             self.activate()
         }
         return self
@@ -67,7 +67,8 @@ public final class SessionManager {
                 }
             }
             self.session = nil
-            self.tokenRequest = nil
+            self.email = nil
+            self.jwt = nil
             self.activate()
         }
     }
@@ -92,14 +93,15 @@ public final class SessionManager {
             return
         }
         activiating = true
-        self.extoleApi.createSession(tokenRequest: self.tokenRequest,
+        self.extoleApi.createSession(email: self.email,
+                                     jwt: self.jwt,
                                      success: { session in
             self.session = session
             self.activiating = false
             self.delegate?.onNewSession(session: session)
             self.runCommands(session: session)
-        }, error: { error in
-            self.delegate?.onSessionServerError(error: error);
+        }, error: { e in
+            self.delegate?.onSessionServerError(error: e.error);
         })
     }
     

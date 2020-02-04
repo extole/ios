@@ -40,7 +40,18 @@ class MeTest: XCTestCase {
         }, error: { error in
             XCTFail(error.code)
         })
-         waitForExpectations(timeout: 5, handler: nil)
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    public func testGetRewards() {
+        let promise = expectation(description: "get friends")
+        extoleSession.getRewards(success: { rewards in
+            XCTAssertEqual(0, rewards.count)
+            promise.fulfill()
+        }, error: { error in
+            XCTFail(error.code)
+        })
+        waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testIdentify() {

@@ -6,7 +6,7 @@ extension ExtoleAPI.Me {
     public struct ShareResponse: Decodable {
         let recipients : [String]
         let recipient_email : String
-        let friend : PublicPersonResponse
+        let friend : ExtoleAPI.Person.PublicPersonResponse
         let data:  [String: String]
     }
 }

@@ -85,7 +85,7 @@ extension ExtoleAPI.Session {
         self.network.processRequest(with: urlRequest, success: success, error: error)
     }
     
-    public func getRewards(success: @escaping(_: ExtoleAPI.Me.RewardResponse) -> Void,
+    public func getRewards(success: @escaping(_: [ExtoleAPI.Me.RewardResponse]) -> Void,
                     error: @escaping (_: ExtoleAPI.Error) -> Void) {
         let rewardsUrl = meRewardsUrl(baseUrl: self.baseUrl)
         let urlRequest = self.getRequest(url: rewardsUrl)

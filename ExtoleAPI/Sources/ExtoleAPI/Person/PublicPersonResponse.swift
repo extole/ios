@@ -2,7 +2,7 @@
 
 import Foundation
 
-extension ExtoleAPI.Me {
+extension ExtoleAPI.Person {
     public struct PublicPersonResponse : Decodable {
         let id: String
         let first_name: String?

@@ -26,7 +26,7 @@ public final class SessionManager {
     private var activiating: Bool = false
     private let accessToken: String? = nil
     private let serialQueue = DispatchQueue(label: "ExtoleAPI.SessionManager")
-    
+
     private var email: String? = nil
     private var jwt: String? = nil
 
@@ -47,7 +47,7 @@ public final class SessionManager {
             }
         })
     }
-    
+
     public func identify(email: String? = nil, jwt: String? = nil) -> SessionManager {
         self.serialQueue.sync {
             self.session = nil

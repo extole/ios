@@ -20,7 +20,7 @@ class SessionManagerTest: XCTestCase {
     
     public func testPrefetch() {
         let prefrech = expectation(description: "prefetch")
-        sessionManager.loadMobileSharing { (mobileSharing: ExtoleApp.MobileSharing) in
+        sessionManager.loadMobileSharing { mobileSharing in
             XCTAssertNotNil(mobileSharing.me.share_code)
             prefrech.fulfill()
         }
@@ -75,5 +75,17 @@ class SessionManagerTest: XCTestCase {
         }
         wait(for: [prefrech], timeout: 5)
    }
+    
+    public func testAsync() {
+        let asynced = expectation(description: "test async")
+        sessionManager.async { session in
+            session.getProfile(success: { myProfile in
+                asynced.fulfill()
+            }, error: { e in
+                XCTFail(e.message ?? e.code)
+            })
+        }
+        wait(for: [asynced], timeout: 5)
+    }
 }
 

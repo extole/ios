@@ -5,35 +5,143 @@ import ExtoleAPI
 
 extension ExtoleApp {
     public class MobileSharing: Decodable {
+        public struct Page {
+            let json: ExtoleAPI.Zones.FlatJson
+            var background : String? {
+                get {
+                    return json["background"]
+                }
+            }
+            var primary_header : String? {
+                get {
+                    return json["primary_header"]
+                }
+            }
+            var reward : String? {
+                get {
+                    return json["reward"]
+                }
+            }
+            var how_it_works : String? {
+                get {
+                    return json["how_it_works"]
+                }
+            }
+            var terms_url : String? {
+                get {
+                    return json["terms_url"]
+                }
+            }
+        }
+        public struct Facebook {
+            let json: ExtoleAPI.Zones.FlatJson
+            var title : String? {
+               get {
+                   return json["title"]
+               }
+            }
+            var image : String? {
+               get {
+                   return json["image"]
+               }
+            }
+            var description : String? {
+                get {
+                  return json["description"]
+                }
+            }
+        }
+        public struct Twitter {
+            let json: ExtoleAPI.Zones.FlatJson
+           
+            var message : String? {
+               get {
+                   return json["message"]
+               }
+            }
+        }
+        
+        public struct Email {
+            let json: ExtoleAPI.Zones.FlatJson
+            var subject : String? {
+              get {
+                return json["subject"]
+              }
+            }
+            var message : String? {
+               get {
+                   return json["message"]
+               }
+            }
+        }
+        
+        public struct Sms {
+            let json: ExtoleAPI.Zones.FlatJson
+            var message : String? {
+               get {
+                   return json["message"]
+               }
+            }
+        }
+        
+        public struct Me {
+            let json: ExtoleAPI.Zones.FlatJson
+            var email : String? {
+               get {
+                   return json["email"]
+               }
+            }
+            var first_name : String? {
+               get {
+                   return json["first_name"]
+               }
+            }
+            var last_name : String? {
+               get {
+                   return json["last_name"]
+               }
+            }
+            var link : String? {
+               get {
+                   return json["link"]
+               }
+            }
+            var share_code : String? {
+               get {
+                   return json["share_code"]
+               }
+            }
+        }
+        
         let data: ExtoleAPI.Zones.FlatJson
-        var page: ExtoleAPI.Zones.FlatJson {
+        var page: Page {
            get {
-               return self.data.nested(forKey: "page")
+            return Page(json: self.data.nested(forKey: "page"))
            }
         }
-        var facebook: ExtoleAPI.Zones.FlatJson {
+        var facebook: Facebook {
           get {
-              return self.data.nested(forKey: "facebook")
+            return Facebook(json: self.data.nested(forKey: "facebook"))
           }
         }
-        var twitter: ExtoleAPI.Zones.FlatJson {
+        var twitter: Twitter {
           get {
-              return self.data.nested(forKey: "twitter")
+            return Twitter(json: self.data.nested(forKey: "twitter"))
           }
         }
-        var email: ExtoleAPI.Zones.FlatJson {
+        var email: Email {
           get {
-              return self.data.nested(forKey: "email")
+            return Email(json: self.data.nested(forKey: "email"))
           }
         }
-        var sms: ExtoleAPI.Zones.FlatJson {
+        var sms: Sms {
           get {
-              return self.data.nested(forKey: "sms")
+            return Sms(json: self.data.nested(forKey: "sms"))
           }
         }
-        var me: ExtoleAPI.Zones.FlatJson {
+        var me: Me {
             get {
-                return self.data.nested(forKey: "me")
+                return Me(json: self.data.nested(forKey: "me"))
             }
         }
         

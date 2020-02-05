@@ -16,6 +16,14 @@ extension ExtoleApp.MobileSharing {
     }
 }
 
+extension ExtoleApp.MobileSharing.Twitter {
+    var url : String? {
+        get {
+            return json["url"]
+        }
+    }
+}
+
 class MobileSharingTest: XCTestCase {
 
     let extoleAPI = ExtoleAPI(programDomain: "ios-santa.extole.io")
@@ -28,7 +36,7 @@ class MobileSharingTest: XCTestCase {
     }
     
    
-    public func testCustomSharing() {
+    public func testExtendMobileSharing() {
         let loaded = expectation(description: "load extended sharing")
         sessionManager.loadMobileSharing { mobileSharing in
             XCTAssertEqual("Share Your Company with friends. You get $20 when they purchase!", mobileSharing.how_it_works)
@@ -37,10 +45,10 @@ class MobileSharingTest: XCTestCase {
         wait(for: [loaded], timeout: 5)
     }
     
-    public func testDefaults() {
+    public func testExtendMobileSharingData() {
         let loaded = expectation(description: "load extended sharing")
         sessionManager.loadMobileSharing { mobileSharing in
-            XCTAssertEqual("tweet", mobileSharing.twitter["url"] ?? "tweet")
+            XCTAssertEqual("tweet", mobileSharing.twitter.url ?? "tweet")
             loaded.fulfill()
         }
         wait(for: [loaded], timeout: 5)

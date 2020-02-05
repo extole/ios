@@ -97,7 +97,7 @@ extension ExtoleAPI.Zones {
                 }
                 return
             } catch {
-                print("not array")
+                // not array
             }
             // handle object
             let container = try decoder.container(keyedBy: AnyKey.self)

@@ -58,7 +58,7 @@ public class ShareExperince {
         self.async { (shareApp) in
             if let existingApp = shareApp {
                 var shareDataWithCode : [String: String] = [:];
-                if let shareCode = existingApp.mobileSharing?.me["share_code"] {
+                if let shareCode = existingApp.mobileSharing?.me.share_code {
                     shareDataWithCode["share.advocate_code"] = shareCode
                 }
                 shareDataWithCode.merge(data, uniquingKeysWith: { left, right in

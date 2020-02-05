@@ -16,7 +16,7 @@ extension ExtoleAPI.Authorization {
         }
         public let error: ExtoleAPI.Error
         
-        var code: Code? {
+        public var code: Code? {
             get {
                 return Code.init(rawValue: error.code)
             }

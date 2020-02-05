@@ -12,8 +12,16 @@ public protocol SessionManagerDelegate : class {
 }
 
 extension ExtoleAPI {
-    public func sessionManager(delegate: SessionManagerDelegate? = nil) -> ExtoleApp.SessionManager {
-        return ExtoleApp.SessionManager(extoleApi: self, delegate: delegate)
+    public func sessionManager(
+        accessToken: String? = nil,
+        email: String? = nil,
+        jwt: String? = nil,
+        delegate: SessionManagerDelegate? = nil) -> ExtoleApp.SessionManager {
+        return ExtoleApp.SessionManager(accessToken: accessToken,
+                                        email: email,
+                                        jwt: jwt,
+                                        extoleApi: self,
+                                        delegate: delegate)
     }
 }
 /// Manages Extole consumer session
@@ -24,15 +32,24 @@ public final class SessionManager {
     weak var delegate: SessionManagerDelegate?
     private var session: ExtoleAPI.Session? = nil
     private var activiating: Bool = false
-    private let accessToken: String? = nil
+    
     private let serialQueue = DispatchQueue(label: "ExtoleAPI.SessionManager")
 
+    private var accessToken: String? = nil
     private var email: String? = nil
     private var jwt: String? = nil
 
-    public init(extoleApi: ExtoleAPI, delegate: SessionManagerDelegate?) {
+    public init(
+        accessToken: String?,
+        email: String?,
+        jwt: String?,
+        extoleApi: ExtoleAPI,
+        delegate: SessionManagerDelegate?) {
         self.extoleApi = extoleApi
         self.delegate = delegate
+        self.accessToken = accessToken
+        self.email = email
+        self.jwt = jwt
     }
 
     public func resume(accessToken: String) {

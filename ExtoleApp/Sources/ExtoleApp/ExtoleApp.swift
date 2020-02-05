@@ -21,7 +21,7 @@ public final class ExtoleApp {
     private let extoleApi: ExtoleAPI
     
     /// manages active Extole session
-    lazy private(set) var sessionManager = ExtoleApp.SessionManager.init(extoleApi: extoleApi, delegate: self)
+    lazy private(set) var sessionManager = extoleApi.sessionManager(delegate: self)
     /// handles events for ExtoleApp
     private weak var delegate: ExtoleAppDelegate?
     private var session: ExtoleAPI.Session?
@@ -41,6 +41,7 @@ public final class ExtoleApp {
     /// Resumes saved session, or creates new one
     public func activate() {
         if let existingToken = self.savedToken {
+            self.sessionManager = extoleApi.sessionManager()
             self.sessionManager.resume(accessToken: existingToken)
         } else {
             self.sessionManager.logout()

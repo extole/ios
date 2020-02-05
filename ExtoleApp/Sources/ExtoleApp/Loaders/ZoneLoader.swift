@@ -3,8 +3,9 @@
 import Foundation
 import ExtoleAPI
 
+extension ExtoleApp {
 /// Loads Extole zone as JSON
-public final class ZoneLoader<T: Codable> : Loader {
+public final class ZoneLoader<T: Decodable> : Loader {
     let zoneName: String
     public private(set) var zoneData: T? = nil
     
@@ -20,4 +21,5 @@ public final class ZoneLoader<T: Codable> : Loader {
             complete()
         }
     }
+}
 }

@@ -4,10 +4,10 @@ import Foundation
 
 extension ExtoleAPI {
     public class Error: Codable {
-        let code: String
-        let message: String?
-        let httpCode: Int?
-        let parameters: [String:String]?
+        public let code: String
+        public let message: String?
+        public let httpCode: Int?
+        public let parameters: [String:String]?
         public init(code: String, message: String, httpCode: Int? = nil,
                     parameters: [String:String]? = nil) {
             self.code = code;

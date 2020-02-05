@@ -4,11 +4,11 @@ import Foundation
 
 extension ExtoleAPI.Me {
     public struct MeShareableResponse: Decodable {
-        let code: String?
-        let key: String?
-        let label: String?
-        let link: String?
-        let data:  [String: String]
-        let content: ExtoleAPI.Me.ShareableContent?
+        public let code: String?
+        public let key: String?
+        public let label: String?
+        public let link: String?
+        public let data:  [String: String]
+        public let content: ExtoleAPI.Me.ShareableContent?
     }
 }

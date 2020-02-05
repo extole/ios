@@ -16,12 +16,12 @@ public final class ExtoleApp {
     let errorRecoveryQueue = DispatchQueue(label: "ExtoleApp.errorRecovery")
     var errorCount = 0
     /// stores key-value pairs for Extole
-    public let settings = UserDefaults(suiteName: "extoleKit")!
+    public let settings = UserDefaults(suiteName: "ExtoleApp")!
     /// program url
     private let extoleApi: ExtoleAPI
     
     /// manages active Extole session
-    lazy private var sessionManager = ExtoleApp.SessionManager.init(extoleApi: extoleApi, delegate: self)
+    lazy private(set) var sessionManager = ExtoleApp.SessionManager.init(extoleApi: extoleApi, delegate: self)
     /// handles events for ExtoleApp
     private weak var delegate: ExtoleAppDelegate?
     private var session: ExtoleAPI.Session?

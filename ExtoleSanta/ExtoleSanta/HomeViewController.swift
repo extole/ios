@@ -154,7 +154,8 @@ class HomeViewController : UIViewController {
     }
 
     @objc func handleShare(_ sender: UIButton) {
-        guard let shareLink = santaApp.shareApp.selectedShareable?.link else {
+        santaApp.shareApp.mobileSharing?.me
+        guard let shareLink = santaApp.shareApp.mobileSharing?.me.link else {
             self.showError(title: "Invalid state", message: "No Shareable")
             return
         }
@@ -179,24 +180,26 @@ class HomeViewController : UIViewController {
                 case ExtoleShare: break
                 default : do {
                     self.busyIndicator.startAnimating()
-                    let share = CustomShare(channel: completedActivity.rawValue)
-                    self.santaApp.shareApp.notify(share: share,
-                                              success : { _ in
-                                                DispatchQueue.main.async {
-                                                    self.busyIndicator.stopAnimating()
-                                                }
-                                                },
-                                              error : { error in
-                                                DispatchQueue.main.async {
-                                                    self.busyIndicator.stopAnimating()
-                                                    self.showError(title: "Share Error", message: String(describing: error))
-                                                    }
-                                                })
+                    let share = completedActivity.rawValue
+                    self.santaApp.shareApp.sessionManager.async { session in
+                        session.submitEvent(eventName: "shared",
+                                            data: ["channel" : completedActivity.rawValue],
+                                            success: { event in
+                            DispatchQueue.main.async {
+                            self.busyIndicator.stopAnimating()
+                            }
+                        }, error: { e in
+                            DispatchQueue.main.async {
+                                self.busyIndicator.stopAnimating()
+                                self.showError(title: "Share Error", message: e.message ?? e.code)
+                                }
+                        })
                     }
                 }
             }
         }
-        self.present(activityViewController, animated: true, completion: nil)
+        self.present(self.activityViewController, animated: true, completion: nil)
+    }
     }
 }
 
@@ -271,7 +274,7 @@ enum TableSection {
     case Profile
     case Wishlist
     
-    private func wishList(shareable: MyShareable?) -> [String?] {
+    private func wishList(shareable: ExtoleAPI.Me.MeShareableResponse?) -> [String?] {
         var wishItems = shareable?.data ?? [:]
         if wishItems.isEmpty {
             wishItems["Add items from Extole Santa list"] = "default"
@@ -282,7 +285,7 @@ enum TableSection {
         }
     }
     
-    func getIUTableSection(profile: MyProfile?, shareable: MyShareable?) -> UITableSection{
+    func getIUTableSection(profile: ExtoleAPI.Me.MyProfileResponse?, shareable: ExtoleAPI.Me.MeShareableResponse?) -> UITableSection{
         switch self {
         case .Identity:
             return UITableSection(title: "Identity", values: [ profile?.email] )

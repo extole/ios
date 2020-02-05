@@ -7,27 +7,27 @@ extension ExtoleApp {
     public class MobileSharing: Decodable {
         public struct Page {
             let json: ExtoleAPI.Zones.Json
-            var background : String? {
+            public var background : String? {
                 get {
                     return json["background"]
                 }
             }
-            var primary_header : String? {
+            public var primary_header : String? {
                 get {
                     return json["primary_header"]
                 }
             }
-            var reward : String? {
+            public var reward : String? {
                 get {
                     return json["reward"]
                 }
             }
-            var how_it_works : String? {
+            public var how_it_works : String? {
                 get {
                     return json["how_it_works"]
                 }
             }
-            var terms_url : String? {
+            public var terms_url : String? {
                 get {
                     return json["terms_url"]
                 }
@@ -35,17 +35,17 @@ extension ExtoleApp {
         }
         public struct Facebook {
             let json: ExtoleAPI.Zones.Json
-            var title : String? {
+            public var title : String? {
                get {
                    return json["title"]
                }
             }
-            var image : String? {
+            public var image : String? {
                get {
                    return json["image"]
                }
             }
-            var description : String? {
+            public var description : String? {
                 get {
                   return json["description"]
                 }
@@ -54,7 +54,7 @@ extension ExtoleApp {
         public struct Twitter {
             let json: ExtoleAPI.Zones.Json
            
-            var message : String? {
+            public var message : String? {
                get {
                    return json["message"]
                }
@@ -63,12 +63,12 @@ extension ExtoleApp {
         
         public struct Email {
             let json: ExtoleAPI.Zones.Json
-            var subject : String? {
+            public var subject : String? {
               get {
                 return json["subject"]
               }
             }
-            var message : String? {
+            public var message : String? {
                get {
                    return json["message"]
                }
@@ -77,7 +77,7 @@ extension ExtoleApp {
         
         public struct Sms {
             let json: ExtoleAPI.Zones.Json
-            var message : String? {
+            public var message : String? {
                get {
                    return json["message"]
                }
@@ -86,27 +86,27 @@ extension ExtoleApp {
         
         public struct Me {
             let json: ExtoleAPI.Zones.Json
-            var email : String? {
+            public var email : String? {
                get {
                    return json["email"]
                }
             }
-            var first_name : String? {
+            public var first_name : String? {
                get {
                    return json["first_name"]
                }
             }
-            var last_name : String? {
+            public var last_name : String? {
                get {
                    return json["last_name"]
                }
             }
-            var link : String? {
+            public var link : String? {
                get {
                    return json["link"]
                }
             }
-            var share_code : String? {
+            public var share_code : String? {
                get {
                    return json["share_code"]
                }
@@ -114,32 +114,32 @@ extension ExtoleApp {
         }
         
         let data: ExtoleAPI.Zones.Json
-        var page: Page {
+        public var page: Page {
            get {
             return Page(json: self.data.nested(forKey: "page"))
            }
         }
-        var facebook: Facebook {
+        public var facebook: Facebook {
           get {
             return Facebook(json: self.data.nested(forKey: "facebook"))
           }
         }
-        var twitter: Twitter {
+        public var twitter: Twitter {
           get {
             return Twitter(json: self.data.nested(forKey: "twitter"))
           }
         }
-        var email: Email {
+        public var email: Email {
           get {
             return Email(json: self.data.nested(forKey: "email"))
           }
         }
-        var sms: Sms {
+        public var sms: Sms {
           get {
             return Sms(json: self.data.nested(forKey: "sms"))
           }
         }
-        var me: Me {
+        public var me: Me {
             get {
                 return Me(json: self.data.nested(forKey: "me"))
             }

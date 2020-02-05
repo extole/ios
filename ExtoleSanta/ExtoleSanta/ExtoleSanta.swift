@@ -22,7 +22,7 @@ class ExtoleSanta {
     /// Loads consumer profile
     public private(set) var profileLoader = ProfileLoader()
     /// Loads share settings
-    public private(set) var settingsLoader = ZoneLoader<ShareSettings>(zoneName: "settings")
+    public private(set) var settingsLoader = ExtoleApp.ZoneLoader<ShareSettings>(zoneName: "settings")
     
     init(delegate: ExtoleSantaDelegate) {
         self.delegate = delegate

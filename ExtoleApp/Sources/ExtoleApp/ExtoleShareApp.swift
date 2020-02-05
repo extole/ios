@@ -35,7 +35,20 @@ public final class ShareApp {
         }
     }
     
+    public var selectedShareable: ExtoleAPI.Me.MeShareableResponse {
+        get {
+            return selectedShareableLoader.shareables[0]
+        }
+    }
+    
+    public var sessionManager: SessionManager {
+        get {
+            return extoleApp.sessionManager
+        }
+    }
+    
     private let mobileShareLoader = MobileSharingLoader()
+    private let selectedShareableLoader = ShareableLoader()
     
     /// Creates new Extole share experince
     public init(programDomain: String,
@@ -73,7 +86,6 @@ public final class ShareApp {
             extoleApp.settings.set(newShareableKey, forKey: "shareable_code")
         }
     }
-
     
     /// reloads share experince, within the same consumer session
     public func reload(complete: @escaping () -> Void) {

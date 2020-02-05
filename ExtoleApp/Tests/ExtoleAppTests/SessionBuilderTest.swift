@@ -79,4 +79,31 @@ class SessionBuilderTest: XCTestCase {
         })
         wait(for: [profileVerified], timeout: 5)
     }
+    
+    public func testResumeWithEmail() {
+        let advocateEmail = String(format: "adv-%lu@extole.com", mach_absolute_time())
+        
+        let sessionBuilder = newBuilder()
+        let resumed = expectation(description: "resumed session")
+        var sessionWithEmail: ExtoleAPI.Session!
+        
+        sessionBuilder
+            .resume(accessToken: "invalid")
+            .identify(email: advocateEmail)
+            .build { session in
+            XCTAssertNotNil(session.accessToken)
+            sessionWithEmail = session
+            resumed.fulfill()
+        }
+        wait(for: [resumed], timeout: 5)
+        //
+        let profileVerified = expectation(description: "resumed session")
+        sessionWithEmail.getProfile(success: { me in
+            XCTAssertEqual(advocateEmail, me.email)
+            profileVerified.fulfill()
+        }, error: { e in
+            XCTFail(e.code)
+        })
+        wait(for: [profileVerified], timeout: 5)
+    }
 }

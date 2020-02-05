@@ -12,11 +12,12 @@ public protocol SessionManagerDelegate : class {
 }
 
 extension ExtoleAPI {
-    public func sessionManager(delegate: SessionManagerDelegate? = nil) -> SessionManager {
-        return SessionManager(extoleApi: self, delegate: delegate)
+    public func sessionManager(delegate: SessionManagerDelegate? = nil) -> ExtoleApp.SessionManager {
+        return ExtoleApp.SessionManager(extoleApi: self, delegate: delegate)
     }
 }
 /// Manages Extole consumer session
+extension ExtoleApp {
 public final class SessionManager {
     public typealias Delegate = SessionManagerDelegate
     private let extoleApi: ExtoleAPI
@@ -114,4 +115,5 @@ public final class SessionManager {
             }
         }
     }
+}
 }

@@ -11,7 +11,7 @@ class SessionManagerTest: XCTestCase {
 
     let extoleAPI = ExtoleAPI(programDomain: "ios-santa.extole.io")
 
-    var sessionManager: SessionManager!
+    var sessionManager: ExtoleApp.SessionManager!
     
     override func setUp() {
         super.setUp()

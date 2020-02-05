@@ -21,7 +21,7 @@ public final class ExtoleApp {
     private let extoleApi: ExtoleAPI
     
     /// manages active Extole session
-    lazy private var sessionManager = SessionManager.init(extoleApi: extoleApi, delegate: self)
+    lazy private var sessionManager = ExtoleApp.SessionManager.init(extoleApi: extoleApi, delegate: self)
     /// handles events for ExtoleApp
     private weak var delegate: ExtoleAppDelegate?
     private var session: ExtoleAPI.Session?

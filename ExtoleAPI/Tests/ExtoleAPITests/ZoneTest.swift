@@ -56,8 +56,6 @@ class ZoneTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
     
-    
-    
     func testMobileSharingFlat() {
        let promise = expectation(description: "fetch mobile_menu")
        let programUrl = "https://ios-santa.extole.io/"

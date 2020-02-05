@@ -6,7 +6,7 @@ import ExtoleAPI
 extension ExtoleApp {
     public class MobileSharing: Decodable {
         public struct Page {
-            let json: ExtoleAPI.Zones.FlatJson
+            let json: ExtoleAPI.Zones.Json
             var background : String? {
                 get {
                     return json["background"]
@@ -34,7 +34,7 @@ extension ExtoleApp {
             }
         }
         public struct Facebook {
-            let json: ExtoleAPI.Zones.FlatJson
+            let json: ExtoleAPI.Zones.Json
             var title : String? {
                get {
                    return json["title"]
@@ -52,7 +52,7 @@ extension ExtoleApp {
             }
         }
         public struct Twitter {
-            let json: ExtoleAPI.Zones.FlatJson
+            let json: ExtoleAPI.Zones.Json
            
             var message : String? {
                get {
@@ -62,7 +62,7 @@ extension ExtoleApp {
         }
         
         public struct Email {
-            let json: ExtoleAPI.Zones.FlatJson
+            let json: ExtoleAPI.Zones.Json
             var subject : String? {
               get {
                 return json["subject"]
@@ -76,7 +76,7 @@ extension ExtoleApp {
         }
         
         public struct Sms {
-            let json: ExtoleAPI.Zones.FlatJson
+            let json: ExtoleAPI.Zones.Json
             var message : String? {
                get {
                    return json["message"]
@@ -85,7 +85,7 @@ extension ExtoleApp {
         }
         
         public struct Me {
-            let json: ExtoleAPI.Zones.FlatJson
+            let json: ExtoleAPI.Zones.Json
             var email : String? {
                get {
                    return json["email"]
@@ -113,7 +113,7 @@ extension ExtoleApp {
             }
         }
         
-        let data: ExtoleAPI.Zones.FlatJson
+        let data: ExtoleAPI.Zones.Json
         var page: Page {
            get {
             return Page(json: self.data.nested(forKey: "page"))
@@ -144,7 +144,5 @@ extension ExtoleApp {
                 return Me(json: self.data.nested(forKey: "me"))
             }
         }
-        
-        
     }
 }

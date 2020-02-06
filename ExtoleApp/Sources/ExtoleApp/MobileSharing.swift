@@ -144,5 +144,23 @@ extension ExtoleApp {
                 return Me(json: self.data.nested(forKey: "me"))
             }
         }
+        
+        public var label: String? {
+            get {
+                return self.data["label"]
+            }
+        }
+        
+        public var target_url: String? {
+            get {
+                return self.data["target_url"]
+            }
+        }
+        
+        public var bundle_name: String? {
+            get {
+                return self.data["bundle_name"]
+            }
+        }
     }
 }

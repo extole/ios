@@ -56,19 +56,36 @@ class ZoneTest: XCTestCase {
         waitForExpectations(timeout: 5, handler: nil)
     }
     
-    func testMobileSharingFlat() {
+    func testMobileSharing() {
        let promise = expectation(description: "fetch mobile_menu")
        let programUrl = "https://ios-santa.extole.io/"
        extoleSession.renderZone(eventName: "mobile_sharing",
                                 success: { (zoneResponse: ExtoleAPI.Zones.ZoneResponse) in
             XCTAssertNotNil(zoneResponse.event_id)
             XCTAssertEqual("mobile_sharing", zoneResponse.data["bundle_name"])
+            XCTAssertEqual("refer-a-friend-mobile-app", zoneResponse.data["label"])
             let shareCode = zoneResponse.data["me.share_code"];
             XCTAssertNotNil(shareCode)
             XCTAssertEqual(programUrl + (shareCode ?? ""), zoneResponse.data["me.link"] ?? "")
             promise.fulfill()
        }, error: { error in
            XCTFail(error.code)
+       })
+       waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testRequiredLabel() {
+       let promise = expectation(description: "fetch mobile_menu")
+       extoleSession.renderZone(eventName: "mobile_sharing",
+                                data: [
+                                    "required_labels": "missing-label"
+                                ],
+                                success: { (zoneResponse: ExtoleAPI.Zones.ZoneResponse) in
+            XCTFail("expecting error")
+            promise.fulfill()
+       }, error: { error in
+           XCTAssertEqual("no_creative", error.code)
+           promise.fulfill()
        })
        waitForExpectations(timeout: 5, handler: nil)
     }

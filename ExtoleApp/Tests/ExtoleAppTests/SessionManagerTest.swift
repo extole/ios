@@ -15,6 +15,9 @@ class SessionManagerTest: XCTestCase {
         let sessionManager = extoleAPI.sessionManager()
         let prefrech = expectation(description: "prefetch")
         sessionManager.loadMobileSharing { mobileSharing in
+            XCTAssertEqual("refer-a-friend-mobile-app", mobileSharing.label)
+            XCTAssertEqual("mobile_sharing", mobileSharing.bundle_name)
+            XCTAssertNotNil(mobileSharing.target_url)
             XCTAssertNotNil(mobileSharing.me.share_code)
             prefrech.fulfill()
         }

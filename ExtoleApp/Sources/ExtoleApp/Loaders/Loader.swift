@@ -9,6 +9,14 @@ public protocol Loader{
     func load(session: ExtoleAPI.Session, complete: @escaping () -> Void)
 }
 
+extension ExtoleApp.SessionManager {
+    public func load(loader: Loader, complete: @escaping () -> Void) {
+        self.async(command: { session in
+            loader.load(session: session, complete: complete)
+        })
+    }
+}
+
 /// Loads all child loaders, calling complete after all is loaded
 public final class CompositeLoader : Loader {
     

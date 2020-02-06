@@ -14,11 +14,11 @@ public class ShareExperince {
     public init(programDomain: String, programLabel: String) {
         self.shareApp = ExtoleApp.ShareApp.init(programDomain: programDomain, programLabel: programLabel, delegate: appDelegate)
     }
-    
+
     public init(shareApp:  ExtoleApp.ShareApp) {
         self.shareApp = shareApp
     }
-    
+
     @objc public func reset() {
         self.appDelegate.readyHandlers = []
         shareApp.reset()

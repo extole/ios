@@ -3,7 +3,7 @@
 import Foundation
 extension ExtoleAPI.Zones {
     public struct ZoneResponse : Decodable {
-        let event_id: String
-        let data: Json
+        public let event_id: String
+        public let data: Json
     }
 }

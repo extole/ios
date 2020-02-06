@@ -33,29 +33,6 @@ extension ExtoleApp {
 }
 
 extension ExtoleApp.SessionManager {
-    enum Zones : String {
-        case mobile_sharing
-    }
-    
-    public func load(loader: Loader, complete: @escaping () -> Void) {
-        self.async(command: { session in
-            loader.load(session: session, complete: complete)
-        })
-    }
-    
-    public func loadZone<T: Decodable>(zone: String,
-                                       success: @escaping (_ zoneData:  T) -> Void,
-                                       error: @escaping (ExtoleAPI.Error ) -> Void) {
-        let loader = ExtoleApp.ZoneLoader<T>(zoneName: zone)
-        self.load(loader: loader, complete: {
-            success(loader.zoneData!)
-        })
-    }
-
-    public func loadMobileSharing(success: @escaping (_ mobileSharing:  ExtoleApp.MobileSharing) -> Void) {
-        self.loadZone(zone: Zones.mobile_sharing.rawValue, success: success, error : { e in
-        })
-    }
 
     public func loadAdvocateExperience(success: @escaping (_ advocateExperience:  ExtoleApp.AdvocateExperience) -> Void) {
         let loader = ExtoleApp.AdvocateExperienceLoader()

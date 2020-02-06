@@ -11,32 +11,6 @@ class SessionManagerTest: XCTestCase {
 
     let extoleAPI = ExtoleAPI(programDomain: "ios-santa.extole.io")
     
-    public func testPrefetch() {
-        let sessionManager = extoleAPI.sessionManager()
-        let prefrech = expectation(description: "prefetch")
-        sessionManager.loadMobileSharing { mobileSharing in
-            XCTAssertEqual("refer-a-friend-mobile-app", mobileSharing.label)
-            XCTAssertEqual("mobile_sharing", mobileSharing.bundle_name)
-            XCTAssertNotNil(mobileSharing.target_url)
-            XCTAssertNotNil(mobileSharing.me.share_code)
-            prefrech.fulfill()
-        }
-        wait(for: [prefrech], timeout: 5)
-    }
-    
-    public func testIdentifyAndPrefetch() {
-        let prefrech = expectation(description: "prefetch")
-        let advocateEmail = "john@ios-stanta.extole.com"
-        
-        let sessionManager = extoleAPI.sessionManager(email: advocateEmail)
-        
-        sessionManager.loadMobileSharing { (mobileSharing: ExtoleApp.MobileSharing) in
-                XCTAssertEqual(advocateEmail, mobileSharing.me.email)
-            prefrech.fulfill()
-        }
-        wait(for: [prefrech], timeout: 5)
-    }
-    
     public func testAsync() {
         let sessionManager = extoleAPI.sessionManager()
         let asynced = expectation(description: "test async")

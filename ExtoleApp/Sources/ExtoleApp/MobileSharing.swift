@@ -3,6 +3,8 @@
 import Foundation
 import ExtoleAPI
 
+
+
 extension ExtoleApp {
     public class MobileSharing: Decodable {
         public struct Page {
@@ -164,3 +166,30 @@ extension ExtoleApp {
         }
     }
 }
+
+let MOBILE_SHARING_ZONE = "mobile_sharing"
+
+public final class MobileSharingLoader : Loader {
+    public private(set) var mobileSharing: ExtoleApp.MobileSharing? = nil
+    
+    public func load(session: ExtoleAPI.Session, complete: @escaping () -> Void) {
+        session.renderZone(eventName: MOBILE_SHARING_ZONE,
+                           success: { (mobileSharing: ExtoleApp.MobileSharing) in
+            self.mobileSharing = mobileSharing;
+            complete()
+        }, error: { error in
+            complete()
+        })
+    }
+}
+
+extension ExtoleApp.SessionManager {
+
+    public func loadMobileSharing(success: @escaping (_ mobileSharing:  ExtoleApp.MobileSharing) -> Void) {
+        let loader = MobileSharingLoader()
+        self.load(loader: loader, complete: {
+           success(loader.mobileSharing!)
+        })
+    }
+}
+

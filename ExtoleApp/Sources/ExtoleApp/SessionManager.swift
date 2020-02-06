@@ -36,15 +36,14 @@ public final class SessionManager {
     private let serialQueue = DispatchQueue(label: "ExtoleAPI.SessionManager")
 
     private var accessToken: String? = nil
-    private var email: String? = nil
-    private var jwt: String? = nil
+    let email: String?
+    let jwt: String?
 
-    public init(
-        accessToken: String?,
-        email: String?,
-        jwt: String?,
-        extoleApi: ExtoleAPI,
-        delegate: SessionManagerDelegate?) {
+    public init(accessToken: String?,
+                email: String?,
+                jwt: String?,
+                extoleApi: ExtoleAPI,
+                delegate: SessionManagerDelegate?) {
         self.extoleApi = extoleApi
         self.delegate = delegate
         self.accessToken = accessToken
@@ -52,29 +51,13 @@ public final class SessionManager {
         self.jwt = jwt
     }
 
-    public func resume(accessToken: String) {
-        extoleApi.resumeSession(accessToken: accessToken, success: { session in
-            self.session = session
-            self.delegate?.onNewSession(session: session)
-        }, error: { e in
-            if e.code != nil {
-                self.delegate?.onSessionInvalid()
-            } else {
-                self.delegate?.onSessionServerError(error: e.error)
-            }
-        })
-    }
-
-    public func identify(email: String? = nil, jwt: String? = nil) -> SessionManager {
+    public func resume() {
         self.serialQueue.sync {
             self.session = nil
-            self.email = email
-            self.jwt = jwt
             self.activate()
         }
-        return self
     }
-    
+
     public func logout() {
         self.serialQueue.sync {
             if let existingSession = session {
@@ -85,8 +68,6 @@ public final class SessionManager {
                 }
             }
             self.session = nil
-            self.email = nil
-            self.jwt = nil
             self.activate()
         }
     }
@@ -101,8 +82,8 @@ public final class SessionManager {
                 return
             } else {
                 asyncCommands.append(command)
+                self.activate()
             }
-            self.activate()
         }
     }
     
@@ -111,15 +92,17 @@ public final class SessionManager {
             return
         }
         activiating = true
-        self.extoleApi.createSession(email: self.email,
-                                     jwt: self.jwt,
-                                     success: { session in
+        ExtoleApp.SessionBuilder.init(extoleAPI: extoleApi, errorHandler: { e in
+            self.delegate?.onSessionServerError(error: e.error);
+            }).build(accessToken: accessToken,
+                     email: email,
+                     jwt: jwt,
+                     success: { session in
+            self.accessToken = session.accessToken
             self.session = session
             self.activiating = false
             self.delegate?.onNewSession(session: session)
             self.runCommands(session: session)
-        }, error: { e in
-            self.delegate?.onSessionServerError(error: e.error);
         })
     }
     

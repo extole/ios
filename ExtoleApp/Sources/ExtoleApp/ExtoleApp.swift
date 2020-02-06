@@ -41,8 +41,8 @@ public final class ExtoleApp {
     /// Resumes saved session, or creates new one
     public func activate() {
         if let existingToken = self.savedToken {
-            self.sessionManager = extoleApi.sessionManager()
-            self.sessionManager.resume(accessToken: existingToken)
+            self.sessionManager = extoleApi.sessionManager(accessToken: existingToken, delegate: self)
+            self.sessionManager.resume()
         } else {
             self.sessionManager.logout()
         }
@@ -74,13 +74,7 @@ extension ExtoleApp : SessionManagerDelegate{
         let retryAfter = 5.0 * Double(errorCount * errorCount)
         extoleInfo(format: "Schedule error recovery in %{public}@ seconds", arg: String(retryAfter))
         errorRecoveryQueue.asyncAfter(deadline: .now() + retryAfter) {
-            if let existingToken = self.savedToken {
-                extoleInfo(format: "resuming session after error")
-                self.sessionManager.resume(accessToken: existingToken)
-            } else {
-                extoleInfo(format: "new session after error")
-                self.sessionManager.logout()
-            }
+            self.sessionManager.resume()
         }
     }
     

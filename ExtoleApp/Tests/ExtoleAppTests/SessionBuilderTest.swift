@@ -39,20 +39,20 @@ class SessionBuilderTest: XCTestCase {
         let resumeBuilder = newBuilder()
         
         let resumed = expectation(description: "resumed session")
-        resumeBuilder.resume(accessToken: accessToken ?? "empty").build { session in
+        resumeBuilder.build(accessToken: accessToken, success : { session in
             XCTAssertEqual(accessToken, session.accessToken)
             resumed.fulfill()
-        }
+        })
         wait(for: [resumed], timeout: 5)
     }
     
     public func testInvalid() {
         let sessionBuilder = newBuilder()
         let resumed = expectation(description: "resumed session")
-        sessionBuilder.resume(accessToken: "invalid").build { session in
+        sessionBuilder.build(accessToken: "invalid", success: { session in
             resumed.fulfill()
             XCTAssertNotNil(session.accessToken)
-        }
+        })
         wait(for: [resumed], timeout: 5)
     }
     
@@ -63,11 +63,11 @@ class SessionBuilderTest: XCTestCase {
         let resumed = expectation(description: "resumed session")
         var sessionWithEmail: ExtoleAPI.Session!
         
-        sessionBuilder.identify(email: advocateEmail).build { session in
+        sessionBuilder.build(email: advocateEmail, success : { session in
             XCTAssertNotNil(session.accessToken)
             sessionWithEmail = session
             resumed.fulfill()
-        }
+        })
         wait(for: [resumed], timeout: 5)
         //
         let profileVerified = expectation(description: "resumed session")
@@ -87,14 +87,13 @@ class SessionBuilderTest: XCTestCase {
         let resumed = expectation(description: "resumed session")
         var sessionWithEmail: ExtoleAPI.Session!
         
-        sessionBuilder
-            .resume(accessToken: "invalid")
-            .identify(email: advocateEmail)
-            .build { session in
+        sessionBuilder.build(accessToken: "invalid",
+                             email: advocateEmail,
+                             success: { session in
             XCTAssertNotNil(session.accessToken)
             sessionWithEmail = session
             resumed.fulfill()
-        }
+        })
         wait(for: [resumed], timeout: 5)
         //
         let profileVerified = expectation(description: "resumed session")

@@ -18,10 +18,11 @@ class AdvocateExperienceTest: XCTestCase {
     }
 
     func testLoadAdvocateExperience() {
-        let loaded = expectation(description: "advocate experience loaded")
         let advocateEmail = String(format: "adv-%lu@extole.com", mach_absolute_time())
+        let sessionManager = extoleAPI.sessionManager(email: advocateEmail)
+        let loaded = expectation(description: "advocate experience loaded")
+
         sessionManager
-            .identify(email: advocateEmail)
             .loadAdvocateExperience(success: { advocateExperience in
                 XCTAssertEqual(advocateEmail, advocateExperience.me.email)
                 XCTAssertEqual("Give $20, Get $20", advocateExperience.mobileSharing.page.reward)

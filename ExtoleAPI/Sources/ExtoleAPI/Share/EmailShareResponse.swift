@@ -4,7 +4,7 @@ import Foundation
 
 extension ExtoleAPI.Share {
     public struct EmailShareResponse : Decodable {
-        let recipient_email: String
-        let polling_id: String
+        public let recipient_email: String
+        public let polling_id: String
     }
 }

@@ -73,7 +73,7 @@ class ProgramTest: XCTestCase {
         program.sessionManager.async { session in
             session.getShares(success: { shares in
                 XCTAssertEqual(1, shares.count)
-                XCTAssertEqual("friend@example.com", shares[0].recipient_email)
+                XCTAssertEqual(friendEmail, shares[0].recipient_email)
                 XCTAssertEqual(["sku": "ps5", "partner_share_id": shareId], shares[0].data)
                 listShare.fulfill()
             }, error: { e in

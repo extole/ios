@@ -4,6 +4,6 @@ import Foundation
 
 extension ExtoleAPI.Events {
     public struct SubmitEventResponse : Codable {
-        let event_id: String
+        public let event_id: String
     }
 }

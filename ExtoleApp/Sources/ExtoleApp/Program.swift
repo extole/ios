@@ -4,7 +4,6 @@ import Foundation
 import ExtoleAPI
 
 extension ExtoleApp {
-    
     public class Program {
         let sessionManager: SessionManager
         let label: String?
@@ -19,7 +18,12 @@ extension ExtoleApp {
             if let existingSharing = mobileSharing {
                 complete(existingSharing)
             } else {
-                sessionManager.loadMobileSharing(success: { loadedSharing in
+                var data : [String:String] = [:]
+                if let programLabel = label {
+                    data["labels"] = programLabel
+                }
+                sessionManager.loadMobileSharing(data: data,
+                                                 success: { loadedSharing in
                    self.mobileSharing = loadedSharing
                    complete(loadedSharing)
                })

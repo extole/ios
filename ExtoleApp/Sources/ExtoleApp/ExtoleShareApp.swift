@@ -47,7 +47,7 @@ public final class ShareApp {
         }
     }
     
-    private let mobileShareLoader = MobileSharingLoader()
+    private let mobileShareLoader = MobileSharingLoader(data: [:])
     private let selectedShareableLoader = ShareableLoader()
     
     /// Creates new Extole share experince

@@ -15,7 +15,7 @@ extension ExtoleApp {
             let loader = CompositeLoader.init(loaders: [profileLoader, mobileSharingLoader])
             loader.load(session: session, complete: complete)
         }
-        let mobileSharingLoader = MobileSharingLoader()
+        let mobileSharingLoader = MobileSharingLoader(data: [:])
         let profileLoader = ProfileLoader()
         
         var mobileSharing: MobileSharing? {

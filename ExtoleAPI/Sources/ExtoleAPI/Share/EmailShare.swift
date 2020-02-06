@@ -13,11 +13,11 @@ import Foundation
         self.recipient_email = recipient_email
         self.data = data
     }
-    var advocate_code: String?
-    var message: String
-    var subject: String
-    var recipient_email: String
-    var data: [String:String]?
+    public var advocate_code: String?
+    public var message: String
+    public var subject: String
+    public var recipient_email: String
+    public var data: [String:String]?
 }
 
 @objc public final class EmailSharePollingResult : NSObject, Codable {

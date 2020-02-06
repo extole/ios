@@ -4,9 +4,9 @@ import Foundation
 extension ExtoleAPI.Me {
 
     public struct ShareResponse: Decodable {
-        let recipients : [String]
-        let recipient_email : String
-        let friend : ExtoleAPI.Person.PublicPersonResponse
-        let data:  [String: String]
+        public let recipients : [String]
+        public let recipient_email : String
+        public let friend : ExtoleAPI.Person.PublicPersonResponse
+        public let data:  [String: String]
     }
 }

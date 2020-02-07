@@ -9,9 +9,9 @@ import ExtoleAPI
 import Foundation
 
 extension ExtoleApp.MobileSharing {
-    var how_it_works: String {
+    var custom_title: String {
         get {
-            return data["page.how_it_works"] ?? "Share good things will happen"
+            return data["sharing.facebook.title"] ?? "Share good things will happen"
         }
     }
 }
@@ -38,7 +38,7 @@ class MobileSharingTest: XCTestCase {
     public func testExtendMobileSharing() {
         let loaded = expectation(description: "load extended sharing")
         sessionManager.loadMobileSharing { mobileSharing in
-            XCTAssertEqual("Share Your Company with friends. You get $20 when they purchase!", mobileSharing.how_it_works)
+            XCTAssertEqual("Get $20 Off", mobileSharing.custom_title)
             loaded.fulfill()
         }
         wait(for: [loaded], timeout: 5)
@@ -47,7 +47,7 @@ class MobileSharingTest: XCTestCase {
     public func testExtendMobileSharingData() {
         let loaded = expectation(description: "load extended sharing")
         sessionManager.loadMobileSharing { mobileSharing in
-            XCTAssertEqual("tweet", mobileSharing.twitter.url ?? "tweet")
+            XCTAssertEqual("tweet", mobileSharing.sharing.twitter.url ?? "tweet")
             loaded.fulfill()
         }
         wait(for: [loaded], timeout: 5)

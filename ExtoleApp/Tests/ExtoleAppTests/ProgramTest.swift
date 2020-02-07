@@ -15,10 +15,9 @@ class ProgramTest: XCTestCase {
         let program = extoleAPI.sessionManager().program()
         let prefrech = expectation(description: "prefetch")
         program.ready { mobileSharing in
-            XCTAssertEqual("refer-a-friend-mobile-app", mobileSharing.label)
-            XCTAssertEqual("mobile_sharing", mobileSharing.bundle_name)
-            XCTAssertNotNil(mobileSharing.target_url)
-            XCTAssertNotNil(mobileSharing.me.share_code)
+            XCTAssertEqual("refer-a-friend", mobileSharing.program_label)
+            XCTAssertNotNil(mobileSharing.links.company_url)
+            XCTAssertNotNil(mobileSharing.me.advocate_code)
             prefrech.fulfill()
         }
         wait(for: [prefrech], timeout: 5)
@@ -46,7 +45,8 @@ class ProgramTest: XCTestCase {
         
         let loaded = expectation(description: "program loaded")
         program.ready { mobileSharing in
-            XCTAssertNotNil(mobileSharing.me.share_code)
+            XCTAssertNotNil(mobileSharing.me.advocate_code)
+            XCTAssertNotNil(mobileSharing.me.shareable_link)
             loaded.fulfill()
         }
         wait(for: [loaded], timeout: 5)

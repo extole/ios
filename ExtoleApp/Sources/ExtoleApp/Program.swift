@@ -13,6 +13,8 @@ extension ExtoleApp {
             self.sessionManager = sessionManager
             self.labels = labels
         }
+        func getShareLink(complete: @escaping (_ mobileSharing: MobileSharing) -> Void) -> Void {
+        }
         
         func ready(complete: @escaping (_ mobileSharing: MobileSharing) -> Void) -> Void {
             if let existingSharing = mobileSharing {
@@ -35,7 +37,7 @@ extension ExtoleApp {
                           error: @escaping (ExtoleAPI.Error) -> Void) {
             self.ready(complete: { loadedSharing in
                 var shareDataWithCode : [String: String] = [:];
-                if let shareCode = loadedSharing.me.share_code {
+                if let shareCode = loadedSharing.me.advocate_code {
                    shareDataWithCode["share.advocate_code"] = shareCode
                 }
                 shareDataWithCode.merge(data, uniquingKeysWith: { left, right in

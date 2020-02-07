@@ -25,7 +25,7 @@ class AdvocateExperienceTest: XCTestCase {
         sessionManager
             .loadAdvocateExperience(success: { advocateExperience in
                 XCTAssertEqual(advocateEmail, advocateExperience.me.email)
-                XCTAssertEqual("Give $20, Get $20", advocateExperience.mobileSharing.page.reward)
+                XCTAssertEqual("Lorem ipsum dolor sit amet", advocateExperience.mobileSharing.calls_to_action.product)
                 loaded.fulfill()
         })
         wait(for: [loaded], timeout: 5)

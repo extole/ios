@@ -29,7 +29,7 @@ class ProgramTest: XCTestCase {
         
         let program = extoleAPI.sessionManager(email: advocateEmail).program()
         
-        program.ready { (mobileSharing: ExtoleApp.MobileSharing) in
+        program.ready { (mobileSharing: ExtoleApp.AdvocateMobileExperience) in
                 XCTAssertEqual(advocateEmail, mobileSharing.me.email)
             prefrech.fulfill()
         }

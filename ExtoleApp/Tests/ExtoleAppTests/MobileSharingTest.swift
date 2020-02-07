@@ -8,7 +8,7 @@ import ExtoleAPI
 
 import Foundation
 
-extension ExtoleApp.MobileSharing {
+extension ExtoleApp.AdvocateMobileExperience {
     var custom_title: String {
         get {
             return data["sharing.facebook.title"] ?? "Share good things will happen"
@@ -16,7 +16,7 @@ extension ExtoleApp.MobileSharing {
     }
 }
 
-extension ExtoleApp.MobileSharing.Twitter {
+extension ExtoleApp.AdvocateMobileExperience.Twitter {
     var url : String? {
         get {
             return json["url"]
@@ -37,7 +37,7 @@ class MobileSharingTest: XCTestCase {
    
     public func testExtendMobileSharing() {
         let loaded = expectation(description: "load extended sharing")
-        sessionManager.loadMobileSharing { mobileSharing in
+        sessionManager.loadAdvocateExeprience { mobileSharing in
             XCTAssertEqual("Get $20 Off", mobileSharing.custom_title)
             loaded.fulfill()
         }
@@ -46,7 +46,7 @@ class MobileSharingTest: XCTestCase {
     
     public func testExtendMobileSharingData() {
         let loaded = expectation(description: "load extended sharing")
-        sessionManager.loadMobileSharing { mobileSharing in
+        sessionManager.loadAdvocateExeprience { mobileSharing in
             XCTAssertEqual("tweet", mobileSharing.sharing.twitter.url ?? "tweet")
             loaded.fulfill()
         }

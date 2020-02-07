@@ -6,7 +6,7 @@ import ExtoleAPI
 
 
 extension ExtoleApp {
-    public class MobileSharing: Decodable {
+    public class AdvocateMobileExperience: Decodable {
         public struct Facebook {
             let json: ExtoleAPI.Zones.Json
             public var title : String? {
@@ -203,19 +203,19 @@ extension ExtoleApp {
     }
 }
 
-let MOBILE_SHARING_ZONE = "advocate_mobile_experience"
+let ZONE = "advocate_mobile_experience"
 
-public final class MobileSharingLoader : Loader {
+public final class AdvocateMobileExperienceLoader : Loader {
     private let data: [String:String]
-    public private(set) var mobileSharing: ExtoleApp.MobileSharing? = nil
+    public private(set) var mobileSharing: ExtoleApp.AdvocateMobileExperience? = nil
     
     init(data: [String:String]) {
         self.data = data
     }
     public func load(session: ExtoleAPI.Session, complete: @escaping () -> Void) {
-        session.renderZone(eventName: MOBILE_SHARING_ZONE,
+        session.renderZone(eventName: ZONE,
                            data: data,
-                           success: { (mobileSharing: ExtoleApp.MobileSharing) in
+                           success: { (mobileSharing: ExtoleApp.AdvocateMobileExperience) in
             self.mobileSharing = mobileSharing;
             complete()
         }, error: { error in
@@ -226,9 +226,9 @@ public final class MobileSharingLoader : Loader {
 
 extension ExtoleApp.SessionManager {
 
-    public func loadMobileSharing(data: [String: String] = [:],
-                                  success: @escaping (_ mobileSharing:  ExtoleApp.MobileSharing) -> Void) {
-        let loader = MobileSharingLoader(data: data)
+    public func loadAdvocateExeprience(data: [String: String] = [:],
+                                  success: @escaping (_ advocateExperience:  ExtoleApp.AdvocateMobileExperience) -> Void) {
+        let loader = AdvocateMobileExperienceLoader(data: data)
         self.load(loader: loader, complete: {
            success(loader.mobileSharing!)
         })

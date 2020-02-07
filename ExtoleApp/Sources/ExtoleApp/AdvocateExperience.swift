@@ -6,7 +6,7 @@ import ExtoleAPI
 extension ExtoleApp {
     
     public struct AdvocateExperience {
-        let mobileSharing: MobileSharing
+        let mobileSharing: AdvocateMobileExperience
         let me: ExtoleAPI.Me.MyProfileResponse
     }
     
@@ -15,10 +15,10 @@ extension ExtoleApp {
             let loader = CompositeLoader.init(loaders: [profileLoader, mobileSharingLoader])
             loader.load(session: session, complete: complete)
         }
-        let mobileSharingLoader = MobileSharingLoader(data: [:])
+        let mobileSharingLoader = AdvocateMobileExperienceLoader(data: [:])
         let profileLoader = ProfileLoader()
         
-        var mobileSharing: MobileSharing? {
+        var mobileSharing: AdvocateMobileExperience? {
             get {
                 return mobileSharingLoader.mobileSharing;
             }

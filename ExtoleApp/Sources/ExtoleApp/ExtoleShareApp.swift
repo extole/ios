@@ -29,7 +29,7 @@ public final class ShareApp {
     /// Active consumer session
     public private(set) var session: ExtoleAPI.Session?
     
-    public var mobileSharing: MobileSharing? {
+    public var mobileSharing: AdvocateMobileExperience? {
         get {
             return mobileShareLoader.mobileSharing
         }
@@ -47,7 +47,7 @@ public final class ShareApp {
         }
     }
     
-    private let mobileShareLoader = MobileSharingLoader(data: [:])
+    private let mobileShareLoader = AdvocateMobileExperienceLoader(data: [:])
     private let selectedShareableLoader = ShareableLoader()
     
     /// Creates new Extole share experince

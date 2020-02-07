@@ -7,16 +7,16 @@ extension ExtoleApp {
     public class Program {
         let sessionManager: SessionManager
         let labels: String?
-        var mobileSharing: MobileSharing?
+        var mobileSharing: AdvocateMobileExperience?
         
         init(sessionManager: SessionManager, labels: String?) {
             self.sessionManager = sessionManager
             self.labels = labels
         }
-        func getShareLink(complete: @escaping (_ mobileSharing: MobileSharing) -> Void) -> Void {
+        func getShareLink(complete: @escaping (_ mobileSharing: AdvocateMobileExperience) -> Void) -> Void {
         }
         
-        func ready(complete: @escaping (_ mobileSharing: MobileSharing) -> Void) -> Void {
+        func ready(complete: @escaping (_ mobileSharing: AdvocateMobileExperience) -> Void) -> Void {
             if let existingSharing = mobileSharing {
                 complete(existingSharing)
             } else {
@@ -24,7 +24,7 @@ extension ExtoleApp {
                 if let selectedLabels = labels {
                     data["labels"] = selectedLabels
                 }
-                sessionManager.loadMobileSharing(data: data,
+                sessionManager.loadAdvocateExeprience(data: data,
                                                  success: { loadedSharing in
                    self.mobileSharing = loadedSharing
                    complete(loadedSharing)

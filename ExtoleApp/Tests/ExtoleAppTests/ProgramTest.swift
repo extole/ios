@@ -12,9 +12,9 @@ class ProgramTest: XCTestCase {
     let extoleAPI = ExtoleAPI(programDomain: "ios-santa.extole.io")
     
     public func testLoadProgram() {
-        let program = extoleAPI.sessionManager().getProgram()
+        let program = extoleAPI.sessionManager().program()
         let prefrech = expectation(description: "prefetch")
-        program.load { mobileSharing in
+        program.ready { mobileSharing in
             XCTAssertEqual("refer-a-friend-mobile-app", mobileSharing.label)
             XCTAssertEqual("mobile_sharing", mobileSharing.bundle_name)
             XCTAssertNotNil(mobileSharing.target_url)
@@ -28,9 +28,9 @@ class ProgramTest: XCTestCase {
         let prefrech = expectation(description: "prefetch")
         let advocateEmail = String(format: "adv-%lu@extole.com", mach_absolute_time())
         
-        let program = extoleAPI.sessionManager(email: advocateEmail).getProgram()
+        let program = extoleAPI.sessionManager(email: advocateEmail).program()
         
-        program.load { (mobileSharing: ExtoleApp.MobileSharing) in
+        program.ready { (mobileSharing: ExtoleApp.MobileSharing) in
                 XCTAssertEqual(advocateEmail, mobileSharing.me.email)
             prefrech.fulfill()
         }
@@ -41,11 +41,11 @@ class ProgramTest: XCTestCase {
         
         let advocateEmail = String(format: "adv-%lu@extole.com", mach_absolute_time())
         let friendEmail = String(format: "fr-%lu@extole.com", mach_absolute_time())
-        let program = extoleAPI.sessionManager(email: advocateEmail).getProgram()
+        let program = extoleAPI.sessionManager(email: advocateEmail).program()
         let shareId = String(mach_absolute_time())
         
         let loaded = expectation(description: "program loaded")
-        program.load { mobileSharing in
+        program.ready { mobileSharing in
             XCTAssertNotNil(mobileSharing.me.share_code)
             loaded.fulfill()
         }

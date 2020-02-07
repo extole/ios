@@ -6,21 +6,21 @@ import ExtoleAPI
 extension ExtoleApp {
     public class Program {
         let sessionManager: SessionManager
-        let label: String?
+        let labels: String?
         var mobileSharing: MobileSharing?
         
-        init(sessionManager: SessionManager, label: String?) {
+        init(sessionManager: SessionManager, labels: String?) {
             self.sessionManager = sessionManager
-            self.label = label
+            self.labels = labels
         }
         
-        func load(complete: @escaping (_ mobileSharing: MobileSharing) -> Void) -> Void {
+        func ready(complete: @escaping (_ mobileSharing: MobileSharing) -> Void) -> Void {
             if let existingSharing = mobileSharing {
                 complete(existingSharing)
             } else {
                 var data : [String:String] = [:]
-                if let programLabel = label {
-                    data["labels"] = programLabel
+                if let selectedLabels = labels {
+                    data["labels"] = selectedLabels
                 }
                 sessionManager.loadMobileSharing(data: data,
                                                  success: { loadedSharing in
@@ -33,7 +33,7 @@ extension ExtoleApp {
         public func share(data: [String:String],
                           success: @escaping (ExtoleAPI.Events.SubmitEventResponse) -> Void,
                           error: @escaping (ExtoleAPI.Error) -> Void) {
-            self.load(complete: { loadedSharing in
+            self.ready(complete: { loadedSharing in
                 var shareDataWithCode : [String: String] = [:];
                 if let shareCode = loadedSharing.me.share_code {
                    shareDataWithCode["share.advocate_code"] = shareCode
@@ -53,7 +53,7 @@ extension ExtoleApp {
 }
 
 extension ExtoleApp.SessionManager {
-    public func getProgram(label: String? = nil) -> ExtoleApp.Program {
-        return ExtoleApp.Program(sessionManager: self, label: label)
+    public func program(labels: String? = nil) -> ExtoleApp.Program {
+        return ExtoleApp.Program(sessionManager: self, labels: labels)
     }
 }

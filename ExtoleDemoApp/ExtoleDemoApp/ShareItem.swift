@@ -9,6 +9,8 @@ struct ShareItem: View {
     var body: some View {
         HStack {
             Image(decorative: "Logo")
+                .resizable()
+                .frame(width: 50, height: 50)
             Spacer()
             VStack {
             Text(title).font(.title)

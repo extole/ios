@@ -9,13 +9,16 @@
 /* Begin PBXBuildFile section */
 		49374D5423F171D10094364A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D5323F171D10094364A /* AppDelegate.swift */; };
 		49374D5623F171D10094364A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D5523F171D10094364A /* SceneDelegate.swift */; };
-		49374D5823F171D10094364A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D5723F171D10094364A /* ContentView.swift */; };
+		49374D5823F171D10094364A /* ShoppingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D5723F171D10094364A /* ShoppingView.swift */; };
 		49374D5A23F171D20094364A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49374D5923F171D20094364A /* Assets.xcassets */; };
 		49374D5D23F171D20094364A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49374D5C23F171D20094364A /* Preview Assets.xcassets */; };
 		49374D6023F171D20094364A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49374D5E23F171D20094364A /* LaunchScreen.storyboard */; };
 		49374D6B23F171D20094364A /* ExtoleDemoAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D6A23F171D20094364A /* ExtoleDemoAppTests.swift */; };
 		49374D7623F178610094364A /* ShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D7523F178610094364A /* ShareItem.swift */; };
 		49374D7823F17C0F0094364A /* index.png in Resources */ = {isa = PBXBuildFile; fileRef = 49374D7723F17C0F0094364A /* index.png */; };
+		49374D7A23F184AE0094364A /* CallToAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D7923F184AE0094364A /* CallToAction.swift */; };
+		49374D8223F18E7B0094364A /* HomeTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D8123F18E7B0094364A /* HomeTabs.swift */; };
+		49374D8423F18F310094364A /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D8323F18F310094364A /* ProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,7 +35,7 @@
 		49374D5023F171D10094364A /* ExtoleDemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExtoleDemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49374D5323F171D10094364A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49374D5523F171D10094364A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		49374D5723F171D10094364A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		49374D5723F171D10094364A /* ShoppingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingView.swift; sourceTree = "<group>"; };
 		49374D5923F171D20094364A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		49374D5C23F171D20094364A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		49374D5F23F171D20094364A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -42,6 +45,9 @@
 		49374D6C23F171D20094364A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49374D7523F178610094364A /* ShareItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareItem.swift; sourceTree = "<group>"; };
 		49374D7723F17C0F0094364A /* index.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = index.png; sourceTree = "<group>"; };
+		49374D7923F184AE0094364A /* CallToAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallToAction.swift; sourceTree = "<group>"; };
+		49374D8123F18E7B0094364A /* HomeTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabs.swift; sourceTree = "<group>"; };
+		49374D8323F18F310094364A /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,12 +92,15 @@
 				49374D7723F17C0F0094364A /* index.png */,
 				49374D5323F171D10094364A /* AppDelegate.swift */,
 				49374D5523F171D10094364A /* SceneDelegate.swift */,
-				49374D5723F171D10094364A /* ContentView.swift */,
+				49374D5723F171D10094364A /* ShoppingView.swift */,
 				49374D5923F171D20094364A /* Assets.xcassets */,
 				49374D5E23F171D20094364A /* LaunchScreen.storyboard */,
 				49374D6123F171D20094364A /* Info.plist */,
 				49374D5B23F171D20094364A /* Preview Content */,
 				49374D7523F178610094364A /* ShareItem.swift */,
+				49374D7923F184AE0094364A /* CallToAction.swift */,
+				49374D8123F18E7B0094364A /* HomeTabs.swift */,
+				49374D8323F18F310094364A /* ProfileView.swift */,
 			);
 			path = ExtoleDemoApp;
 			sourceTree = "<group>";
@@ -218,7 +227,10 @@
 				49374D7623F178610094364A /* ShareItem.swift in Sources */,
 				49374D5423F171D10094364A /* AppDelegate.swift in Sources */,
 				49374D5623F171D10094364A /* SceneDelegate.swift in Sources */,
-				49374D5823F171D10094364A /* ContentView.swift in Sources */,
+				49374D8223F18E7B0094364A /* HomeTabs.swift in Sources */,
+				49374D5823F171D10094364A /* ShoppingView.swift in Sources */,
+				49374D8423F18F310094364A /* ProfileView.swift in Sources */,
+				49374D7A23F184AE0094364A /* CallToAction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

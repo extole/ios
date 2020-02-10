@@ -13,10 +13,8 @@ extension ExtoleApp {
             self.sessionManager = sessionManager
             self.labels = labels
         }
-        func getShareLink(complete: @escaping (_ mobileSharing: AdvocateMobileExperience) -> Void) -> Void {
-        }
         
-        func ready(complete: @escaping (_ mobileSharing: AdvocateMobileExperience) -> Void) -> Void {
+        public func ready(complete: @escaping (_ mobileSharing: AdvocateMobileExperience) -> Void) -> Void {
             if let existingSharing = mobileSharing {
                 complete(existingSharing)
             } else {

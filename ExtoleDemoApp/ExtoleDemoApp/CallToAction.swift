@@ -3,7 +3,8 @@
 import SwiftUI
 
 struct CallToAction: View {
-    let title: String
+    @Binding var title: String
+
     var body: some View {
         HStack {
             Spacer()
@@ -15,6 +16,10 @@ struct CallToAction: View {
 
 struct CallToAction_Previews: PreviewProvider {
     static var previews: some View {
-        CallToAction(title: "Get $40")
+        CallToAction(title: Binding<String>.init(get: { () -> String in
+            "get $40"
+        }, set: { value in
+            
+        }))
     }
 }

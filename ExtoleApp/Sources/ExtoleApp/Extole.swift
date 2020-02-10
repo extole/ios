@@ -5,7 +5,7 @@ import ExtoleAPI
 
 public final class Extole {
     let extoleAPI: ExtoleAPI
-    init(programDomain: String,
+    public init(programDomain: String,
          appName: String? = nil,
          appVersion: String? = nil,
          network : Network = Network.init()) {

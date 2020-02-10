@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,8 @@
 		49374D7A23F184AE0094364A /* CallToAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D7923F184AE0094364A /* CallToAction.swift */; };
 		49374D8223F18E7B0094364A /* HomeTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D8123F18E7B0094364A /* HomeTabs.swift */; };
 		49374D8423F18F310094364A /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D8323F18F310094364A /* ProfileView.swift */; };
+		49374D8723F194110094364A /* ExtoleAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 49374D8623F194110094364A /* ExtoleAPI */; };
+		49374D8923F194110094364A /* ExtoleApp in Frameworks */ = {isa = PBXBuildFile; productRef = 49374D8823F194110094364A /* ExtoleApp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49374D8723F194110094364A /* ExtoleAPI in Frameworks */,
+				49374D8923F194110094364A /* ExtoleApp in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +78,7 @@
 				49374D5223F171D10094364A /* ExtoleDemoApp */,
 				49374D6923F171D20094364A /* ExtoleDemoAppTests */,
 				49374D5123F171D10094364A /* Products */,
+				49374D8523F194110094364A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -122,6 +127,13 @@
 			path = ExtoleDemoAppTests;
 			sourceTree = "<group>";
 		};
+		49374D8523F194110094364A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -138,6 +150,10 @@
 			dependencies = (
 			);
 			name = ExtoleDemoApp;
+			packageProductDependencies = (
+				49374D8623F194110094364A /* ExtoleAPI */,
+				49374D8823F194110094364A /* ExtoleApp */,
+			);
 			productName = ExtoleDemoApp;
 			productReference = 49374D5023F171D10094364A /* ExtoleDemoApp.app */;
 			productType = "com.apple.product-type.application";
@@ -493,6 +509,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		49374D8623F194110094364A /* ExtoleAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ExtoleAPI;
+		};
+		49374D8823F194110094364A /* ExtoleApp */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ExtoleApp;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 49374D4823F171D10094364A /* Project object */;
 }

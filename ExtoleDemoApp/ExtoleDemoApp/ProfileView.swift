@@ -7,7 +7,7 @@ struct ProfileView: View {
     
     @State var firstName: String = ""
     @State var lastName: String = ""
-    @State var emailName: String = ""
+    @State var email: String = ""
 
     var body: some View {
         return NavigationView {
@@ -17,10 +17,17 @@ struct ProfileView: View {
                 Text("Last Name")
                 TextField("Last Name", text: $lastName)
                 Text("Email")
-                TextField("Email", text: $emailName)
+                TextField("Email", text: $email)
                 Text("Login").foregroundColor(.blue).onTapGesture {
-                    appState.program.sessionManager.logout()
-                    print("trigger login", self.emailName)
+                    self.appState.program.sessionManager.async { session in
+                        session.updateProfile(email: self.email,
+                                              first_name: self.firstName,
+                                              last_name: self.lastName,
+                                              success:  {
+                                            },
+                                              error: { e in
+                                            })
+                    }
                 }
                 Spacer()
             }
@@ -29,7 +36,7 @@ struct ProfileView: View {
             if let existingState = self.appState.shareExperience {
                 self.firstName = existingState.me.first_name ?? ""
                 self.lastName = existingState.me.last_name ?? ""
-                self.emailName = existingState.me.email ?? ""
+                self.email = existingState.me.email ?? ""
             }
         }
     }

@@ -5,7 +5,7 @@ import ExtoleAPI
 
 extension ExtoleApp {
     public class Program {
-        let sessionManager: SessionManager
+        public let sessionManager: SessionManager
         let labels: String?
         var mobileSharing: AdvocateMobileExperience?
         

@@ -26,6 +26,8 @@
 		49374D8423F18F310094364A /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D8323F18F310094364A /* ProfileView.swift */; };
 		49374D8723F194110094364A /* ExtoleAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 49374D8623F194110094364A /* ExtoleAPI */; };
 		49374D8923F194110094364A /* ExtoleApp in Frameworks */ = {isa = PBXBuildFile; productRef = 49374D8823F194110094364A /* ExtoleApp */; };
+		493A05A223F300A0006903FF /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493A05A123F300A0006903FF /* ShareSheet.swift */; };
+		493A05A423F30401006903FF /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493A05A323F30401006903FF /* SafariView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,8 @@
 		49374D7923F184AE0094364A /* CallToAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallToAction.swift; sourceTree = "<group>"; };
 		49374D8123F18E7B0094364A /* HomeTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabs.swift; sourceTree = "<group>"; };
 		49374D8323F18F310094364A /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		493A05A123F300A0006903FF /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		493A05A323F30401006903FF /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,8 @@
 				492E019D23F2B95F00E56902 /* AdvocateView.swift */,
 				492E019F23F2D10F00E56902 /* ShareView.swift */,
 				492E01A123F2E50A00E56902 /* Toast.swift */,
+				493A05A123F300A0006903FF /* ShareSheet.swift */,
+				493A05A323F30401006903FF /* SafariView.swift */,
 			);
 			path = ExtoleDemoApp;
 			sourceTree = "<group>";
@@ -260,6 +266,8 @@
 				49374D5423F171D10094364A /* AppDelegate.swift in Sources */,
 				492E01A023F2D10F00E56902 /* ShareView.swift in Sources */,
 				49374D5623F171D10094364A /* SceneDelegate.swift in Sources */,
+				493A05A223F300A0006903FF /* ShareSheet.swift in Sources */,
+				493A05A423F30401006903FF /* SafariView.swift in Sources */,
 				492E019C23F2B91500E56902 /* LoginView.swift in Sources */,
 				49374D8223F18E7B0094364A /* HomeTabs.swift in Sources */,
 				49374D5823F171D10094364A /* ShoppingView.swift in Sources */,

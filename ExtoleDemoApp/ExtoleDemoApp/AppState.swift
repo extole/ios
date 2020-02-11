@@ -59,4 +59,12 @@ class AppState : ObservableObject, ExtoleApp.SessionManager.Delegate {
             }
         }
     }
+    
+    public func shared(channel: String) {
+        program.share(data: ["channel" : channel], success: {_ in 
+            
+        }, error: { e in
+            
+        })
+    }
 }

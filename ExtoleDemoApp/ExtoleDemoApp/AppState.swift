@@ -2,8 +2,28 @@
 
 import Foundation
 import ExtoleApp
+import ExtoleAPI
 
-class AppState : ObservableObject {
+class AppState : ObservableObject, ExtoleApp.SessionManager.Delegate {
+    func onSessionInvalid() {
+        settings.removeObject(forKey: "access_token")
+        self.reset()
+    }
+    
+    func onSessionDeleted() {
+        settings.removeObject(forKey: "access_token")
+        self.reset()
+    }
+    
+    func onNewSession(session: ExtoleAPI.Session) {
+        self.settings.set(session.accessToken, forKey: "access_token");
+        self.refresh()
+    }
+
+    func onSessionServerError(error: ExtoleAPI.Error) {
+        
+    }
+    
     public let settings = UserDefaults(suiteName: "ExtoleDemoApp")!
     
     var program: ExtoleApp.Program!
@@ -13,19 +33,27 @@ class AppState : ObservableObject {
         self.reset()
     }
 
+    public var isLogged : Bool {
+        get {
+            if let email = shareExperience?.me.email {
+                return !email.isEmpty
+            }
+            return false
+        }
+    }
+    public func logout() {
+        program.sessionManager.logout();
+    }
+    
     public func reset() {
         let savedAccessToken: String? = settings.string(forKey: "access_token");
         self.program = Extole(programDomain: "ios-santa.extole.io")
-                   .session(accessToken: savedAccessToken)
+                   .session(accessToken: savedAccessToken, delegate: self)
                    .program()
     }
+    
     public func refresh() {
         self.program.ready { mobileExperience in
-            self.program.sessionManager.async { session in
-                self.settings.set(session.accessToken,
-                                  forKey: "access_token");
-            }
-            sleep(10)
             DispatchQueue.main.async {
                 self.shareExperience = mobileExperience
             }

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		492E019C23F2B91500E56902 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E019B23F2B91500E56902 /* LoginView.swift */; };
+		492E019E23F2B95F00E56902 /* AdvocateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E019D23F2B95F00E56902 /* AdvocateView.swift */; };
+		492E01A023F2D10F00E56902 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E019F23F2D10F00E56902 /* ShareView.swift */; };
 		4933FAAB23F1B64700F1C274 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4933FAAA23F1B64700F1C274 /* AppState.swift */; };
 		49374D5423F171D10094364A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D5323F171D10094364A /* AppDelegate.swift */; };
 		49374D5623F171D10094364A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D5523F171D10094364A /* SceneDelegate.swift */; };
@@ -35,6 +38,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		492E019B23F2B91500E56902 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		492E019D23F2B95F00E56902 /* AdvocateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvocateView.swift; sourceTree = "<group>"; };
+		492E019F23F2D10F00E56902 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		4933FAAA23F1B64700F1C274 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		49374D5023F171D10094364A /* ExtoleDemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExtoleDemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49374D5323F171D10094364A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -109,6 +115,9 @@
 				49374D8123F18E7B0094364A /* HomeTabs.swift */,
 				49374D8323F18F310094364A /* ProfileView.swift */,
 				4933FAAA23F1B64700F1C274 /* AppState.swift */,
+				492E019B23F2B91500E56902 /* LoginView.swift */,
+				492E019D23F2B95F00E56902 /* AdvocateView.swift */,
+				492E019F23F2D10F00E56902 /* ShareView.swift */,
 			);
 			path = ExtoleDemoApp;
 			sourceTree = "<group>";
@@ -245,10 +254,13 @@
 			files = (
 				49374D7623F178610094364A /* ShareItem.swift in Sources */,
 				49374D5423F171D10094364A /* AppDelegate.swift in Sources */,
+				492E01A023F2D10F00E56902 /* ShareView.swift in Sources */,
 				49374D5623F171D10094364A /* SceneDelegate.swift in Sources */,
+				492E019C23F2B91500E56902 /* LoginView.swift in Sources */,
 				49374D8223F18E7B0094364A /* HomeTabs.swift in Sources */,
 				49374D5823F171D10094364A /* ShoppingView.swift in Sources */,
 				49374D8423F18F310094364A /* ProfileView.swift in Sources */,
+				492E019E23F2B95F00E56902 /* AdvocateView.swift in Sources */,
 				49374D7A23F184AE0094364A /* CallToAction.swift in Sources */,
 				4933FAAB23F1B64700F1C274 /* AppState.swift in Sources */,
 			);

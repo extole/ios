@@ -1,6 +1,7 @@
 //Copyright © 2019 Extole. All rights reserved.
 
 import SwiftUI
+import ExtoleApp
 
 struct ProfileView: View {
     @ObservedObject var appState: AppState
@@ -8,7 +9,20 @@ struct ProfileView: View {
     @State var firstName: String = ""
     @State var lastName: String = ""
     @State var email: String = ""
+    
+    init(appState: AppState) {
+        self.appState = appState
+        importState(shareExperience : appState.shareExperience)
+    }
 
+    func importState(shareExperience: ExtoleApp.AdvocateMobileExperience?) {
+        if let existingState = shareExperience {
+            self.firstName = existingState.me.first_name ?? ""
+            self.lastName = existingState.me.last_name ?? ""
+            self.email = existingState.me.email ?? ""
+        }
+    }
+    
     var body: some View {
         return NavigationView {
             VStack {
@@ -24,6 +38,8 @@ struct ProfileView: View {
                                               first_name: self.firstName,
                                               last_name: self.lastName,
                                               success:  {
+                                                self.appState.reset()
+                                                self.appState.refresh()
                                             },
                                               error: { e in
                                             })
@@ -32,12 +48,9 @@ struct ProfileView: View {
                 Spacer()
             }
             .navigationBarTitle(Text("Account"))
-        }.onAppear{
-            if let existingState = self.appState.shareExperience {
-                self.firstName = existingState.me.first_name ?? ""
-                self.lastName = existingState.me.last_name ?? ""
-                self.email = existingState.me.email ?? ""
-            }
         }
+        .onReceive(appState.$shareExperience, perform: { newShare in
+            self.importState(shareExperience: newShare)
+        })
     }
 }

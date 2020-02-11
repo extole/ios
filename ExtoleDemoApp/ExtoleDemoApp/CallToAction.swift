@@ -4,7 +4,7 @@ import SwiftUI
 import ExtoleApp
 
 struct CallToAction: View {
-     @ObservedObject var appExperience: AppState
+    @ObservedObject var appExperience: AppState
 
     var ctaLink: String {
         return appExperience.shareExperience?.program_label ?? "Default"

@@ -10,18 +10,22 @@ class AppState : ObservableObject {
     @Published var shareExperience: ExtoleApp.AdvocateMobileExperience? = nil
     
     init () {
-        let savedAccessToken: String? = settings.string(forKey: "access_token");
-        self.program = Extole(programDomain: "ios-santa.extole.io")
-            .session(accessToken: savedAccessToken)
-            .program()
+        self.reset()
     }
 
+    public func reset() {
+        let savedAccessToken: String? = settings.string(forKey: "access_token");
+        self.program = Extole(programDomain: "ios-santa.extole.io")
+                   .session(accessToken: savedAccessToken)
+                   .program()
+    }
     public func refresh() {
         self.program.ready { mobileExperience in
             self.program.sessionManager.async { session in
                 self.settings.set(session.accessToken,
                                   forKey: "access_token");
             }
+            sleep(10)
             DispatchQueue.main.async {
                 self.shareExperience = mobileExperience
             }

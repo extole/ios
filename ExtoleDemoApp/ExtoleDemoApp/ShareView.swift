@@ -35,7 +35,6 @@ struct ShareView: View {
     func share() {
         self.sheetActon = .share
         self.showShareSheet = true
-        
     }
     
     var shareableLink: String {
@@ -57,23 +56,31 @@ struct ShareView: View {
     }
     
     func shared(_ activityType: UIActivity.ActivityType?, _ completed: Bool, _ returnedItems: [Any]?, _ error: Error?) {
-        appState.shared(channel: activityType?.rawValue ?? "custom")
+        if (completed) {
+            appState.shared(channel: activityType?.rawValue ?? "custom")
+        }
     }
     
     var body: some View {
         VStack {
+            Image(decorative: "Logo")
             Text(appState.shareExperience?.calls_to_action.menu ?? "Title")
             Text(appState.shareExperience?.links.how_it_works_url ?? "How It Works")
             Button(shareableLink, action: copy)
             Button("Share", action: share)
             Spacer()
-            Button(termsLink, action: {
-                self.sheetActon = .terms
-                self.showShareSheet = true
-            })
-            Button(poweredLink, action: {
-                UIApplication.shared.open(URL(string: self.poweredLink)!)
-            })
+            HStack {
+                Button("Terms", action: {
+                    self.sheetActon = .terms
+                    self.showShareSheet = true
+                })
+                Spacer()
+                Text("|")
+                Spacer()
+                Button("Powered By", action: {
+                    UIApplication.shared.open(URL(string: self.poweredLink)!)
+                })
+            }
             
         }
         .toast(isShowing: $showingAlert, text: Text("Copied"))

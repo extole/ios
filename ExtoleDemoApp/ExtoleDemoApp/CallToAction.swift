@@ -4,17 +4,25 @@ import SwiftUI
 import ExtoleApp
 
 struct CallToAction: View {
-    @ObservedObject var appExperience: AppState
+    @ObservedObject var appState: AppState
 
     var ctaLink: String {
-        return appExperience.shareExperience?.program_label ?? "Default"
+        return appState.shareExperience?.program_label ?? "Loading..."
+    }
+
+    var shareDestination: some View {
+        get {
+            if appState.isLogged {
+                return AnyView(ShareView(appState: appState))
+            } else {
+                return AnyView(LoginView(appState: appState))
+            }
+        }
     }
 
     var body: some View {
-        HStack {
-            Spacer()
+        NavigationLink(destination: shareDestination) {
             Text(ctaLink).font(.callout).foregroundColor(.blue)
-            Spacer()
         }
     }
 }

@@ -11,11 +11,11 @@ struct AdvocateView: View {
         return NavigationView {
             VStack {
                 Text(appState.shareExperience?.me.email ?? "")
-                
+
                 NavigationLink(destination: ShareView(appState: appState)) {
                     shareLink
                 }
-            
+
                 Text("Logout")
                     .foregroundColor(.blue).onTapGesture {
                         self.appState.program.sessionManager.logout()

@@ -22,16 +22,22 @@ struct LoginView: View {
             self.email = existingState.me.email ?? ""
         }
     }
-    
+
     var body: some View {
         return NavigationView {
-            VStack {
-                Text("First Name")
-                TextField("First Name", text: $firstName)
-                Text("Last Name")
-                TextField("Last Name", text: $lastName)
-                Text("Email")
-                TextField("Email", text: $email)
+            VStack (alignment: .leading) {
+                HStack  {
+                    Text("First Name")
+                    TextField("Joe", text: $firstName)
+                }
+                HStack {
+                    Text("Last Name")
+                    TextField("Doe", text: $lastName)
+                }
+                HStack {
+                    Text("Email")
+                    TextField("joe@doe.com", text: $email)
+                }
                 Text("Login").foregroundColor(.blue).onTapGesture {
                     self.appState.program.sessionManager.async { session in
                         session.updateProfile(email: self.email,
@@ -48,6 +54,7 @@ struct LoginView: View {
                 Spacer()
             }
             .navigationBarTitle(Text("Login"))
+            Spacer()
         }
         .onReceive(appState.$shareExperience, perform: { newShare in
             self.importState(shareExperience: newShare)

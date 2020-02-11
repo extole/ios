@@ -5,7 +5,7 @@ import ExtoleApp
 
 struct ShoppingView: View {
 
-     @ObservedObject var appExperience: AppState
+     @ObservedObject var appState: AppState
     
     var body: some View {
         
@@ -19,7 +19,7 @@ struct ShoppingView: View {
                 ShareItem(title: "Virtual Minesota", description: "Roll it")
                 ShareItem(title: "Virtual NY", description: "Roll it")
                 ShareItem(title: "Ca La Mama Acasa", description: "Roll it")
-                CallToAction(appExperience: appExperience)
+                CallToAction(appState: appState)
                 Spacer()
             }
             .navigationBarTitle(Text("Extole Demo"))

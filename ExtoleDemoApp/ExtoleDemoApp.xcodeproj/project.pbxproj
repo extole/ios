@@ -10,6 +10,7 @@
 		492E019C23F2B91500E56902 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E019B23F2B91500E56902 /* LoginView.swift */; };
 		492E019E23F2B95F00E56902 /* AdvocateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E019D23F2B95F00E56902 /* AdvocateView.swift */; };
 		492E01A023F2D10F00E56902 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E019F23F2D10F00E56902 /* ShareView.swift */; };
+		492E01A223F2E50A00E56902 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E01A123F2E50A00E56902 /* Toast.swift */; };
 		4933FAAB23F1B64700F1C274 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4933FAAA23F1B64700F1C274 /* AppState.swift */; };
 		49374D5423F171D10094364A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D5323F171D10094364A /* AppDelegate.swift */; };
 		49374D5623F171D10094364A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49374D5523F171D10094364A /* SceneDelegate.swift */; };
@@ -41,6 +42,7 @@
 		492E019B23F2B91500E56902 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		492E019D23F2B95F00E56902 /* AdvocateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvocateView.swift; sourceTree = "<group>"; };
 		492E019F23F2D10F00E56902 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		492E01A123F2E50A00E56902 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		4933FAAA23F1B64700F1C274 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		49374D5023F171D10094364A /* ExtoleDemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExtoleDemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49374D5323F171D10094364A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				492E019B23F2B91500E56902 /* LoginView.swift */,
 				492E019D23F2B95F00E56902 /* AdvocateView.swift */,
 				492E019F23F2D10F00E56902 /* ShareView.swift */,
+				492E01A123F2E50A00E56902 /* Toast.swift */,
 			);
 			path = ExtoleDemoApp;
 			sourceTree = "<group>";
@@ -253,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49374D7623F178610094364A /* ShareItem.swift in Sources */,
+				492E01A223F2E50A00E56902 /* Toast.swift in Sources */,
 				49374D5423F171D10094364A /* AppDelegate.swift in Sources */,
 				492E01A023F2D10F00E56902 /* ShareView.swift in Sources */,
 				49374D5623F171D10094364A /* SceneDelegate.swift in Sources */,

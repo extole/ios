@@ -15,12 +15,11 @@ struct AdvocateView: View {
                 NavigationLink(destination: ShareView()) {
                     shareLink
                 }
-
+                Spacer()
                 Text("Logout")
                     .foregroundColor(.blue).onTapGesture {
                         self.appState.program.sessionManager.logout()
                 }
-                Spacer()
                 .navigationBarTitle("Account")
             }
         }

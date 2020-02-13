@@ -3,33 +3,37 @@
 import SwiftUI
 import ExtoleApp
 
+struct LoginFields {
+    var firstName: String = ""
+    var lastName: String = ""
+    var email: String = ""
+}
+
 struct LoginView: View {
     @EnvironmentObject var appState: AppState
-    
-    @State var firstName: String = ""
-    @State var lastName: String = ""
-    @State var email: String = ""
+
+    @State var fields = LoginFields()
 
     var body: some View {
         return NavigationView {
-            VStack (alignment: .leading) {
+            VStack {
                 HStack  {
                     Text("First Name")
-                    TextField("Joe", text: $firstName)
+                    TextField("Joe", text: self.$fields.firstName)
                 }
                 HStack {
                     Text("Last Name")
-                    TextField("Doe", text: $lastName)
+                    TextField("Doe", text: self.$fields.lastName)
                 }
                 HStack {
                     Text("Email")
-                    TextField("joe@doe.com", text: $email)
+                    TextField("joe@doe.com", text: self.$fields.email)
                 }
                 Text("Login").foregroundColor(.blue).onTapGesture {
                     self.appState.program.sessionManager.async { session in
-                        session.updateProfile(email: self.email,
-                                              first_name: self.firstName,
-                                              last_name: self.lastName,
+                        session.updateProfile(email: self.fields.email,
+                                              first_name: self.fields.firstName,
+                                              last_name: self.fields.lastName,
                                               success:  {
                                                 self.appState.reset()
                                                 self.appState.refresh()
@@ -42,13 +46,14 @@ struct LoginView: View {
             }
             .navigationBarTitle(Text("Login"))
             Spacer()
-        }
-        .onReceive(appState.$shareExperience, perform: { newShare in
-           if let existingState = newShare {
-                self.firstName = existingState.me.first_name ?? ""
-                self.lastName = existingState.me.last_name ?? ""
-                self.email = existingState.me.email ?? ""
-            }
+        }.onAppear( perform: {
+            _ = self.appState.$shareExperience.map { shareExperience -> LoginFields in
+                LoginFields(firstName: shareExperience?.me.first_name ?? "",
+                            lastName: shareExperience?.me.last_name ?? "",
+                            email: shareExperience?.me.email ?? "")
+                
+                }
+            .assign(to: \.fields, on: self)
         })
     }
 }

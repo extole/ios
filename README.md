@@ -20,8 +20,9 @@ $ xcode-select -switch /Applications/Xcode.app/Contents/Developer/
 
 * [ExtoleAPI](ExtoleAPI) - low level library to access consumer-api
 * [ExtoleApp](ExtoleApp) - high level api for share experience
-* [ExtoleSanta](ExtoleSanta/ExtoleSanta) - sample application
-* [WebStanta](WebSanta/WebSanta) - WebView share experience experience
-* [SantaPostbox](SantaPostbox/SantaPostbox) - Objective-C sample application
+* [ExtoleDemoApp](ExtoleDemoApp/ExtoleDemoApp) - SwiftUI demo app
+* [ExtoleSanta](ExtoleSanta/ExtoleSanta) - UIKit sample application / Deprecated
+* [WebStanta](WebSanta/WebSanta) - WebView share experience experience / Deprecated
+* [SantaPostbox](SantaPostbox/SantaPostbox) - Objective-C sample application / Deprecated
 
 

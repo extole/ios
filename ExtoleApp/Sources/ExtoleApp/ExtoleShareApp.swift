@@ -35,9 +35,9 @@ public final class ShareApp {
         }
     }
     
-    public var selectedShareable: ExtoleAPI.Me.MeShareableResponse {
+    public var selectedShareable: ExtoleAPI.Me.MeShareableResponse? {
         get {
-            return selectedShareableLoader.shareables[0]
+            return selectedShareableLoader.shareables.first
         }
     }
     

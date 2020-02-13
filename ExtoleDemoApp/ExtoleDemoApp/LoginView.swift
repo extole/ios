@@ -47,12 +47,12 @@ struct LoginView: View {
             .navigationBarTitle(Text("Login"))
             Spacer()
         }.onAppear( perform: {
-            _ = self.appState.$shareExperience.map { shareExperience -> LoginFields in
+            _ = self.appState.$shareExperience.map { shareExperience in
                 LoginFields(firstName: shareExperience?.me.first_name ?? "",
                             lastName: shareExperience?.me.last_name ?? "",
                             email: shareExperience?.me.email ?? "")
                 
-                }
+            }
             .assign(to: \.fields, on: self)
         })
     }

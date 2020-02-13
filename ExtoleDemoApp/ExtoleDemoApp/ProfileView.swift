@@ -4,17 +4,13 @@ import SwiftUI
 import ExtoleApp
 
 struct ProfileView: View {
-    @ObservedObject var appState: AppState
+    @EnvironmentObject var appState: AppState
     
-    init(appState: AppState) {
-        self.appState = appState
-    }
-
     var body: some View {
         if appState.isLogged {
-            return AnyView(AdvocateView(appState: appState))
+            return AnyView(AdvocateView())
         } else {
-            return AnyView(LoginView(appState: appState))
+            return AnyView(LoginView())
         }
     }
 }

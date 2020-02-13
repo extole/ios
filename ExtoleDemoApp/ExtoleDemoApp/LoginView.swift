@@ -4,24 +4,11 @@ import SwiftUI
 import ExtoleApp
 
 struct LoginView: View {
-    @ObservedObject var appState: AppState
+    @EnvironmentObject var appState: AppState
     
     @State var firstName: String = ""
     @State var lastName: String = ""
     @State var email: String = ""
-    
-    init(appState: AppState) {
-        self.appState = appState
-        importState(shareExperience : appState.shareExperience)
-    }
-
-    func importState(shareExperience: ExtoleApp.AdvocateMobileExperience?) {
-        if let existingState = shareExperience {
-            self.firstName = existingState.me.first_name ?? ""
-            self.lastName = existingState.me.last_name ?? ""
-            self.email = existingState.me.email ?? ""
-        }
-    }
 
     var body: some View {
         return NavigationView {
@@ -57,7 +44,11 @@ struct LoginView: View {
             Spacer()
         }
         .onReceive(appState.$shareExperience, perform: { newShare in
-            self.importState(shareExperience: newShare)
+           if let existingState = newShare {
+                self.firstName = existingState.me.first_name ?? ""
+                self.lastName = existingState.me.last_name ?? ""
+                self.email = existingState.me.email ?? ""
+            }
         })
     }
 }

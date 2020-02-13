@@ -5,7 +5,7 @@ import ExtoleApp
 
 struct HomeTabs: View {
     
-    @ObservedObject var appState: AppState
+    @EnvironmentObject var appState: AppState
     @State var selected = 0
     
     func ctaLink() -> String {
@@ -14,12 +14,12 @@ struct HomeTabs: View {
     
     var body: some View {
         return TabView(selection: $selected) {
-            ShoppingView(appState: appState)
+            ShoppingView()
                   .tabItem {
                       Image(systemName: "1.circle")
                       Text("Shopping")
                   }.tag(0)
-              ProfileView(appState: appState)
+              ProfileView()
                   .tabItem {
                       Image(systemName: "2.circle")
                       Text("Profile")

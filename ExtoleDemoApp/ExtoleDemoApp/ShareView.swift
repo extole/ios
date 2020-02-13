@@ -4,7 +4,7 @@ import SwiftUI
 
 
 struct ShareView: View {
-    @ObservedObject var appState: AppState
+    @EnvironmentObject var appState: AppState
 
     @State var showingAlert: Bool = false
     

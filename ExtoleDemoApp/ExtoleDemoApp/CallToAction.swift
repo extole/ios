@@ -4,25 +4,27 @@ import SwiftUI
 import ExtoleApp
 
 struct CallToAction: View {
-    @ObservedObject var appState: AppState
+    @EnvironmentObject var appState: AppState
 
-    var ctaLink: String {
-        return appState.shareExperience?.program_label ?? "Loading..."
-    }
+    @State var ctaLink: String = "Loading..."
 
     var shareDestination: some View {
         get {
             if appState.isLogged {
-                return AnyView(ShareView(appState: appState))
+                return AnyView(ShareView())
             } else {
-                return AnyView(LoginView(appState: appState))
+                return AnyView(LoginView())
             }
         }
     }
 
     var body: some View {
         NavigationLink(destination: shareDestination) {
-            Text(ctaLink).font(.callout).foregroundColor(.blue)
-        }
+            Text($ctaLink.animation().wrappedValue).font(.callout).foregroundColor(.blue)
+        }.onAppear( perform: {
+            //self.ctaLink = self.appState.shareExperience?.program_label ?? "Loading";
+        }).onReceive(appState.$shareExperience, perform: { newShare in
+            self.ctaLink = newShare?.program_label ?? "Loading";
+        })
     }
 }

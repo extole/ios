@@ -50,6 +50,7 @@ class AppState : ObservableObject, ExtoleApp.SessionManager.Delegate {
         self.program = Extole(programDomain: "ios-santa.extole.io")
                    .session(accessToken: savedAccessToken, delegate: self)
                    .program()
+        self.refresh()
     }
     
     public func refresh() {

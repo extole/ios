@@ -3,7 +3,7 @@
 import SwiftUI
 
 struct AdvocateView: View {
-    @ObservedObject var appState: AppState
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         let shareLink = Text(appState.shareExperience?.calls_to_action.account_page ?? "Share")
@@ -12,7 +12,7 @@ struct AdvocateView: View {
             VStack {
                 Text(appState.shareExperience?.me.email ?? "")
 
-                NavigationLink(destination: ShareView(appState: appState)) {
+                NavigationLink(destination: ShareView()) {
                     shareLink
                 }
 

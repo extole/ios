@@ -154,8 +154,7 @@ class HomeViewController : UIViewController {
     }
 
     @objc func handleShare(_ sender: UIButton) {
-        santaApp.shareApp.mobileSharing?.me
-        guard let shareLink = santaApp.shareApp.mobileSharing?.me.link else {
+        guard let shareLink = santaApp.shareApp.mobileSharing?.me.shareable_link else {
             self.showError(title: "Invalid state", message: "No Shareable")
             return
         }

@@ -1,39 +1,5 @@
-# fastlane specific
-**/fastlane/report.xml
-**/fastlane/Preview.html
-**/fastlane/screenshots
-**/fastlane/test_output
-
-# Mac OS X
-*.DS_Store
-
-# Xcode
-*.pbxuser
-*.mode1v3
-*.mode2v3
-*.perspectivev3
-*.xcuserstate
-project.xcworkspace/
-xcuserdata/
-
-# Generated files
-*.o
-*.pyc
-
-
-#Python modules
-MANIFEST
-dist/
-build/
-
-# Backup files
-*~.nib
-
-temp/
+xcuserdata
+.DS_Store
+ExtoleKit/Build/
+project.xcworkspace
 .swiftpm
-
-.build
-.idea
-
-Pods/
-Podfile.lock

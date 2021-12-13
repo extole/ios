@@ -4,7 +4,7 @@ This app provides source code examples of how to:
 - send an event to Extole
 - get a resource (text, url, data) describing a marketing campaign configured in Extole
 - share via email through Extole
-- share using Android native share
+- share using iOS native share
 - render a zone using WebView
 
 Screenshot:

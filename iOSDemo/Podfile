@@ -6,7 +6,7 @@ target 'iOSDemo' do
   use_frameworks!
 
   # Pods for iOSDemo
-  pod 'ExtoleMobileSDK', :path => '/Users/diftodi/extole/code/ios-internal/ExtoleMobileSDK/ExtoleMobileSDK.podspec'
+  pod 'ExtoleMobileSDK'
 
   target 'iOSDemoTests' do
     inherit! :search_paths

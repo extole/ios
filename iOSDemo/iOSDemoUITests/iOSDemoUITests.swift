@@ -12,23 +12,23 @@ class ExtoleWebViewTest: XCTestCase {
 
     func testEmailShare() throws {
         let emailButton = self.app.webViews.buttons["email"]
-        XCTAssert(emailButton.waitForExistence(timeout: 15))
+        XCTAssert(emailButton.waitForExistence(timeout: 25))
 
         emailButton.tap()
 
         let messagePredicate = NSPredicate(format: "value CONTAINS[c] %@", "Sign up")
         let messageText = self.app.textViews.matching(messagePredicate)
-        XCTAssert(messageText.element.waitForExistence(timeout: 15))
+        XCTAssert(messageText.element.waitForExistence(timeout: 25))
     }
 
     func testNativeShare() throws {
         let nativeShareButton = self.app.webViews.buttons["native"]
-        XCTAssert(nativeShareButton.waitForExistence(timeout: 15))
+        XCTAssert(nativeShareButton.waitForExistence(timeout: 25))
 
         nativeShareButton.tap()
 
         let copyMessageButton = self.app.staticTexts["Copy"]
-        XCTAssert(copyMessageButton.waitForExistence(timeout: 15))
+        XCTAssert(copyMessageButton.waitForExistence(timeout: 25))
 
         let messageTextField = self.app.staticTexts["Messages"]
         XCTAssert(messageTextField.waitForExistence(timeout: 15))

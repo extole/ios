@@ -6,7 +6,7 @@ target 'iOSDemo' do
   use_frameworks!
 
   # Pods for iOSDemo
-  pod 'ExtoleMobileSDK'
+  pod 'ExtoleMobileSDK', '~> 0.0.7'
 
   target 'iOSDemoTests' do
     inherit! :search_paths

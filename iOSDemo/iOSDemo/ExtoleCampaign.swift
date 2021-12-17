@@ -3,7 +3,7 @@ import ExtoleMobileSDK
 
 class ExtoleCampaign: ObservableObject {
     @Published var shareExperience = ExtoleShareExperience()
-    let extole: ExtoleService = ExtoleService(programDomain: "https://mobile-monitor.extole.io",
+    var extole: Extole = ExtoleService(programDomain: "https://mobile-monitor.extole.io",
         applicationName: "iOS App", labels: ["business"])
     var contextCampaign: Campaign?
 
@@ -25,16 +25,14 @@ class ExtoleCampaign: ObservableObject {
     }
 
     public func identify(email: String) {
-        extole.identify(email, [:]) { _, _ in
-            self.fetchExtoleProgram()
-        }
+        extole = extole.copy(email: email)
     }
 
     public func getWebView(zoneName: String) -> UIExtoleWebView {
         if nil != contextCampaign {
-            return UIExtoleWebView(contextCampaign!.webViewBuilder().create(), zoneName)
+            return UIExtoleWebView(contextCampaign!.webView(), zoneName)
         } else {
-            return UIExtoleWebView(extole.webViewBuilder().create(), zoneName)
+            return UIExtoleWebView(extole.webView(), zoneName)
         }
     }
 }

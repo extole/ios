@@ -1,0 +1,27 @@
+name: Run iOS SDK tests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+
+defaults:
+  run:
+    working-directory: iOSDemo
+
+jobs:
+  ios_sdk_tests:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install cocoapods
+      run: pod install --repo-update
+
+    - name: Build iOS SDK tests
+      run: xcodebuild -workspace iOSDemo.xcworkspace -configuration Release -scheme iOSDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=15.2'
+    
+    - name: Run iOS SDK tests
+      run: xcodebuild -workspace iOSDemo.xcworkspace -scheme iOSDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=15.2' test

@@ -21,7 +21,7 @@ jobs:
       run: pod install --repo-update
 
     - name: Build iOS SDK tests
-      run: xcodebuild -workspace iOSDemo.xcworkspace -configuration Release -scheme iOSDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS:15.2'
+      run: xcodebuild -workspace iOSDemo.xcworkspace -configuration Release -scheme iOSDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=15.2'
     
     - name: Run iOS SDK tests
-      run: xcodebuild -workspace iOSDemo.xcworkspace -scheme iOSDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS:15.2' test
+      run: xcodebuild -workspace iOSDemo.xcworkspace -scheme iOSDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=15.2' test

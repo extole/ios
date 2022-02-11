@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install cocoapods
-      run: pod install
+      run: pod install --repo-update
 
     - name: Build iOS SDK tests
       run: xcodebuild -workspace iOSDemo.xcworkspace -configuration Release -scheme iOSDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=15.0'

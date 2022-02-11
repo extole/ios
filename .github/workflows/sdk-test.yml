@@ -2,8 +2,8 @@ name: Run iOS SDK tests
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "ENG-16266" ]
+  schedule:
+    - cron: '0 */6 * * *'
 
 defaults:
   run:

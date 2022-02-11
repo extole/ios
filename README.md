@@ -1,3 +1,5 @@
+[![Run iOS SDK tests](https://github.com/extole/ios/actions/workflows/sdk-test.yml/badge.svg?event=schedule)](https://github.com/extole/ios/actions/workflows/sdk-test.yml)
+
 # Extole iOS SDK
 
 This app provides source code examples of how to:

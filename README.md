@@ -90,10 +90,10 @@ CTAs such as mobile menu items can be fully customized in the My Extole Campaign
 
 ```
 extole.fetchZone("cta_prefetch") { (zone: ExtoleMobileSDK.Zone?, campaign: ExtoleMobileSDK.Campaign?, error: Error?) in
-            let ctaImage = zone?.get("image") as! String? ?? ""
-            let ctaText = zone?.get("text) as! String? ?? ""
-            let ctaMessage = zone?.get("message") as! String? ?? ""
-        }
+    let ctaImage = zone?.get("image") as! String? ?? ""
+    let ctaText = zone?.get("text) as! String? ?? ""
+    let ctaMessage = zone?.get("message") as! String? ?? ""
+}
 
 // usage example:
 View {

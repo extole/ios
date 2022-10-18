@@ -1,30 +1,24 @@
 import SwiftUI
+import ExtoleMobileSDK
 
 struct ContentView: View {
-    @EnvironmentObject var extoleProgram: ExtoleCampaign
-    @State private var email: String = ""
+    @EnvironmentObject var extoleCampaign: ExtoleCampaign
     var body: some View {
         NavigationView {
             VStack {
-                AsyncImage(url: URL(string: extoleProgram.shareExperience.shareImage))
+                AsyncImage(url: URL(string: extoleCampaign.cta.image))
                     .frame(height: 400)
                     .aspectRatio(contentMode: .fit)
                     .clipShape(Circle())
                     .overlay(Circle().stroke(Color.gray, lineWidth: 4))
                     .shadow(radius: 7)
-                Text(extoleProgram.shareExperience.shareMessage)
-                    .padding()
-                TextField("Enter your email address", text: $email)
-                    .onSubmit {
-                        NSLog("Identifying user")
-                        extoleProgram.identify(email: email)
+                Button(extoleCampaign.cta.text) {
+                        extoleCampaign.extole.sendEvent(extoleCampaign.cta.touchEvent, [:], completion: { (idEvent, error) in
+                        })
                     }.padding()
-                NavigationLink(destination: ContentWebView().environmentObject(extoleProgram)) {
-                    Text(extoleProgram.shareExperience.shareButtonText)
-                }.padding()
                 Spacer()
             }.task {
-                extoleProgram.fetchExtoleProgram()
+                extoleCampaign.fetch()
             }
         }
     }

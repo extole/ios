@@ -8,10 +8,3 @@ struct ContentWebView: View {
         }
     }
 }
-
-struct ContentWebView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-            .environmentObject(ExtoleCampaign())
-    }
-}

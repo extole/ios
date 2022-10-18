@@ -2,30 +2,21 @@ import Foundation
 import ExtoleMobileSDK
 
 class ExtoleCampaign: ObservableObject {
-    @Published var shareExperience = ExtoleShareExperience()
-    var extole: Extole = ExtoleService(programDomain: "https://mobile-monitor.extole.io",
-        applicationName: "iOS App", labels: ["business"])
+    @Published var cta = CTA()
     var contextCampaign: Campaign?
+    var extole: Extole
 
-    func fetchExtoleProgram() {
-        extole.getZone("apply_for_card") { (zone: ExtoleMobileSDK.Zone?, _: ExtoleMobileSDK.Campaign?, error: Error?) in
-            if error != nil {
-                self.shareExperience = ExtoleShareExperience(title: "Error",
-                    shareButtonText: "...",
-                    shareMessage: error?.localizedDescription ?? "Unable to load Extole Zone", shareImage: "...")
-            } else {
-                let shareImage = zone?.get("sharing.email.image") as! String? ?? ""
-                let shareButtonText = zone?.get("sharing.email.subject") as! String? ?? ""
-                let shareMessage = zone?.get("sharing.email.message") as! String? ?? ""
-                self.shareExperience = ExtoleShareExperience(title: "Extole Sharing Program",
-                    shareButtonText: shareButtonText,
-                    shareMessage: shareMessage, shareImage: shareImage)
-            }
-        }
+    public init(_ extole: Extole) {
+        self.extole = extole
     }
 
-    public func identify(email: String) {
-        extole = extole.copy(email: email)
+    func fetch() {
+        extole.fetchZone("cta_prefetch", [:]) { (zone: ExtoleMobileSDK.Zone?, _: ExtoleMobileSDK.Campaign?, error: Error?) in
+            let title = zone?.get("title") as! String? ?? ""
+            let touchEvent = zone?.get("sharing.email.subject") as! String? ?? ""
+            let image = zone?.get("image") as! String? ?? ""
+            self.cta = CTA(text: title, image: image, touchEvent: touchEvent)
+        }
     }
 
     public func getWebView(zoneName: String) -> UIExtoleWebView {

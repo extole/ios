@@ -2,11 +2,11 @@ import SwiftUI
 
 @main
 struct iOSDemoApp: App {
-    let extole = ExtoleCampaign()
+    @UIApplicationDelegateAdaptor var delegate: AppDelegate
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(extole)
+                .environmentObject(ExtoleCampaign(delegate.extole))
         }
     }
 }

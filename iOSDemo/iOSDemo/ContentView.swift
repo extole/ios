@@ -2,23 +2,26 @@ import SwiftUI
 import ExtoleMobileSDK
 
 struct ContentView: View {
-    @EnvironmentObject var extoleCampaign: ExtoleCampaign
+    let extoleWrapper: ExtoleSDK = ExtoleSDK()
+    @State var zone: Zone? = nil
     var body: some View {
         NavigationView {
             VStack {
-                AsyncImage(url: URL(string: extoleCampaign.cta.image))
+                AsyncImage(url: URL(string: zone?.get("image") as! String? ?? ""))
                     .frame(height: 400)
                     .aspectRatio(contentMode: .fit)
                     .clipShape(Circle())
                     .overlay(Circle().stroke(Color.gray, lineWidth: 4))
                     .shadow(radius: 7)
-                Button(extoleCampaign.cta.text) {
-                        extoleCampaign.extole.sendEvent(extoleCampaign.cta.touchEvent, [:], completion: { (idEvent, error) in
-                        })
+                Button(zone?.get("title") as! String? ?? "") {
+                    extoleWrapper.sendEvent("mobile_cta_touch", [:])
                     }.padding()
                 Spacer()
             }.task {
-                extoleCampaign.fetch()
+                extoleWrapper.setup()
+                extoleWrapper.extole.fetchZone("mobile_cta", [:]) { zone, campaign, error in
+                    self.zone = zone
+                }
             }
         }
     }
